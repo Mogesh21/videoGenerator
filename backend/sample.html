@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+  </head>
+  <body>
+    <input id="title" />
+    <input id="author" />
+    <input id="bg" type="file" />
+    <input id="content" />
+    <button onclick="submit()">submit</button>
+  </body>
+  <script>
+    async function submit() {
+      const title = document.getElementById("title").value;
+      const author = document.getElementById("author").value;
+      const bg = document.getElementById("bg");
+      const content = document.getElementById("content").value;
+
+      console.log(title, author, bg.files[0], content);
+
+      const form = new FormData();
+
+      form.append("title", title);
+      form.append("content", content);
+      form.append("author", author);
+      form.append("id", 1);
+      form.append("background_image", bg.files[0]);
+      const response = await fetch("http://127.0.0.1:8080/images/add", {
+        method: "POST",
+        body: form,
+      });
+
+      console.log(response);
+    }
+  </script>
+</html>

@@ -1,0 +1,7 @@
+.videoplayer {
+  width: -webkit-fill-available !important;
+}
+
+.video-container {
+  padding: 0.5rem;
+}

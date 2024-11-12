@@ -1,0 +1,95 @@
+generator client1 {
+  provider = "prisma-client-js"
+  output   = "./generated/client1"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL_1")
+}
+
+model book_sec {
+  book_num      Int    @id @db.UnsignedInt
+  title         String @db.VarChar(255)
+  short_title   String @db.VarChar(255)
+  chapter_count Int    @db.UnsignedInt
+}
+
+model images {
+  id         Int       @id @default(autoincrement())
+  title_id   Int
+  name       String    @db.VarChar(45)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  updated_at DateTime? @default(now()) @db.Timestamp(0)
+  deleted_at DateTime? @db.Timestamp(0)
+  is_deleted Int?      @default(0) @db.TinyInt
+  projects   projects  @relation(fields: [title_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "title")
+
+  @@index([title_id], map: "title_idx")
+}
+
+model projects {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(45)
+  title      String?   @default("") @db.VarChar(45)
+  author     String?   @default("") @db.VarChar(45)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  updated_at DateTime? @default(now()) @db.Timestamp(0)
+  deleted_at DateTime? @db.Timestamp(0)
+  is_deleted Int?      @default(0) @db.TinyInt
+  images     images[]
+  videos     videos[]
+}
+
+model settings {
+  id            Int     @id @default(autoincrement())
+  title_size    Int?
+  title_color   String? @db.VarChar(45)
+  content_size  Int?
+  content_color String? @db.VarChar(45)
+  credit_size   Int?
+  credit_color  String? @db.VarChar(45)
+}
+
+model verse_sec {
+  book_num    Int
+  chapter_num Int
+  verse_num   Int
+  content     String @db.Text
+  id          Int    @id @default(autoincrement())
+}
+
+model versions {
+  id               Int       @id @default(autoincrement())
+  version_name     String    @db.MediumText
+  metakeywords     String?   @db.Text
+  metadescription  String?   @db.Text
+  createdby        String    @db.MediumText
+  updatedby        String    @db.MediumText
+  createdid        Int?
+  updatedid        Int?
+  status           Int?
+  updated_at       DateTime? @db.Timestamp(0)
+  created_at       DateTime? @db.Timestamp(0)
+  uploadnotprocess Int?      @default(0)
+  uploadedid       Int?
+  nooftimesupdated Int       @default(0)
+  version_num      Int?      @default(0)
+  lang             String?   @db.Text
+  lang_id          Int       @default(0)
+  audiotype        Int       @default(0)
+  alignment        Int       @default(0)
+}
+
+model videos {
+  id         Int       @id @default(autoincrement())
+  title_id   Int
+  name       String    @db.VarChar(100)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  updated_at DateTime? @default(now()) @db.Timestamp(0)
+  deleted_at DateTime? @db.Timestamp(0)
+  is_deleted Int?      @default(0) @db.TinyInt
+  projects   projects  @relation(fields: [title_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "videoTitle")
+
+  @@index([title_id], map: "title_idx")
+}
