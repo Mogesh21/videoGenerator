@@ -1,5 +1,7 @@
 import express from "express";
+import fs from "fs";
 import { PrismaClient } from "../prisma/generated/client1/index.js";
+import path from "path";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -21,6 +23,10 @@ router.get("/images", async (req, res) => {
             created_at: true,
           },
         },
+      },
+      where: {
+        is_deleted: 0,
+        deleted_at: null,
       },
     });
 
@@ -71,6 +77,10 @@ router.get("/videos", async (req, res) => {
           },
         },
       },
+      where: {
+        is_deleted: 0,
+        deleted_at: null,
+      },
     });
 
     const formattedData = data.map((val) => {
@@ -105,6 +115,69 @@ router.get("/videos", async (req, res) => {
   }
 });
 
+router.delete("/deleteVideo", async (req, res) => {
+  try {
+    const { ids } = JSON.parse(req.headers.data);
+    ids.forEach((id) => {
+      console.log(id, path.join(process.cwd(), "public", "videos", id.toString()));
+      fs.rmSync(path.join(process.cwd(), "public", "videos", id.toString()), {
+        recursive: true,
+        force: true, 
+      });
+    });
+
+    if (ids.length > 1) {
+      const videosResult = await prisma.videos.deleteMany({
+        // data: {
+        //   is_deleted: 1,
+        //   deleted_at: new Date(),
+        // },
+        where: {
+          title_id: {
+            in: ids,
+          },
+        },
+      });
+      const projectResult = await prisma.projects.deleteMany({
+        // data: {
+        //   is_deleted: 1,
+        //   deleted_at: new Date(),
+        // },
+        where: {
+          id: {
+            in: ids,
+          },
+        },
+      });
+    } else {
+      const videosResult = await prisma.videos.deleteMany({
+        // data: {
+        //   is_deleted: 1,
+        //   deleted_at: new Date(),
+        // },
+        where: {
+          title_id: ids[0],
+        },
+      });
+
+      const projectResult = await prisma.projects.delete({
+        // data: {
+        //   is_deleted: 1,
+        //   deleted_at: new Date(),
+        // },
+        where: {
+          id: ids[0],
+        },
+      });
+    }
+
+    res.status(200).json({ message: "success" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 //---------DYNAMIC ROUTES ------------//
 
 router.get("/videos/:id", async (req, res) => {
@@ -127,6 +200,8 @@ router.get("/videos/:id", async (req, res) => {
       },
       where: {
         id: parseInt(id),
+        is_deleted: 0,
+        deleted_at: null,
       },
     });
 
@@ -185,6 +260,8 @@ router.get("/:id", async (req, res) => {
       },
       where: {
         id: parseInt(id),
+        is_deleted: 0,
+        deleted_at: null,
       },
     });
 

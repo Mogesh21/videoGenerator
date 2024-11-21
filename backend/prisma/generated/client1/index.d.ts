@@ -4196,32 +4196,44 @@ export namespace Prisma {
 
   export type SettingsMinAggregateOutputType = {
     id: number | null
+    font_style: string | null
     title_size: number | null
     title_color: string | null
+    title_style: string | null
     content_size: number | null
     content_color: string | null
+    content_style: string | null
     credit_size: number | null
     credit_color: string | null
+    credit_style: string | null
   }
 
   export type SettingsMaxAggregateOutputType = {
     id: number | null
+    font_style: string | null
     title_size: number | null
     title_color: string | null
+    title_style: string | null
     content_size: number | null
     content_color: string | null
+    content_style: string | null
     credit_size: number | null
     credit_color: string | null
+    credit_style: string | null
   }
 
   export type SettingsCountAggregateOutputType = {
     id: number
+    font_style: number
     title_size: number
     title_color: number
+    title_style: number
     content_size: number
     content_color: number
+    content_style: number
     credit_size: number
     credit_color: number
+    credit_style: number
     _all: number
   }
 
@@ -4242,32 +4254,44 @@ export namespace Prisma {
 
   export type SettingsMinAggregateInputType = {
     id?: true
+    font_style?: true
     title_size?: true
     title_color?: true
+    title_style?: true
     content_size?: true
     content_color?: true
+    content_style?: true
     credit_size?: true
     credit_color?: true
+    credit_style?: true
   }
 
   export type SettingsMaxAggregateInputType = {
     id?: true
+    font_style?: true
     title_size?: true
     title_color?: true
+    title_style?: true
     content_size?: true
     content_color?: true
+    content_style?: true
     credit_size?: true
     credit_color?: true
+    credit_style?: true
   }
 
   export type SettingsCountAggregateInputType = {
     id?: true
+    font_style?: true
     title_size?: true
     title_color?: true
+    title_style?: true
     content_size?: true
     content_color?: true
+    content_style?: true
     credit_size?: true
     credit_color?: true
+    credit_style?: true
     _all?: true
   }
 
@@ -4359,12 +4383,16 @@ export namespace Prisma {
 
   export type SettingsGroupByOutputType = {
     id: number
+    font_style: string | null
     title_size: number | null
     title_color: string | null
+    title_style: string | null
     content_size: number | null
     content_color: string | null
+    content_style: string | null
     credit_size: number | null
     credit_color: string | null
+    credit_style: string | null
     _count: SettingsCountAggregateOutputType | null
     _avg: SettingsAvgAggregateOutputType | null
     _sum: SettingsSumAggregateOutputType | null
@@ -4388,23 +4416,31 @@ export namespace Prisma {
 
   export type settingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    font_style?: boolean
     title_size?: boolean
     title_color?: boolean
+    title_style?: boolean
     content_size?: boolean
     content_color?: boolean
+    content_style?: boolean
     credit_size?: boolean
     credit_color?: boolean
+    credit_style?: boolean
   }, ExtArgs["result"]["settings"]>
 
 
   export type settingsSelectScalar = {
     id?: boolean
+    font_style?: boolean
     title_size?: boolean
     title_color?: boolean
+    title_style?: boolean
     content_size?: boolean
     content_color?: boolean
+    content_style?: boolean
     credit_size?: boolean
     credit_color?: boolean
+    credit_style?: boolean
   }
 
 
@@ -4413,12 +4449,16 @@ export namespace Prisma {
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
+      font_style: string | null
       title_size: number | null
       title_color: string | null
+      title_style: string | null
       content_size: number | null
       content_color: string | null
+      content_style: string | null
       credit_size: number | null
       credit_color: string | null
+      credit_style: string | null
     }, ExtArgs["result"]["settings"]>
     composites: {}
   }
@@ -4789,12 +4829,16 @@ export namespace Prisma {
    */ 
   interface settingsFieldRefs {
     readonly id: FieldRef<"settings", 'Int'>
+    readonly font_style: FieldRef<"settings", 'String'>
     readonly title_size: FieldRef<"settings", 'Int'>
     readonly title_color: FieldRef<"settings", 'String'>
+    readonly title_style: FieldRef<"settings", 'String'>
     readonly content_size: FieldRef<"settings", 'Int'>
     readonly content_color: FieldRef<"settings", 'String'>
+    readonly content_style: FieldRef<"settings", 'String'>
     readonly credit_size: FieldRef<"settings", 'Int'>
     readonly credit_color: FieldRef<"settings", 'String'>
+    readonly credit_style: FieldRef<"settings", 'String'>
   }
     
 
@@ -8002,12 +8046,16 @@ export namespace Prisma {
 
   export const SettingsScalarFieldEnum: {
     id: 'id',
+    font_style: 'font_style',
     title_size: 'title_size',
     title_color: 'title_color',
+    title_style: 'title_style',
     content_size: 'content_size',
     content_color: 'content_color',
+    content_style: 'content_style',
     credit_size: 'credit_size',
-    credit_color: 'credit_color'
+    credit_color: 'credit_color',
+    credit_style: 'credit_style'
   };
 
   export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
@@ -8310,22 +8358,30 @@ export namespace Prisma {
     OR?: settingsWhereInput[]
     NOT?: settingsWhereInput | settingsWhereInput[]
     id?: IntFilter<"settings"> | number
+    font_style?: StringNullableFilter<"settings"> | string | null
     title_size?: IntNullableFilter<"settings"> | number | null
     title_color?: StringNullableFilter<"settings"> | string | null
+    title_style?: StringNullableFilter<"settings"> | string | null
     content_size?: IntNullableFilter<"settings"> | number | null
     content_color?: StringNullableFilter<"settings"> | string | null
+    content_style?: StringNullableFilter<"settings"> | string | null
     credit_size?: IntNullableFilter<"settings"> | number | null
     credit_color?: StringNullableFilter<"settings"> | string | null
+    credit_style?: StringNullableFilter<"settings"> | string | null
   }
 
   export type settingsOrderByWithRelationInput = {
     id?: SortOrder
+    font_style?: SortOrderInput | SortOrder
     title_size?: SortOrderInput | SortOrder
     title_color?: SortOrderInput | SortOrder
+    title_style?: SortOrderInput | SortOrder
     content_size?: SortOrderInput | SortOrder
     content_color?: SortOrderInput | SortOrder
+    content_style?: SortOrderInput | SortOrder
     credit_size?: SortOrderInput | SortOrder
     credit_color?: SortOrderInput | SortOrder
+    credit_style?: SortOrderInput | SortOrder
   }
 
   export type settingsWhereUniqueInput = Prisma.AtLeast<{
@@ -8333,22 +8389,30 @@ export namespace Prisma {
     AND?: settingsWhereInput | settingsWhereInput[]
     OR?: settingsWhereInput[]
     NOT?: settingsWhereInput | settingsWhereInput[]
+    font_style?: StringNullableFilter<"settings"> | string | null
     title_size?: IntNullableFilter<"settings"> | number | null
     title_color?: StringNullableFilter<"settings"> | string | null
+    title_style?: StringNullableFilter<"settings"> | string | null
     content_size?: IntNullableFilter<"settings"> | number | null
     content_color?: StringNullableFilter<"settings"> | string | null
+    content_style?: StringNullableFilter<"settings"> | string | null
     credit_size?: IntNullableFilter<"settings"> | number | null
     credit_color?: StringNullableFilter<"settings"> | string | null
+    credit_style?: StringNullableFilter<"settings"> | string | null
   }, "id">
 
   export type settingsOrderByWithAggregationInput = {
     id?: SortOrder
+    font_style?: SortOrderInput | SortOrder
     title_size?: SortOrderInput | SortOrder
     title_color?: SortOrderInput | SortOrder
+    title_style?: SortOrderInput | SortOrder
     content_size?: SortOrderInput | SortOrder
     content_color?: SortOrderInput | SortOrder
+    content_style?: SortOrderInput | SortOrder
     credit_size?: SortOrderInput | SortOrder
     credit_color?: SortOrderInput | SortOrder
+    credit_style?: SortOrderInput | SortOrder
     _count?: settingsCountOrderByAggregateInput
     _avg?: settingsAvgOrderByAggregateInput
     _max?: settingsMaxOrderByAggregateInput
@@ -8361,12 +8425,16 @@ export namespace Prisma {
     OR?: settingsScalarWhereWithAggregatesInput[]
     NOT?: settingsScalarWhereWithAggregatesInput | settingsScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"settings"> | number
+    font_style?: StringNullableWithAggregatesFilter<"settings"> | string | null
     title_size?: IntNullableWithAggregatesFilter<"settings"> | number | null
     title_color?: StringNullableWithAggregatesFilter<"settings"> | string | null
+    title_style?: StringNullableWithAggregatesFilter<"settings"> | string | null
     content_size?: IntNullableWithAggregatesFilter<"settings"> | number | null
     content_color?: StringNullableWithAggregatesFilter<"settings"> | string | null
+    content_style?: StringNullableWithAggregatesFilter<"settings"> | string | null
     credit_size?: IntNullableWithAggregatesFilter<"settings"> | number | null
     credit_color?: StringNullableWithAggregatesFilter<"settings"> | string | null
+    credit_style?: StringNullableWithAggregatesFilter<"settings"> | string | null
   }
 
   export type verse_secWhereInput = {
@@ -8812,70 +8880,98 @@ export namespace Prisma {
   }
 
   export type settingsCreateInput = {
+    font_style?: string | null
     title_size?: number | null
     title_color?: string | null
+    title_style?: string | null
     content_size?: number | null
     content_color?: string | null
+    content_style?: string | null
     credit_size?: number | null
     credit_color?: string | null
+    credit_style?: string | null
   }
 
   export type settingsUncheckedCreateInput = {
     id?: number
+    font_style?: string | null
     title_size?: number | null
     title_color?: string | null
+    title_style?: string | null
     content_size?: number | null
     content_color?: string | null
+    content_style?: string | null
     credit_size?: number | null
     credit_color?: string | null
+    credit_style?: string | null
   }
 
   export type settingsUpdateInput = {
+    font_style?: NullableStringFieldUpdateOperationsInput | string | null
     title_size?: NullableIntFieldUpdateOperationsInput | number | null
     title_color?: NullableStringFieldUpdateOperationsInput | string | null
+    title_style?: NullableStringFieldUpdateOperationsInput | string | null
     content_size?: NullableIntFieldUpdateOperationsInput | number | null
     content_color?: NullableStringFieldUpdateOperationsInput | string | null
+    content_style?: NullableStringFieldUpdateOperationsInput | string | null
     credit_size?: NullableIntFieldUpdateOperationsInput | number | null
     credit_color?: NullableStringFieldUpdateOperationsInput | string | null
+    credit_style?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type settingsUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
+    font_style?: NullableStringFieldUpdateOperationsInput | string | null
     title_size?: NullableIntFieldUpdateOperationsInput | number | null
     title_color?: NullableStringFieldUpdateOperationsInput | string | null
+    title_style?: NullableStringFieldUpdateOperationsInput | string | null
     content_size?: NullableIntFieldUpdateOperationsInput | number | null
     content_color?: NullableStringFieldUpdateOperationsInput | string | null
+    content_style?: NullableStringFieldUpdateOperationsInput | string | null
     credit_size?: NullableIntFieldUpdateOperationsInput | number | null
     credit_color?: NullableStringFieldUpdateOperationsInput | string | null
+    credit_style?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type settingsCreateManyInput = {
     id?: number
+    font_style?: string | null
     title_size?: number | null
     title_color?: string | null
+    title_style?: string | null
     content_size?: number | null
     content_color?: string | null
+    content_style?: string | null
     credit_size?: number | null
     credit_color?: string | null
+    credit_style?: string | null
   }
 
   export type settingsUpdateManyMutationInput = {
+    font_style?: NullableStringFieldUpdateOperationsInput | string | null
     title_size?: NullableIntFieldUpdateOperationsInput | number | null
     title_color?: NullableStringFieldUpdateOperationsInput | string | null
+    title_style?: NullableStringFieldUpdateOperationsInput | string | null
     content_size?: NullableIntFieldUpdateOperationsInput | number | null
     content_color?: NullableStringFieldUpdateOperationsInput | string | null
+    content_style?: NullableStringFieldUpdateOperationsInput | string | null
     credit_size?: NullableIntFieldUpdateOperationsInput | number | null
     credit_color?: NullableStringFieldUpdateOperationsInput | string | null
+    credit_style?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type settingsUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
+    font_style?: NullableStringFieldUpdateOperationsInput | string | null
     title_size?: NullableIntFieldUpdateOperationsInput | number | null
     title_color?: NullableStringFieldUpdateOperationsInput | string | null
+    title_style?: NullableStringFieldUpdateOperationsInput | string | null
     content_size?: NullableIntFieldUpdateOperationsInput | number | null
     content_color?: NullableStringFieldUpdateOperationsInput | string | null
+    content_style?: NullableStringFieldUpdateOperationsInput | string | null
     credit_size?: NullableIntFieldUpdateOperationsInput | number | null
     credit_color?: NullableStringFieldUpdateOperationsInput | string | null
+    credit_style?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type verse_secCreateInput = {
@@ -9437,12 +9533,16 @@ export namespace Prisma {
 
   export type settingsCountOrderByAggregateInput = {
     id?: SortOrder
+    font_style?: SortOrder
     title_size?: SortOrder
     title_color?: SortOrder
+    title_style?: SortOrder
     content_size?: SortOrder
     content_color?: SortOrder
+    content_style?: SortOrder
     credit_size?: SortOrder
     credit_color?: SortOrder
+    credit_style?: SortOrder
   }
 
   export type settingsAvgOrderByAggregateInput = {
@@ -9454,22 +9554,30 @@ export namespace Prisma {
 
   export type settingsMaxOrderByAggregateInput = {
     id?: SortOrder
+    font_style?: SortOrder
     title_size?: SortOrder
     title_color?: SortOrder
+    title_style?: SortOrder
     content_size?: SortOrder
     content_color?: SortOrder
+    content_style?: SortOrder
     credit_size?: SortOrder
     credit_color?: SortOrder
+    credit_style?: SortOrder
   }
 
   export type settingsMinOrderByAggregateInput = {
     id?: SortOrder
+    font_style?: SortOrder
     title_size?: SortOrder
     title_color?: SortOrder
+    title_style?: SortOrder
     content_size?: SortOrder
     content_color?: SortOrder
+    content_style?: SortOrder
     credit_size?: SortOrder
     credit_color?: SortOrder
+    credit_style?: SortOrder
   }
 
   export type settingsSumOrderByAggregateInput = {

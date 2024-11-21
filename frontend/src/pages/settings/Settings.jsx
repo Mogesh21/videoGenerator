@@ -1,20 +1,24 @@
 import { LoadingButton } from '@mui/lab';
-import { MenuItem, Select } from '@mui/material';
-import { message } from 'antd';
+import { message, Input, Select, Checkbox } from 'antd';
 import axios from 'axios';
 import { SERVER_ADDRESS } from 'config/AppConfig';
 import React, { useEffect, useState } from 'react';
+// import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
 
 const Settings = () => {
   const [loading, setLoading] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [font, setFont] = useState({
+    font_style: '',
     title_size: '',
     title_color: '#FFFFFF',
+    title_style: '',
     content_size: '',
     content_color: '#FFFFFF',
+    content_style: '',
     credit_size: '',
-    credit_color: '#FFFFFF'
+    credit_color: '#FFFFFF',
+    credit_style: ''
   });
 
   const fetchData = async () => {
@@ -37,6 +41,7 @@ const Settings = () => {
   }, []);
 
   const handleSave = async () => {
+    console.log(font);
     try {
       setLoading(true);
       const response = await axios.post(`${SERVER_ADDRESS}/settings/update`, font);
@@ -50,35 +55,70 @@ const Settings = () => {
       message.error({ content: 'Internal Server Error', duration: 2 });
     } finally {
       setLoading(false);
+      setHidden(false);
     }
   };
   return (
     <div>
-      <div className="flex justify-center items-start flex-col gap-2 w-[40vw]">
-        <div className="flex gap-2 items-center justify-center flex-wrap ">
-          <div className="grid grid-cols-3 gap-3 justify-items-center place-items-center">
-            <p className="text-right w-[10rem]">Title Font:</p>
+      <div className="flex justify-center items-start flex-col gap-2 w-[60vw]">
+        <div className="flex gap-2 items-center flex-wrap ">
+          <div className="flex gap-2 items-center w-full">
+            <span className="w-[10rem]">Font Style:</span>
             <Select
-              className="w-28"
-              placeholder="Size"
+              value={font.font_style}
+              className=" ml-1 w-[10rem]"
+              onChange={(val) => {
+                setHidden(true);
+                setFont({ ...font, font_style: val });
+              }}
+            >
+              <Select.Option value="Noto Sans" style={{ fontFamily: "'Noto Sans', sans-serif" }}>
+                Noto Sans
+              </Select.Option>
+              <Select.Option value="Kanit" style={{ fontFamily: "'Kanit', sans-serif" }}>
+                Kanit
+              </Select.Option>
+              <Select.Option value="Noto Serif" style={{ fontFamily: "'Noto Serif', serif" }}>
+                Noto Serif
+              </Select.Option>
+              <Select.Option value="Playfair" style={{ fontFamily: "'Playfair Display', serif" }}>
+                Playfair
+              </Select.Option>
+              <Select.Option value="Poppins" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                Poppins
+              </Select.Option>
+              <Select.Option value="Roboto" style={{ fontFamily: "'Roboto', sans-serif" }}>
+                Roboto
+              </Select.Option>
+              <Select.Option value="SourGummy" style={{ fontFamily: "'Sour Gummy', cursive" }}>
+                Sour Gummy
+              </Select.Option>
+            </Select>
+          </div>
+          <div className="flex gap-3 justify-items-center place-items-center">
+            <p className=" w-[10rem]">Title Font:</p>
+            <Input
+              placeholder="Enter size in px"
+              className="w-[5rem]"
               value={font.title_size}
               onChange={(e) => {
                 setHidden(true);
                 setFont({ ...font, title_size: e.target.value });
               }}
+            />
+            <Select
+              style={{ width: '10rem' }}
+              value={font.title_style}
+              onChange={(val) => {
+                setHidden(true);
+                setFont({ ...font, title_style: val });
+              }}
             >
-              <MenuItem value={10}>10px</MenuItem>
-              <MenuItem value={20}>20px</MenuItem>
-              <MenuItem value={30}>30px</MenuItem>
-              <MenuItem value={40}>40px</MenuItem>
-              <MenuItem value={50}>50px</MenuItem>
-              <MenuItem value={60}>60px</MenuItem>
-              <MenuItem value={70}>70px</MenuItem>
-              <MenuItem value={80}>80px</MenuItem>
-              <MenuItem value={90}>90px</MenuItem>
-              <MenuItem value={100}>100px</MenuItem>
+              <Select.Option value="normal">normal</Select.Option>
+              <Select.Option value="bold">Bold</Select.Option>
+              <Select.Option value="bolditalic">Bold + Italic</Select.Option>
+              <Select.Option value="italic">Italic</Select.Option>
             </Select>
-
             <input
               type="color"
               value={font.title_color}
@@ -88,26 +128,29 @@ const Settings = () => {
               }}
             />
           </div>
-          <div className="grid grid-cols-3 gap-3 justify-items-center place-items-center">
-            <p className="text-right w-[10rem]">Content Font size: </p>
-            <Select
-              className="w-28"
+          <div className="flex gap-3 justify-items-center place-items-center">
+            <p className=" w-[10rem]">Content Font size: </p>
+            <Input
+              placeholder="Enter size in px"
+              className="w-[5rem]"
               value={font.content_size}
               onChange={(e) => {
                 setHidden(true);
                 setFont({ ...font, content_size: e.target.value });
               }}
+            />
+            <Select
+              style={{ width: '10rem' }}
+              value={font.content_style}
+              onChange={(val) => {
+                setHidden(true);
+                setFont({ ...font, content_style: val });
+              }}
             >
-              <MenuItem value={10}>10px</MenuItem>
-              <MenuItem value={20}>20px</MenuItem>
-              <MenuItem value={30}>30px</MenuItem>
-              <MenuItem value={40}>40px</MenuItem>
-              <MenuItem value={50}>50px</MenuItem>
-              <MenuItem value={60}>60px</MenuItem>
-              <MenuItem value={70}>70px</MenuItem>
-              <MenuItem value={80}>80px</MenuItem>
-              <MenuItem value={90}>90px</MenuItem>
-              <MenuItem value={100}>100px</MenuItem>
+              <Select.Option value="normal">normal</Select.Option>
+              <Select.Option value="bold">Bold</Select.Option>
+              <Select.Option value="bolditalic">Bold + Italic</Select.Option>
+              <Select.Option value="italic">Italic</Select.Option>
             </Select>
             <input
               type="color"
@@ -118,26 +161,29 @@ const Settings = () => {
               }}
             />
           </div>
-          <div className="grid grid-cols-3 gap-3 justify-items-center place-items-center">
-            <p className="text-right w-[10rem]">Author Font size: </p>
-            <Select
-              className="w-28"
+          <div className="flex gap-3 justify-items-center place-items-center">
+            <p className=" w-[10rem]">Author Font size: </p>
+            <Input
+              placeholder="Enter size in px"
+              className="w-[5rem]"
               value={font.credit_size}
               onChange={(e) => {
                 setHidden(true);
                 setFont({ ...font, credit_size: e.target.value });
               }}
+            />
+            <Select
+              style={{ width: '10rem' }}
+              value={font.credit_style}
+              onChange={(val) => {
+                setHidden(true);
+                setFont({ ...font, credit_style: val });
+              }}
             >
-              <MenuItem value={10}>10px</MenuItem>
-              <MenuItem value={20}>20px</MenuItem>
-              <MenuItem value={30}>30px</MenuItem>
-              <MenuItem value={40}>40px</MenuItem>
-              <MenuItem value={50}>50px</MenuItem>
-              <MenuItem value={60}>60px</MenuItem>
-              <MenuItem value={70}>70px</MenuItem>
-              <MenuItem value={80}>80px</MenuItem>
-              <MenuItem value={90}>90px</MenuItem>
-              <MenuItem value={100}>100px</MenuItem>
+              <Select.Option value="normal">normal</Select.Option>
+              <Select.Option value="bold">Bold</Select.Option>
+              <Select.Option value="bolditalic">Bold + Italic</Select.Option>
+              <Select.Option value="italic">Italic</Select.Option>
             </Select>
             <input
               type="color"
@@ -150,7 +196,7 @@ const Settings = () => {
           </div>
         </div>
         {hidden && (
-          <div className='w-full flex justify-center'>
+          <div className="ml-[11rem] flex justify-center">
             <LoadingButton loading={loading} variant="contained" color="success" className="w-20 px-2 mr-4" onClick={handleSave}>
               Save
             </LoadingButton>

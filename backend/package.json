@@ -5,14 +5,13 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "paneer": "node index.js",
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@prisma/client": "^5.22.0",
-    "nodemon": "^3.1.7",
     "prisma": "^5.22.0"
   },
   "dependencies": {
@@ -24,6 +23,8 @@
     "fluent-ffmpeg": "^2.1.3",
     "jimp": "^0.16.1",
     "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.7",
     "videoshow": "^0.1.12"
   }
 }
+

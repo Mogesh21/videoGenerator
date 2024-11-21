@@ -43,12 +43,16 @@ model projects {
 
 model settings {
   id            Int     @id @default(autoincrement())
+  font_style    String? @db.VarChar(75)
   title_size    Int?
   title_color   String? @db.VarChar(45)
+  title_style   String? @db.VarChar(45)
   content_size  Int?
   content_color String? @db.VarChar(45)
+  content_style String? @db.VarChar(45)
   credit_size   Int?
   credit_color  String? @db.VarChar(45)
+  credit_style  String? @db.VarChar(45)
 }
 
 model verse_sec {

@@ -152,12 +152,16 @@ exports.Prisma.ProjectsScalarFieldEnum = {
 
 exports.Prisma.SettingsScalarFieldEnum = {
   id: 'id',
+  font_style: 'font_style',
   title_size: 'title_size',
   title_color: 'title_color',
+  title_style: 'title_style',
   content_size: 'content_size',
   content_color: 'content_color',
+  content_style: 'content_style',
   credit_size: 'credit_size',
-  credit_color: 'credit_color'
+  credit_color: 'credit_color',
+  credit_style: 'credit_style'
 };
 
 exports.Prisma.Verse_secScalarFieldEnum = {

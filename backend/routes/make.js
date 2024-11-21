@@ -17,9 +17,7 @@ const progressData = {};
 const imageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     const dir = `./public/temp/0`;
-    console.log(dir);
     if (!fs.existsSync(dir)) {
-      console.log(1);
       fs.mkdirSync(dir, { recursive: true });
     }
     cb(null, dir);
@@ -53,7 +51,8 @@ const createImage = async (
   content,
   author,
   size,
-  bg
+  bg,
+  fontStyle
 ) => {
   const verseTable = "record" + version_id;
 
@@ -86,12 +85,13 @@ const createImage = async (
   content.text = verses.content;
   author.text = `${book.title}-${verses.book_num + 1}-${verse_num}`;
 
-  const images = await generateImages(bgPath, title, content, author, 0, size, true);
+  const images = await generateImages(bgPath, title, content, author, 0, size, true, fontStyle);
   const Image = path.join(process.cwd(), "public", "images", "0", images[0]);
 
   console.log(Image);
   return Image;
 };
+
 const createVideo = async (
   audioUrl,
   version_id,
@@ -105,7 +105,8 @@ const createVideo = async (
   author,
   size,
   bg,
-  projectId
+  projectId,
+  fontStyle
 ) => {
   const verseTable = "record" + version_id;
 
@@ -138,7 +139,7 @@ const createVideo = async (
   content.text = verses.content;
   author.text = `${book.title}-${verses.book_num + 1}-${verse_num}`;
 
-  const images = await generateImages(bgPath, title, content, author, 0, size, true);
+  const images = await generateImages(bgPath, title, content, author, 0, size, true, fontStyle);
 
   const response = await axios.get(audioUrl, {
     responseType: "arraybuffer",
@@ -173,14 +174,12 @@ router.get("/progress", (req, res) => {
 router.post("/add", images.single("background_image"), async (req, res) => {
   try {
     const data = JSON.parse(req.body.data);
-    const { name, fileData, title, content, author, size, id, type } = data;
+    const { name, fileData, title, content, author, size, id, type, style } = data;
     const bg = req.file.filename;
 
     const videos = [];
 
     progressData[id] = 0;
-
-    console.log(name);
 
     const addProject = await db1.projects.create({
       data: {
@@ -206,7 +205,8 @@ router.post("/add", images.single("background_image"), async (req, res) => {
           author,
           size,
           bg,
-          projectId
+          projectId,
+          style
         );
         videos.push(...vid);
         progressData[id] = Math.floor((videos.length / fileData.length) * 100);
@@ -239,8 +239,10 @@ router.post("/add", images.single("background_image"), async (req, res) => {
           content,
           author,
           size,
-          bg
+          bg,
+          style
         );
+
         images.push(img);
         progressData[id] = Math.floor((images.length / fileData.length) * 60);
       }

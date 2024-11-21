@@ -1,9 +1,10 @@
-import { Button, Form, Input, message, Radio, Switch, Upload } from 'antd';
+import { Button, Form, Input, message, Radio, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import readXlsxFile from 'read-excel-file';
 import axios from 'axios';
 import { SERVER_ADDRESS } from 'config/AppConfig';
 import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const Create = () => {
   const navigate = useNavigate();
@@ -20,12 +21,16 @@ const Create = () => {
 
   const [progress, setProgress] = useState(null);
   const [font, setFont] = useState({
+    font_style: '',
     title_size: '',
     title_color: '#FFFFFF',
+    title_style: '',
     content_size: '',
     content_color: '#FFFFFF',
+    content_style: '',
     credit_size: '',
-    credit_color: '#FFFFFF'
+    credit_color: '#FFFFFF',
+    credit_style: ''
   });
 
   const fetchFont = async () => {
@@ -93,15 +98,18 @@ const Create = () => {
   const handleSubmit = async () => {
     const title = {
       size: font.title_size,
-      color: font.title_color
+      color: font.title_color,
+      style: font.title_style
     };
     const content = {
       size: font.content_size,
-      color: font.content_color
+      color: font.content_color,
+      style: font.content_style
     };
     const author = {
       size: font.credit_size,
-      color: font.credit_color
+      color: font.credit_color,
+      style: font.credit_style
     };
 
     let prog;
@@ -131,7 +139,8 @@ const Create = () => {
           author: author,
           size: aspectRatio,
           id: lastResponse.data.id,
-          type: type
+          type: type,
+          style: font.font_style
         })
       );
 
@@ -163,26 +172,32 @@ const Create = () => {
     <div className="w-full rounded-xl p-3 bg-white flex flex-col items-center gap-4">
       <p className="ml-10 text-2xl font-bold underline text-blue-600">Generate Video</p>
       {/* <audio ref={audioRef} controls src="https://android.jaqer.com/bible/nkjv/40001.mp3" /> */}
-      <Form onFinish={handleSubmit} className="w-3/6" labelCol={{ span: 10 }} wrapperCol={{ offset: 2, span: 20 }}>
+      <Form onFinish={handleSubmit} className="w-4/6" labelCol={{ span: 10 }} wrapperCol={{ offset: 1, span: 10 }}>
         <Form.Item name="name" label="Project Name" rules={[{ required: true, message: 'Please enter the project name' }]}>
           <Input value={name} onChange={(e) => setName(e.target.value)} />
         </Form.Item>
         <Form.Item name="size" label="Aspect Ratio" rules={[{ required: true, message: 'Please select the aspect Ratio' }]}>
-          <Radio.Group aria-label="text alignment" value={aspectRatio.type} onChange={handleChange}>
-            <Radio value="post" aria-label="post">
-              {/* <img src="../src/assets/images/aspect-ratio/post.png" /> */}
-              {/* <p>Post</p> */}
-              Post
+          <Radio.Group aria-label="text alignment" className="flex gap-2 items-start" value={aspectRatio.type} onChange={handleChange}>
+            <Radio value="post" aria-label="post" className="h-20 flex items-center">
+              <div className="flex flex-col items-center mt-4">
+                <img src="../src/assets/images/aspect-ratio/post.png" className="w-10 h-10" />
+                {/* <p>Post</p> */}
+                Post
+              </div>
             </Radio>
-            <Radio value="reel" aria-label="reel">
-              {/* <img src="../src/assets/images/aspect-ratio/reel.png" className=" h-full" /> */}
-              {/* <p>Reel</p> */}
-              Reel
+            <Radio value="reel" aria-label="reel" className="h-20 flex items-center">
+              <div className="flex flex-col items-center">
+                <img src="../src/assets/images/aspect-ratio/reel.png" className="w-10 h-auto" />
+                {/* <p>Reel</p> */}
+                Reel
+              </div>
             </Radio>
-            <Radio value="video" aria-label="video">
-              {/* <img src="../src/assets/images/aspect-ratio/video.png" /> */}
-              {/* <p>Video</p> */}
-              Video
+            <Radio value="video" aria-label="video" className="h-20 flex items-center">
+              <div className="mt-6 flex flex-col items-center">
+                <img src="../src/assets/images/aspect-ratio/video.png" className="w-auto h-10" />
+                {/* <p>Video</p> */}
+                Video
+              </div>
             </Radio>
           </Radio.Group>
         </Form.Item>

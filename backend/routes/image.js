@@ -32,6 +32,10 @@ router.get("/lastId", async (req, res) => {
       orderBy: {
         id: "desc",
       },
+      where: {
+        is_deleted: 0,
+        deleted_at: null,
+      },
     });
 
     res.status(200).json({ id: lastRecord ? lastRecord.id + 1 : 0 });
@@ -54,11 +58,13 @@ router.get("/", async (req, res) => {
           },
           where: {
             is_deleted: 0,
+            deleted_at: null,
           },
         },
       },
       where: {
         is_deleted: 0,
+        deleted_at: null, 
       },
     });
 

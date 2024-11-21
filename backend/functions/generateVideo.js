@@ -6,8 +6,6 @@ const VideoGenerator = async (audioUrl, Images, Values, start_time = "", project
   try {
     const videoName = `${Date.now()}.mp4`;
 
-    console.log(projectId);
-
     fs.mkdirSync(path.join(process.cwd(), "public", "videos", projectId.toString()), {
       recursive: true,
     });
@@ -32,7 +30,7 @@ const VideoGenerator = async (audioUrl, Images, Values, start_time = "", project
         Images.map((_, index) => `[v${index}]`).join("") +
         `concat=n=${Images.length}:v=1:a=0[outv];[${Images.length}:a]anull[aout]`;
 
-      await command
+      command
         .complexFilter([filterComplex])
         .outputOptions([
           "-map",

@@ -49,7 +49,6 @@ const resizeMultipleImages = async (req, res, next) => {
 
       // Resize and use writeAsync instead of write
       await image.resize(width, height).writeAsync(imagePath);
-
     } catch (err) {
       console.error("Error resizing image:", err);
       throw new Error("Try again with another image");
@@ -85,6 +84,7 @@ router.get("/", async (req, res) => {
       },
       where: {
         is_deleted: 0,
+        deleted_at: null,
       },
     });
 
@@ -113,6 +113,10 @@ router.get("/lastId", async (req, res) => {
     const lastRecord = await prisma.projects.findFirst({
       orderBy: {
         id: "desc",
+      },
+      where: {
+        is_deleted: 0,
+        deleted_at: null,
       },
     });
 
@@ -190,6 +194,50 @@ router.delete("/delete", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+router.delete("/deleteVideos", async (req, res) => {
+  try {
+    const { ids, names, titleid, allvideos } = JSON.parse(req.headers.data);
+    let deleteOp;
+    if (ids.length > 1) {
+      deleteOp = await prisma.videos.deleteMany({
+        where: {
+          id: {
+            in: ids,
+          },
+        },
+      });
+    } else {
+      deleteOp = await prisma.videos.delete({
+        where: {
+          id: ids[0],
+        },
+      });
+    }
+    if (deleteOp) {
+      if (allvideos) {
+        await prisma.projects.delete({
+          where: {
+            id: titleid,
+          },
+        });
+
+        fs.rmSync(path.join(process.cwd(), "public", "videos", titleid.toString()), {
+          recursive: true,
+          force: true,
+        });
+      } else {
+        names.forEach((name) =>
+          fs.unlinkSync(path.join(process.cwd(), "public", "videos", titleid.toString(), name))
+        );
+      }
+      res.status(200).json({ message: "success" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal Server Error", error: err });
   }
 });
 
