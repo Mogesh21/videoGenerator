@@ -4,12 +4,12 @@ import readXlsxFile from 'read-excel-file';
 import axios from 'axios';
 import { SERVER_ADDRESS } from 'config/AppConfig';
 import { useNavigate } from 'react-router';
-import { Link } from 'react-router-dom';
 
 const Create = () => {
   const navigate = useNavigate();
   const [fileData, setFileData] = useState();
   const [bg, setBg] = useState();
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [type, setType] = useState(false);
@@ -33,6 +33,20 @@ const Create = () => {
     credit_style: ''
   });
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${SERVER_ADDRESS}/projects/videos`);
+      if (response.status === 200) {
+        setData(response.data);
+      } else {
+        message.error({ content: 'Internal Server Error', duration: 2 });
+      }
+    } catch (err) {
+      console.log(err);
+      message.error({ content: 'Internal Server Error', duration: 2 });
+    }
+  };
+
   const fetchFont = async () => {
     const response = await axios.get(`${SERVER_ADDRESS}/settings`);
     if (response.status === 200) {
@@ -44,6 +58,7 @@ const Create = () => {
 
   useEffect(() => {
     fetchFont();
+    fetchData();
   }, []);
 
   const handleChange = (event) => {
@@ -73,6 +88,7 @@ const Create = () => {
 
   const onChange = async (doc) => {
     const data = await readXlsxFile(doc.file);
+    console.log(data);
     setFileData(data.slice(1));
   };
 
@@ -114,6 +130,11 @@ const Create = () => {
 
     let prog;
     try {
+      const exists = data.filter((data) => data.name === name);
+      if (exists.length > 0) {
+        message.error('Name already exists');
+        return;
+      }
       setLoading(true);
 
       const formData = new FormData();
@@ -152,15 +173,19 @@ const Create = () => {
       });
 
       if (response.status === 200) {
-        setProgress(null);
-        message.success({ content: 'Videos Generated Successfully', duration: 2 });
-        navigate(`/videos/${response.data.id}`, { state: { id: response.data.id } });
+        if (response.data.message === 'TypeError') {
+          message.error({ content: 'Invalid Excel sheet values', duration: 2 });
+        } else {
+          setProgress(null);
+          message.success({ content: 'Videos Generated Successfully', duration: 2 });
+          navigate(`/videos/${response.data.id}`, { state: { id: response.data.id } });
+        }
       } else {
         message.error({ content: 'Internal Server Error', duration: 2 });
       }
     } catch (err) {
       console.log(err);
-      message.error({ content: 'Internal Server Error', duration: 2 });
+      message.error({ content: err.response.data.message, duration: 2 });
     } finally {
       setLoading(false);
       clearInterval(prog);

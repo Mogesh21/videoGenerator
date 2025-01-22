@@ -39,7 +39,7 @@ const Projects = () => {
   }, []);
 
   const handleProject = (data) => {
-    navigate(`/videos/${data.id}`, { state: { data: data } });
+    navigate(`/videos/${data.id}`, { state: { id: data.id } });
   };
 
   const handleSearch = (val) => {
@@ -110,8 +110,8 @@ const Projects = () => {
         </div>
       </div>
       <div className="flex flex-wrap gap-3 pl-2 pt-2 justify-start w-full">
-        <Checkbox.Group value={selected} onChange={(val) => setSelected([...val])}>
-          {searchData ? (
+        <Checkbox.Group className="columns-[160px] w-full" value={selected} onChange={(val) => setSelected([...val])}>
+          {searchData.length > 0 ? (
             searchData.map(
               (data) =>
                 data.videos.length > 0 && (
@@ -127,7 +127,7 @@ const Projects = () => {
             )
           ) : (
             <div className=" mt-4 flex justify-center w-full">
-              <p className="text-md ">Projects Empty..</p>
+              <p className="text-md ">No data found...</p>
             </div>
           )}
         </Checkbox.Group>

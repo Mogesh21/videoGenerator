@@ -28,10 +28,6 @@ const MainRoutes = {
       path: '/',
       element: <Projects />
     },
-    // {
-    //   path: '/images',
-    //   element: <Images />
-    // },
     {
       path: '/videos',
       element: <Projects />

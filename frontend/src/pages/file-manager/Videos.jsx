@@ -22,9 +22,10 @@ const Videos = () => {
     }
   }, [isModalOpen]);
 
-  const fetchData = async () => {
+  const fetchData = async (project_id) => {
     try {
-      const response = await axios.get(`${SERVER_ADDRESS}/projects/videos/${location.state.id.toString()}`);
+      const id = location?.state?.id?.toString() || project_id;
+      const response = await axios.get(`${SERVER_ADDRESS}/projects/videos/${id}`);
       if (response.status === 200) {
         setData(response.data);
       } else {
@@ -37,11 +38,17 @@ const Videos = () => {
   };
 
   useEffect(() => {
-    if (!location.state?.data) {
-      fetchData();
+    // console.log(location.state)
+    // if (!location.state?.data) {
+    //   fetchData();
+    // } else {
+    //   const val = location.state.data;
+    //   setData(val);
+    // }
+    if (location?.state?.id) {
+      fetchData(location.state.id);
     } else {
-      const val = location.state.data;
-      setData(val);
+      navigate('/videos');
     }
   }, []);
 
@@ -74,7 +81,6 @@ const Videos = () => {
   const handleMultipleDelete = async () => {
     try {
       const names = data.videos.filter((val) => selected.includes(val.id)).map((val) => val.name);
-      console.log(data.videos.length === selected.length);
       // return;
       const response = await axios.delete(`${SERVER_ADDRESS}/videos/deleteVideos`, {
         headers: {
@@ -87,8 +93,10 @@ const Videos = () => {
         }
       });
       if (response.status === 200) {
+        console.log(selected.length === data.videos.length);
         message.success({ content: 'Selected Videos Deleted Successfully', duration: 2 });
-        data.videos.length === selected.length ? navigate('/videos') : navigate('/videos', { state: { id: data.id } });
+        setSelected([]);
+        data.videos.length === selected.length ? navigate('/videos') : fetchData(data.id);
       } else {
         throw new Error('Internal Server Error');
       }
@@ -165,30 +173,30 @@ const Videos = () => {
           </Checkbox.Group>
         </div>
       </div>
-      <Modal
-        style={{}}
-        title={currentVideo?.title}
-        open={isModalOpen}
-        footer=""
-        onCancel={() => {
-          setIsModalOpen(false);
-          setCurrentVideo({});
-          setPlaying(false);
-        }}
-      >
-        {isModalOpen && (
+      {isModalOpen && (
+        <Modal
+          style={{}}
+          title={currentVideo?.title}
+          open={isModalOpen}
+          footer=""
+          onCancel={() => {
+            setIsModalOpen(false);
+            setCurrentVideo({});
+            setPlaying(false);
+          }}
+        >
           <div style={{ backgroundColor: 'black' }} className="video-container mt-6">
             <ReactPlayer
               key={isModalOpen ? currentVideo?.id : null}
-              playing={playing}
+              playing={isModalOpen}
               className="videoplayer"
               url={isModalOpen ? `${SERVER_ADDRESS}/public/videos/${data.id}/${currentVideo?.name}` : ''}
               controls
               style={{ width: '30rem', height: 'auto' }}
             />
           </div>
-        )}
-      </Modal>
+        </Modal>
+      )}
 
       {/* <div className="flex flex-wrap gap-2 pl-2 pt-2 justify-start w-full">
         {searchData ? (

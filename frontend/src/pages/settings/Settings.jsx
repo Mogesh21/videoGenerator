@@ -42,6 +42,17 @@ const Settings = () => {
 
   const handleSave = async () => {
     console.log(font);
+    const numberRegex = /^[0-9]{1,3}$/;
+    if (!numberRegex.test(font.title_size) || parseInt(font.title_size) < 0 || parseInt(font.title_size) > 100) {
+      message.error({ content: 'Invalid value for title font size. Size must be in range [1 - 100]' });
+      return;
+    } else if (!numberRegex.test(font.content_size) || font.content_size < 0 || font.content_size > 100) {
+      message.error({ content: 'Invalid value for content font size. Size must be in range [1 - 100]' });
+      return;
+    } else if (!numberRegex.test(font.credit_size) || font.credit_size < 0 || font.credit_size > 100) {
+      message.error({ content: 'Invalid value for Author font size. Size must be in range [1 - 100]' });
+      return;
+    }
     try {
       setLoading(true);
       const response = await axios.post(`${SERVER_ADDRESS}/settings/update`, font);

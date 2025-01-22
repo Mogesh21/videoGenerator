@@ -16,6 +16,8 @@ const VideoGenerator = async (audioUrl, Images, Values, start_time = "", project
       const command = ffmpeg();
 
       Images.forEach((image, index) => {
+        console.log(image);
+        console.log(Values);
         const duration = Values[index] || 5;
         command.input(image).inputOptions(["-loop 1", `-t ${duration}`]);
       });
@@ -37,14 +39,17 @@ const VideoGenerator = async (audioUrl, Images, Values, start_time = "", project
           "[outv]",
           "-map",
           "[aout]",
-          "-c:v libx264",
-          "-pix_fmt yuv420p",
+          "-c:v",
+          "libx264",
+          "-pix_fmt",
+          "yuv420p",
           "-shortest",
-          "-loglevel verbose",
+          "-loglevel",
+          "verbose",
         ])
         .output(videoPath)
         .on("start", (cmd) => {
-          // console.log(cmd);
+          console.log(cmd);
         })
         .on("end", () => {
           // console.log("Video created successfully:", videoPath);

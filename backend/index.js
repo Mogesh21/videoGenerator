@@ -12,12 +12,11 @@ import Settings from "./routes/settings.js";
 
 ffmpeg.setFfmpegPath(`${process.cwd()}/ffmpeg/bin/ffmpeg.exe`);
 configDotenv();
-const app = express();
 
+const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use("/public", express.static("public"));
 
 app.use("/images", Images);
