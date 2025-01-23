@@ -108,8 +108,7 @@ const createVideo = async (
   projectId,
   fontStyle
 ) => {
-  let verses, book;
-  let images;
+  let verses, book, audioPath, images;
   try {
     const verseTable = "record" + version_id;
 
@@ -153,9 +152,10 @@ const createVideo = async (
     const response = await axios.get(audioUrl, {
       responseType: "arraybuffer",
     });
-    const audioPath = `${process.cwd()}/public/temp/0/sample.mp3`;
+    audioPath = `${process.cwd()}/public/temp/0/sample.mp3`;
     fs.writeFileSync(audioPath, response.data);
   } catch (error) {
+    console.log(error);
     throw new Error("Image Error");
   }
 
