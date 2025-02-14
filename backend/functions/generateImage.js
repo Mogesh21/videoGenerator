@@ -1,45 +1,83 @@
-import axios from "axios";
 import canvas from "canvas";
 import fs from "fs";
 import path from "path";
 
 const { loadImage, createCanvas, registerFont } = canvas;
 
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-  const words = text.split(" ");
-  let line = "";
+// function wrapText(ctx, text, x, y, maxWidth, lineHeight, totalHeight = 0) {
+//   const align = ctx.textAlign;
+//   const xVal = align === "center" ? x + maxWidth / 2 : align === "right" ? x + maxWidth : x;
+//   const paragraphs = text.split("\\n");
+//   paragraphs.forEach((paragraph) => {
+//     const words = paragraph.split(" ");
+//     let line = "";
+//     for (const word of words) {
+//       const testLine = line + word + " ";
+//       const metrics = ctx.measureText(testLine);
+//       if (metrics.width > maxWidth && line !== "") {
+//         ctx.fillText(line, xVal, y);
+//         line = word + " ";
+//         y += lineHeight;
+//       } else {
+//         line = testLine;
+//       }
+//     }
+//     console.log(line);
+//     ctx.fillText(line, xVal, y);
+//     y += lineHeight;
+//   });
+//   return y;
+// }
 
-  for (let n = 0; n < words.length; n++) {
-    const testLine = line + words[n] + " ";
-    const metrics = ctx.measureText(testLine);
-    const testWidth = metrics.width;
+function wrapText(ctx, text, x, y, maxWidth, lineHeight, totalHeight = 0) {
+  const paragraphs = text.split("\\n");
+  let wrappedLines = [];
 
-    if (testWidth > maxWidth && n > 0) {
-      ctx.fillText(line, x, y);
-      line = words[n] + " ";
-      y += lineHeight;
-    } else {
-      line = testLine;
+  paragraphs.forEach((paragraph) => {
+    const words = paragraph.split(" ");
+    let line = "";
+
+    for (const word of words) {
+      const testLine = line + word + " ";
+      const metrics = ctx.measureText(testLine);
+
+      if (metrics.width > maxWidth && line !== "") {
+        wrappedLines.push(line);
+        line = word + " ";
+      } else {
+        line = testLine;
+      }
     }
-  }
-  ctx.fillText(line, x, y);
-  return y + lineHeight;
+    wrappedLines.push(line);
+  });
+
+  const align = ctx.textAlign;
+  const xVal = align === "center" ? x + maxWidth / 2 : align === "right" ? x + maxWidth : x;
+
+  const totalTextHeight = wrappedLines.length * lineHeight;
+
+  if (totalHeight) y = y + (totalHeight / 2 - totalTextHeight/2);
+
+  wrappedLines.forEach((line) => {
+    ctx.fillText(line, xVal, y);
+    y += lineHeight;
+  });
+
+  return y;
 }
 
 async function generateImages(
   backgroundPath,
-  title,
-  content,
-  author,
-  id,
+  { titleText, contentText, creditText },
+  positions,
+  fontSettings,
+  hasTitle,
+  hasAuthor,
   size,
-  single = false,
-  fontStyle = "Noto Sans"
+  fontStyle
 ) {
   const name = Date.now();
-  const width = size.width;
-  const height = size.height;
-  const padding = 80;
+  const { width, height } = size;
   const createdImage = [];
 
   const fontPack = {
@@ -87,131 +125,90 @@ async function generateImages(
     },
   };
 
-  // registerFont(path.join(process.cwd(), "font", fontPack[fontStyle][title.style || "normal"]), {
-  //   family: `${fontStyle}-${title.style || "normal"}`,
-  // });
-  registerFont(path.join(process.cwd(), "font", fontPack[fontStyle][content.style || "normal"]), {
-    family: `${fontStyle}-${content.style || "normal"}`,
-  });
-
-  const dir = `./public/images/${id}`;
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-
-  const adjustFontSize = (ctx, fontTemplate, textArray, maxHeight, maxWidth) => {
-    let fontSize = parseInt(fontTemplate.match(/\d+/)[0]);
-    let lineHeight = fontSize + 10;
-    let fits = false;
-
-    while (!fits) {
-      ctx.font = fontTemplate.replace(/\d+/, fontSize);
-      lineHeight = fontSize + 10;
-
-      const totalHeight = textArray.reduce((acc, line) => {
-        const metrics = ctx.measureText(line);
-        const testWidth = metrics.width;
-        return (
-          acc + (testWidth > maxWidth ? Math.ceil(testWidth / maxWidth) * lineHeight : lineHeight)
-        );
-      }, 0);
-
-      if (totalHeight + lineHeight * 2 <= maxHeight || fontSize <= 10) {
-        fits = true;
-      } else {
-        fontSize -= 2;
-      }
-    }
-    return { fontSize, lineHeight };
+  const registerElementFont = (elementStyle, elementType) => {
+    const styleKey = elementStyle || "normal";
+    const fontPath = path.join(process.cwd(), "font", fontPack[fontStyle][styleKey]);
+    registerFont(fontPath, { family: `${fontStyle}-${styleKey}-${elementType}` });
   };
 
-  const wrapAndDrawText = (ctx, text, x, y, maxWidth, lineHeight) => {
-    const words = text.split(" ");
-    let line = "";
+  // Register fonts for each element if enabled
+  // if (hasTitle) {
+  //   registerElementFont(fontSettings.title_style, "title");
+  // }
+  // if (contentText) {
+  //   registerElementFont(fontSettings.content_style, "content");
+  // }
+  // if (hasAuthor) {
+  //   registerElementFont(fontSettings.credit_style, "credit");
+  // }
 
-    for (let n = 0; n < words.length; n++) {
-      const testLine = line + words[n] + " ";
-      const metrics = ctx.measureText(testLine);
-      const testWidth = metrics.width;
+  const dir = `./public/images/0`;
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-      if (testWidth > maxWidth && n > 0) {
-        ctx.fillText(line, x, y);
-        line = words[n] + " ";
-        y += lineHeight;
-      } else {
-        line = testLine;
-      }
-    }
-    ctx.fillText(line, x, y);
-    return y + lineHeight;
-  };
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext("2d");
 
-  const data = typeof content.text === "string" ? content.text.split("\\n") : content.text;
+  // Draw background
+  const background = await loadImage(backgroundPath);
+  ctx.drawImage(background, 0, 0, width, height);
 
-  for (let i = 0; i < data.length; i++) {
-    const canvas = createCanvas(width, height);
-    const ctx = canvas.getContext("2d");
-
-    const background = await loadImage(backgroundPath);
-    ctx.drawImage(background, 0, 0, width, height);
-
-    const textAreaHeight = height - padding * 4;
-    const textMaxWidth = width - padding * 2;
-
-    const { fontSize, lineHeight } = adjustFontSize(
+  // Render Title
+  if (hasTitle) {
+    ctx.font = `${fontSettings.title_size}px ${fontStyle}-${
+      fontSettings.title_style || "normal"
+    }-title`;
+    ctx.fillStyle = fontSettings.title_color;
+    ctx.textAlign = fontSettings.title_align;
+    wrapText(
       ctx,
-      `${content.size}px ${fontStyle}-${content.style || "normal"}`,
-      data,
-      textAreaHeight,
-      textMaxWidth
+      titleText,
+      positions.title.x * 3,
+      positions.title.y * 3 + fontSettings.title_size,
+      fontSettings.title_width,
+      fontSettings.title_size * 1.3
     );
-
-    ctx.font = `${fontSize}px ${fontStyle}`;
-    ctx.fillStyle = content.color;
-    ctx.textAlign = "left";
-
-    const contentAreaHeight = data.reduce((acc, line) => {
-      const metrics = ctx.measureText(line);
-      return (
-        acc +
-        (metrics.width > textMaxWidth
-          ? Math.ceil(metrics.width / textMaxWidth) * lineHeight
-          : lineHeight)
-      );
-    }, 0);
-
-    const startY = (height - contentAreaHeight - lineHeight) / 2;
-
-    let y = startY;
-    data.forEach((line) => {
-      y = wrapAndDrawText(ctx, line, padding, y, textMaxWidth, lineHeight);
-    });
-
-    registerFont(path.join(process.cwd(), "font", fontPack[fontStyle][author.style || "normal"]), {
-      family: `${fontStyle}-${author.style || "normal"}`,
-    });
-
-    ctx.font = `${fontSize < author.size ? fontSize : author.size}px ${fontStyle}-${
-      author.style || "normal"
-    }`;
-    ctx.fillStyle = author.color;
-    ctx.textAlign = "right";
-    ctx.fillText(`- ${author.text}`, width - padding, y + lineHeight / 2);
-
-    const outputPath = path.join(
-      process.cwd(),
-      "public",
-      "images",
-      id.toString(),
-      `${name}_${i + 1}.png`
-    );
-
-    const buffer = canvas.toBuffer("image/png");
-    fs.writeFileSync(outputPath, buffer);
-    createdImage.push(`${name}_${i + 1}.png`);
   }
 
-  console.log("All images generated successfully!");
+  // Render Content
+  if (contentText)
+    ctx.font = `${fontSettings.content_size}px ${fontStyle}-${
+      fontSettings.content_style || "normal"
+    }-content`;
+  ctx.fillStyle = fontSettings.content_color;
+  ctx.textAlign = fontSettings.content_align;
+  wrapText(
+    ctx,
+    contentText,
+    positions.content.x * 3,
+    positions.content.y * 3 + fontSettings.content_size,
+    fontSettings.content_width,
+    fontSettings.content_size * 1.3,
+    fontSettings.content_height
+  );
+
+  // Render Credit (Author)
+  if (hasAuthor) {
+    ctx.font = `${fontSettings.credit_size}px ${fontStyle}-${
+      fontSettings.credit_style || "normal"
+    }-credit`;
+
+    ctx.fillStyle = fontSettings.credit_color;
+    ctx.textAlign = fontSettings.credit_align;
+    wrapText(
+      ctx,
+      creditText,
+      positions.credit.x * 3,
+      positions.credit.y * 3 + fontSettings.credit_size,
+      fontSettings.credit_width,
+      fontSettings.credit_size * 1.3
+    );
+  }
+
+  const outputPath = path.join(dir, `${name}.png`);
+  const buffer = canvas.toBuffer("image/png");
+  fs.writeFileSync(outputPath, buffer);
+  createdImage.push(`${name}.png`);
+
   return createdImage;
 }
 

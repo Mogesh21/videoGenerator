@@ -204,6 +204,21 @@ exports.Prisma.VideosScalarFieldEnum = {
   is_deleted: 'is_deleted'
 };
 
+exports.Prisma.TemplatesScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  background_image: 'background_image',
+  font: 'font',
+  position: 'position',
+  hasAuthor: 'hasAuthor',
+  hasTitle: 'hasTitle',
+  size: 'size',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at',
+  is_deleted: 'is_deleted'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -222,7 +237,8 @@ exports.Prisma.ModelName = {
   settings: 'settings',
   verse_sec: 'verse_sec',
   versions: 'versions',
-  videos: 'videos'
+  videos: 'videos',
+  templates: 'templates'
 };
 
 /**

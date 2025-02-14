@@ -48,6 +48,11 @@ export type versions = $Result.DefaultSelection<Prisma.$versionsPayload>
  * 
  */
 export type videos = $Result.DefaultSelection<Prisma.$videosPayload>
+/**
+ * Model templates
+ * 
+ */
+export type templates = $Result.DefaultSelection<Prisma.$templatesPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -241,6 +246,16 @@ export class PrismaClient<
     * ```
     */
   get videos(): Prisma.videosDelegate<ExtArgs>;
+
+  /**
+   * `prisma.templates`: Exposes CRUD operations for the **templates** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Templates
+    * const templates = await prisma.templates.findMany()
+    * ```
+    */
+  get templates(): Prisma.templatesDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -688,7 +703,8 @@ export namespace Prisma {
     settings: 'settings',
     verse_sec: 'verse_sec',
     versions: 'versions',
-    videos: 'videos'
+    videos: 'videos',
+    templates: 'templates'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -704,7 +720,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "book_sec" | "images" | "projects" | "settings" | "verse_sec" | "versions" | "videos"
+      modelProps: "book_sec" | "images" | "projects" | "settings" | "verse_sec" | "versions" | "videos" | "templates"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1167,6 +1183,72 @@ export namespace Prisma {
           count: {
             args: Prisma.videosCountArgs<ExtArgs>
             result: $Utils.Optional<VideosCountAggregateOutputType> | number
+          }
+        }
+      }
+      templates: {
+        payload: Prisma.$templatesPayload<ExtArgs>
+        fields: Prisma.templatesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.templatesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.templatesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
+          }
+          findFirst: {
+            args: Prisma.templatesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.templatesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
+          }
+          findMany: {
+            args: Prisma.templatesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>[]
+          }
+          create: {
+            args: Prisma.templatesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
+          }
+          createMany: {
+            args: Prisma.templatesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.templatesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
+          }
+          update: {
+            args: Prisma.templatesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
+          }
+          deleteMany: {
+            args: Prisma.templatesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.templatesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.templatesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
+          }
+          aggregate: {
+            args: Prisma.TemplatesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTemplates>
+          }
+          groupBy: {
+            args: Prisma.templatesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TemplatesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.templatesCountArgs<ExtArgs>
+            result: $Utils.Optional<TemplatesCountAggregateOutputType> | number
           }
         }
       }
@@ -7994,6 +8076,961 @@ export namespace Prisma {
 
 
   /**
+   * Model templates
+   */
+
+  export type AggregateTemplates = {
+    _count: TemplatesCountAggregateOutputType | null
+    _avg: TemplatesAvgAggregateOutputType | null
+    _sum: TemplatesSumAggregateOutputType | null
+    _min: TemplatesMinAggregateOutputType | null
+    _max: TemplatesMaxAggregateOutputType | null
+  }
+
+  export type TemplatesAvgAggregateOutputType = {
+    id: number | null
+    hasAuthor: number | null
+    hasTitle: number | null
+    is_deleted: number | null
+  }
+
+  export type TemplatesSumAggregateOutputType = {
+    id: number | null
+    hasAuthor: number | null
+    hasTitle: number | null
+    is_deleted: number | null
+  }
+
+  export type TemplatesMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    background_image: string | null
+    font: string | null
+    position: string | null
+    hasAuthor: number | null
+    hasTitle: number | null
+    size: string | null
+    created_at: Date | null
+    updated_at: Date | null
+    deleted_at: Date | null
+    is_deleted: number | null
+  }
+
+  export type TemplatesMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    background_image: string | null
+    font: string | null
+    position: string | null
+    hasAuthor: number | null
+    hasTitle: number | null
+    size: string | null
+    created_at: Date | null
+    updated_at: Date | null
+    deleted_at: Date | null
+    is_deleted: number | null
+  }
+
+  export type TemplatesCountAggregateOutputType = {
+    id: number
+    name: number
+    background_image: number
+    font: number
+    position: number
+    hasAuthor: number
+    hasTitle: number
+    size: number
+    created_at: number
+    updated_at: number
+    deleted_at: number
+    is_deleted: number
+    _all: number
+  }
+
+
+  export type TemplatesAvgAggregateInputType = {
+    id?: true
+    hasAuthor?: true
+    hasTitle?: true
+    is_deleted?: true
+  }
+
+  export type TemplatesSumAggregateInputType = {
+    id?: true
+    hasAuthor?: true
+    hasTitle?: true
+    is_deleted?: true
+  }
+
+  export type TemplatesMinAggregateInputType = {
+    id?: true
+    name?: true
+    background_image?: true
+    font?: true
+    position?: true
+    hasAuthor?: true
+    hasTitle?: true
+    size?: true
+    created_at?: true
+    updated_at?: true
+    deleted_at?: true
+    is_deleted?: true
+  }
+
+  export type TemplatesMaxAggregateInputType = {
+    id?: true
+    name?: true
+    background_image?: true
+    font?: true
+    position?: true
+    hasAuthor?: true
+    hasTitle?: true
+    size?: true
+    created_at?: true
+    updated_at?: true
+    deleted_at?: true
+    is_deleted?: true
+  }
+
+  export type TemplatesCountAggregateInputType = {
+    id?: true
+    name?: true
+    background_image?: true
+    font?: true
+    position?: true
+    hasAuthor?: true
+    hasTitle?: true
+    size?: true
+    created_at?: true
+    updated_at?: true
+    deleted_at?: true
+    is_deleted?: true
+    _all?: true
+  }
+
+  export type TemplatesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which templates to aggregate.
+     */
+    where?: templatesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of templates to fetch.
+     */
+    orderBy?: templatesOrderByWithRelationInput | templatesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: templatesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` templates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` templates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned templates
+    **/
+    _count?: true | TemplatesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TemplatesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TemplatesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TemplatesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TemplatesMaxAggregateInputType
+  }
+
+  export type GetTemplatesAggregateType<T extends TemplatesAggregateArgs> = {
+        [P in keyof T & keyof AggregateTemplates]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTemplates[P]>
+      : GetScalarType<T[P], AggregateTemplates[P]>
+  }
+
+
+
+
+  export type templatesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: templatesWhereInput
+    orderBy?: templatesOrderByWithAggregationInput | templatesOrderByWithAggregationInput[]
+    by: TemplatesScalarFieldEnum[] | TemplatesScalarFieldEnum
+    having?: templatesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TemplatesCountAggregateInputType | true
+    _avg?: TemplatesAvgAggregateInputType
+    _sum?: TemplatesSumAggregateInputType
+    _min?: TemplatesMinAggregateInputType
+    _max?: TemplatesMaxAggregateInputType
+  }
+
+  export type TemplatesGroupByOutputType = {
+    id: number
+    name: string
+    background_image: string | null
+    font: string | null
+    position: string | null
+    hasAuthor: number | null
+    hasTitle: number | null
+    size: string | null
+    created_at: Date | null
+    updated_at: Date | null
+    deleted_at: Date | null
+    is_deleted: number | null
+    _count: TemplatesCountAggregateOutputType | null
+    _avg: TemplatesAvgAggregateOutputType | null
+    _sum: TemplatesSumAggregateOutputType | null
+    _min: TemplatesMinAggregateOutputType | null
+    _max: TemplatesMaxAggregateOutputType | null
+  }
+
+  type GetTemplatesGroupByPayload<T extends templatesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TemplatesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TemplatesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TemplatesGroupByOutputType[P]>
+            : GetScalarType<T[P], TemplatesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type templatesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    background_image?: boolean
+    font?: boolean
+    position?: boolean
+    hasAuthor?: boolean
+    hasTitle?: boolean
+    size?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    deleted_at?: boolean
+    is_deleted?: boolean
+  }, ExtArgs["result"]["templates"]>
+
+
+  export type templatesSelectScalar = {
+    id?: boolean
+    name?: boolean
+    background_image?: boolean
+    font?: boolean
+    position?: boolean
+    hasAuthor?: boolean
+    hasTitle?: boolean
+    size?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    deleted_at?: boolean
+    is_deleted?: boolean
+  }
+
+
+  export type $templatesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "templates"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+      background_image: string | null
+      font: string | null
+      position: string | null
+      hasAuthor: number | null
+      hasTitle: number | null
+      size: string | null
+      created_at: Date | null
+      updated_at: Date | null
+      deleted_at: Date | null
+      is_deleted: number | null
+    }, ExtArgs["result"]["templates"]>
+    composites: {}
+  }
+
+  type templatesGetPayload<S extends boolean | null | undefined | templatesDefaultArgs> = $Result.GetResult<Prisma.$templatesPayload, S>
+
+  type templatesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<templatesFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: TemplatesCountAggregateInputType | true
+    }
+
+  export interface templatesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['templates'], meta: { name: 'templates' } }
+    /**
+     * Find zero or one Templates that matches the filter.
+     * @param {templatesFindUniqueArgs} args - Arguments to find a Templates
+     * @example
+     * // Get one Templates
+     * const templates = await prisma.templates.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends templatesFindUniqueArgs>(args: SelectSubset<T, templatesFindUniqueArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Templates that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {templatesFindUniqueOrThrowArgs} args - Arguments to find a Templates
+     * @example
+     * // Get one Templates
+     * const templates = await prisma.templates.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends templatesFindUniqueOrThrowArgs>(args: SelectSubset<T, templatesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Templates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {templatesFindFirstArgs} args - Arguments to find a Templates
+     * @example
+     * // Get one Templates
+     * const templates = await prisma.templates.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends templatesFindFirstArgs>(args?: SelectSubset<T, templatesFindFirstArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Templates that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {templatesFindFirstOrThrowArgs} args - Arguments to find a Templates
+     * @example
+     * // Get one Templates
+     * const templates = await prisma.templates.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends templatesFindFirstOrThrowArgs>(args?: SelectSubset<T, templatesFindFirstOrThrowArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Templates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {templatesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Templates
+     * const templates = await prisma.templates.findMany()
+     * 
+     * // Get first 10 Templates
+     * const templates = await prisma.templates.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const templatesWithIdOnly = await prisma.templates.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends templatesFindManyArgs>(args?: SelectSubset<T, templatesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Templates.
+     * @param {templatesCreateArgs} args - Arguments to create a Templates.
+     * @example
+     * // Create one Templates
+     * const Templates = await prisma.templates.create({
+     *   data: {
+     *     // ... data to create a Templates
+     *   }
+     * })
+     * 
+     */
+    create<T extends templatesCreateArgs>(args: SelectSubset<T, templatesCreateArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Templates.
+     * @param {templatesCreateManyArgs} args - Arguments to create many Templates.
+     * @example
+     * // Create many Templates
+     * const templates = await prisma.templates.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends templatesCreateManyArgs>(args?: SelectSubset<T, templatesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Templates.
+     * @param {templatesDeleteArgs} args - Arguments to delete one Templates.
+     * @example
+     * // Delete one Templates
+     * const Templates = await prisma.templates.delete({
+     *   where: {
+     *     // ... filter to delete one Templates
+     *   }
+     * })
+     * 
+     */
+    delete<T extends templatesDeleteArgs>(args: SelectSubset<T, templatesDeleteArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Templates.
+     * @param {templatesUpdateArgs} args - Arguments to update one Templates.
+     * @example
+     * // Update one Templates
+     * const templates = await prisma.templates.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends templatesUpdateArgs>(args: SelectSubset<T, templatesUpdateArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Templates.
+     * @param {templatesDeleteManyArgs} args - Arguments to filter Templates to delete.
+     * @example
+     * // Delete a few Templates
+     * const { count } = await prisma.templates.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends templatesDeleteManyArgs>(args?: SelectSubset<T, templatesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Templates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {templatesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Templates
+     * const templates = await prisma.templates.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends templatesUpdateManyArgs>(args: SelectSubset<T, templatesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Templates.
+     * @param {templatesUpsertArgs} args - Arguments to update or create a Templates.
+     * @example
+     * // Update or create a Templates
+     * const templates = await prisma.templates.upsert({
+     *   create: {
+     *     // ... data to create a Templates
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Templates we want to update
+     *   }
+     * })
+     */
+    upsert<T extends templatesUpsertArgs>(args: SelectSubset<T, templatesUpsertArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Templates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {templatesCountArgs} args - Arguments to filter Templates to count.
+     * @example
+     * // Count the number of Templates
+     * const count = await prisma.templates.count({
+     *   where: {
+     *     // ... the filter for the Templates we want to count
+     *   }
+     * })
+    **/
+    count<T extends templatesCountArgs>(
+      args?: Subset<T, templatesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TemplatesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Templates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TemplatesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TemplatesAggregateArgs>(args: Subset<T, TemplatesAggregateArgs>): Prisma.PrismaPromise<GetTemplatesAggregateType<T>>
+
+    /**
+     * Group by Templates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {templatesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends templatesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: templatesGroupByArgs['orderBy'] }
+        : { orderBy?: templatesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, templatesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTemplatesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the templates model
+   */
+  readonly fields: templatesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for templates.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__templatesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the templates model
+   */ 
+  interface templatesFieldRefs {
+    readonly id: FieldRef<"templates", 'Int'>
+    readonly name: FieldRef<"templates", 'String'>
+    readonly background_image: FieldRef<"templates", 'String'>
+    readonly font: FieldRef<"templates", 'String'>
+    readonly position: FieldRef<"templates", 'String'>
+    readonly hasAuthor: FieldRef<"templates", 'Int'>
+    readonly hasTitle: FieldRef<"templates", 'Int'>
+    readonly size: FieldRef<"templates", 'String'>
+    readonly created_at: FieldRef<"templates", 'DateTime'>
+    readonly updated_at: FieldRef<"templates", 'DateTime'>
+    readonly deleted_at: FieldRef<"templates", 'DateTime'>
+    readonly is_deleted: FieldRef<"templates", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * templates findUnique
+   */
+  export type templatesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * Filter, which templates to fetch.
+     */
+    where: templatesWhereUniqueInput
+  }
+
+  /**
+   * templates findUniqueOrThrow
+   */
+  export type templatesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * Filter, which templates to fetch.
+     */
+    where: templatesWhereUniqueInput
+  }
+
+  /**
+   * templates findFirst
+   */
+  export type templatesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * Filter, which templates to fetch.
+     */
+    where?: templatesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of templates to fetch.
+     */
+    orderBy?: templatesOrderByWithRelationInput | templatesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for templates.
+     */
+    cursor?: templatesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` templates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` templates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of templates.
+     */
+    distinct?: TemplatesScalarFieldEnum | TemplatesScalarFieldEnum[]
+  }
+
+  /**
+   * templates findFirstOrThrow
+   */
+  export type templatesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * Filter, which templates to fetch.
+     */
+    where?: templatesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of templates to fetch.
+     */
+    orderBy?: templatesOrderByWithRelationInput | templatesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for templates.
+     */
+    cursor?: templatesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` templates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` templates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of templates.
+     */
+    distinct?: TemplatesScalarFieldEnum | TemplatesScalarFieldEnum[]
+  }
+
+  /**
+   * templates findMany
+   */
+  export type templatesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * Filter, which templates to fetch.
+     */
+    where?: templatesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of templates to fetch.
+     */
+    orderBy?: templatesOrderByWithRelationInput | templatesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing templates.
+     */
+    cursor?: templatesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` templates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` templates.
+     */
+    skip?: number
+    distinct?: TemplatesScalarFieldEnum | TemplatesScalarFieldEnum[]
+  }
+
+  /**
+   * templates create
+   */
+  export type templatesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * The data needed to create a templates.
+     */
+    data: XOR<templatesCreateInput, templatesUncheckedCreateInput>
+  }
+
+  /**
+   * templates createMany
+   */
+  export type templatesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many templates.
+     */
+    data: templatesCreateManyInput | templatesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * templates update
+   */
+  export type templatesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * The data needed to update a templates.
+     */
+    data: XOR<templatesUpdateInput, templatesUncheckedUpdateInput>
+    /**
+     * Choose, which templates to update.
+     */
+    where: templatesWhereUniqueInput
+  }
+
+  /**
+   * templates updateMany
+   */
+  export type templatesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update templates.
+     */
+    data: XOR<templatesUpdateManyMutationInput, templatesUncheckedUpdateManyInput>
+    /**
+     * Filter which templates to update
+     */
+    where?: templatesWhereInput
+  }
+
+  /**
+   * templates upsert
+   */
+  export type templatesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * The filter to search for the templates to update in case it exists.
+     */
+    where: templatesWhereUniqueInput
+    /**
+     * In case the templates found by the `where` argument doesn't exist, create a new templates with this data.
+     */
+    create: XOR<templatesCreateInput, templatesUncheckedCreateInput>
+    /**
+     * In case the templates was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<templatesUpdateInput, templatesUncheckedUpdateInput>
+  }
+
+  /**
+   * templates delete
+   */
+  export type templatesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * Filter which templates to delete.
+     */
+    where: templatesWhereUniqueInput
+  }
+
+  /**
+   * templates deleteMany
+   */
+  export type templatesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which templates to delete
+     */
+    where?: templatesWhereInput
+  }
+
+  /**
+   * templates without action
+   */
+  export type templatesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -8108,6 +9145,24 @@ export namespace Prisma {
   };
 
   export type VideosScalarFieldEnum = (typeof VideosScalarFieldEnum)[keyof typeof VideosScalarFieldEnum]
+
+
+  export const TemplatesScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    background_image: 'background_image',
+    font: 'font',
+    position: 'position',
+    hasAuthor: 'hasAuthor',
+    hasTitle: 'hasTitle',
+    size: 'size',
+    created_at: 'created_at',
+    updated_at: 'updated_at',
+    deleted_at: 'deleted_at',
+    is_deleted: 'is_deleted'
+  };
+
+  export type TemplatesScalarFieldEnum = (typeof TemplatesScalarFieldEnum)[keyof typeof TemplatesScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -8682,6 +9737,95 @@ export namespace Prisma {
     is_deleted?: IntNullableWithAggregatesFilter<"videos"> | number | null
   }
 
+  export type templatesWhereInput = {
+    AND?: templatesWhereInput | templatesWhereInput[]
+    OR?: templatesWhereInput[]
+    NOT?: templatesWhereInput | templatesWhereInput[]
+    id?: IntFilter<"templates"> | number
+    name?: StringFilter<"templates"> | string
+    background_image?: StringNullableFilter<"templates"> | string | null
+    font?: StringNullableFilter<"templates"> | string | null
+    position?: StringNullableFilter<"templates"> | string | null
+    hasAuthor?: IntNullableFilter<"templates"> | number | null
+    hasTitle?: IntNullableFilter<"templates"> | number | null
+    size?: StringNullableFilter<"templates"> | string | null
+    created_at?: DateTimeNullableFilter<"templates"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"templates"> | Date | string | null
+    deleted_at?: DateTimeNullableFilter<"templates"> | Date | string | null
+    is_deleted?: IntNullableFilter<"templates"> | number | null
+  }
+
+  export type templatesOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    background_image?: SortOrderInput | SortOrder
+    font?: SortOrderInput | SortOrder
+    position?: SortOrderInput | SortOrder
+    hasAuthor?: SortOrderInput | SortOrder
+    hasTitle?: SortOrderInput | SortOrder
+    size?: SortOrderInput | SortOrder
+    created_at?: SortOrderInput | SortOrder
+    updated_at?: SortOrderInput | SortOrder
+    deleted_at?: SortOrderInput | SortOrder
+    is_deleted?: SortOrderInput | SortOrder
+  }
+
+  export type templatesWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: templatesWhereInput | templatesWhereInput[]
+    OR?: templatesWhereInput[]
+    NOT?: templatesWhereInput | templatesWhereInput[]
+    name?: StringFilter<"templates"> | string
+    background_image?: StringNullableFilter<"templates"> | string | null
+    font?: StringNullableFilter<"templates"> | string | null
+    position?: StringNullableFilter<"templates"> | string | null
+    hasAuthor?: IntNullableFilter<"templates"> | number | null
+    hasTitle?: IntNullableFilter<"templates"> | number | null
+    size?: StringNullableFilter<"templates"> | string | null
+    created_at?: DateTimeNullableFilter<"templates"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"templates"> | Date | string | null
+    deleted_at?: DateTimeNullableFilter<"templates"> | Date | string | null
+    is_deleted?: IntNullableFilter<"templates"> | number | null
+  }, "id">
+
+  export type templatesOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    background_image?: SortOrderInput | SortOrder
+    font?: SortOrderInput | SortOrder
+    position?: SortOrderInput | SortOrder
+    hasAuthor?: SortOrderInput | SortOrder
+    hasTitle?: SortOrderInput | SortOrder
+    size?: SortOrderInput | SortOrder
+    created_at?: SortOrderInput | SortOrder
+    updated_at?: SortOrderInput | SortOrder
+    deleted_at?: SortOrderInput | SortOrder
+    is_deleted?: SortOrderInput | SortOrder
+    _count?: templatesCountOrderByAggregateInput
+    _avg?: templatesAvgOrderByAggregateInput
+    _max?: templatesMaxOrderByAggregateInput
+    _min?: templatesMinOrderByAggregateInput
+    _sum?: templatesSumOrderByAggregateInput
+  }
+
+  export type templatesScalarWhereWithAggregatesInput = {
+    AND?: templatesScalarWhereWithAggregatesInput | templatesScalarWhereWithAggregatesInput[]
+    OR?: templatesScalarWhereWithAggregatesInput[]
+    NOT?: templatesScalarWhereWithAggregatesInput | templatesScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"templates"> | number
+    name?: StringWithAggregatesFilter<"templates"> | string
+    background_image?: StringNullableWithAggregatesFilter<"templates"> | string | null
+    font?: StringNullableWithAggregatesFilter<"templates"> | string | null
+    position?: StringNullableWithAggregatesFilter<"templates"> | string | null
+    hasAuthor?: IntNullableWithAggregatesFilter<"templates"> | number | null
+    hasTitle?: IntNullableWithAggregatesFilter<"templates"> | number | null
+    size?: StringNullableWithAggregatesFilter<"templates"> | string | null
+    created_at?: DateTimeNullableWithAggregatesFilter<"templates"> | Date | string | null
+    updated_at?: DateTimeNullableWithAggregatesFilter<"templates"> | Date | string | null
+    deleted_at?: DateTimeNullableWithAggregatesFilter<"templates"> | Date | string | null
+    is_deleted?: IntNullableWithAggregatesFilter<"templates"> | number | null
+  }
+
   export type book_secCreateInput = {
     book_num: number
     title: string
@@ -9244,6 +10388,108 @@ export namespace Prisma {
     is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
+  export type templatesCreateInput = {
+    name: string
+    background_image?: string | null
+    font?: string | null
+    position?: string | null
+    hasAuthor?: number | null
+    hasTitle?: number | null
+    size?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    is_deleted?: number | null
+  }
+
+  export type templatesUncheckedCreateInput = {
+    id?: number
+    name: string
+    background_image?: string | null
+    font?: string | null
+    position?: string | null
+    hasAuthor?: number | null
+    hasTitle?: number | null
+    size?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    is_deleted?: number | null
+  }
+
+  export type templatesUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    background_image?: NullableStringFieldUpdateOperationsInput | string | null
+    font?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    hasAuthor?: NullableIntFieldUpdateOperationsInput | number | null
+    hasTitle?: NullableIntFieldUpdateOperationsInput | number | null
+    size?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type templatesUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    background_image?: NullableStringFieldUpdateOperationsInput | string | null
+    font?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    hasAuthor?: NullableIntFieldUpdateOperationsInput | number | null
+    hasTitle?: NullableIntFieldUpdateOperationsInput | number | null
+    size?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type templatesCreateManyInput = {
+    id?: number
+    name: string
+    background_image?: string | null
+    font?: string | null
+    position?: string | null
+    hasAuthor?: number | null
+    hasTitle?: number | null
+    size?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    is_deleted?: number | null
+  }
+
+  export type templatesUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    background_image?: NullableStringFieldUpdateOperationsInput | string | null
+    font?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    hasAuthor?: NullableIntFieldUpdateOperationsInput | number | null
+    hasTitle?: NullableIntFieldUpdateOperationsInput | number | null
+    size?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type templatesUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    background_image?: NullableStringFieldUpdateOperationsInput | string | null
+    font?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    hasAuthor?: NullableIntFieldUpdateOperationsInput | number | null
+    hasTitle?: NullableIntFieldUpdateOperationsInput | number | null
+    size?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -9758,6 +11004,65 @@ export namespace Prisma {
   export type videosSumOrderByAggregateInput = {
     id?: SortOrder
     title_id?: SortOrder
+    is_deleted?: SortOrder
+  }
+
+  export type templatesCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    background_image?: SortOrder
+    font?: SortOrder
+    position?: SortOrder
+    hasAuthor?: SortOrder
+    hasTitle?: SortOrder
+    size?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    deleted_at?: SortOrder
+    is_deleted?: SortOrder
+  }
+
+  export type templatesAvgOrderByAggregateInput = {
+    id?: SortOrder
+    hasAuthor?: SortOrder
+    hasTitle?: SortOrder
+    is_deleted?: SortOrder
+  }
+
+  export type templatesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    background_image?: SortOrder
+    font?: SortOrder
+    position?: SortOrder
+    hasAuthor?: SortOrder
+    hasTitle?: SortOrder
+    size?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    deleted_at?: SortOrder
+    is_deleted?: SortOrder
+  }
+
+  export type templatesMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    background_image?: SortOrder
+    font?: SortOrder
+    position?: SortOrder
+    hasAuthor?: SortOrder
+    hasTitle?: SortOrder
+    size?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    deleted_at?: SortOrder
+    is_deleted?: SortOrder
+  }
+
+  export type templatesSumOrderByAggregateInput = {
+    id?: SortOrder
+    hasAuthor?: SortOrder
+    hasTitle?: SortOrder
     is_deleted?: SortOrder
   }
 
@@ -10407,6 +11712,10 @@ export namespace Prisma {
      * @deprecated Use videosDefaultArgs instead
      */
     export type videosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = videosDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use templatesDefaultArgs instead
+     */
+    export type templatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = templatesDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

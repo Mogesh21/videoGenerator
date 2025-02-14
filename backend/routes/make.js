@@ -1,5 +1,4 @@
 import express from "express";
-import multer from "multer";
 import path from "path";
 import axios from "axios";
 import fs from "fs";
@@ -13,24 +12,6 @@ const db1 = new PrismaClient1();
 const db2 = new PrismaClient2();
 
 const progressData = {};
-
-const imageStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = `./public/temp/0`;
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, "bg" + path.extname(file.originalname));
-  },
-});
-
-const images = multer({
-  storage: imageStorage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-});
 
 function secondsToHMS(seconds) {
   const hours = Math.floor(seconds / 3600);
@@ -47,12 +28,12 @@ const createImage = async (
   book_id,
   chapter_num,
   verse_num,
-  title,
-  content,
-  author,
-  size,
-  bg,
-  fontStyle
+  hasTitle,
+  hasAuthor,
+  position,
+  background_image,
+  font,
+  size
 ) => {
   const verseTable = "record" + version_id;
 
@@ -81,12 +62,23 @@ const createImage = async (
     },
   });
 
-  const bgPath = path.join(process.cwd(), "public", "temp", "0", bg);
-  title.text = book.title;
-  content.text = verses.content;
-  author.text = `${book.title}-${parseInt(book.book_num) + 1}-${parseInt(verse_num) + 1}`;
+  const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
+  const data = {
+    titleText: book.title,
+    contentText: verses.content,
+    creditText: `${book.title}-${parseInt(chapter_num) + 1}-${parseInt(verse_num) + 1}`,
+  };
 
-  const images = await generateImages(bgPath, title, content, author, 0, size, true, fontStyle);
+  const images = await generateImages(
+    bgPath,
+    data,
+    position,
+    font,
+    hasTitle,
+    hasAuthor,
+    size,
+    font.font_style || "Noto Sans"
+  );
   const Image = path.join(process.cwd(), "public", "images", "0", images[0]);
 
   return Image;
@@ -100,13 +92,13 @@ const createVideo = async (
   verse_num,
   start_time,
   values,
-  title,
-  content,
-  author,
+  hasTitle,
+  hasAuthor,
+  position,
+  background_imge,
+  font,
   size,
-  bg,
-  projectId,
-  fontStyle
+  projectId
 ) => {
   let verses, book, audioPath, images;
   try {
@@ -142,21 +134,39 @@ const createVideo = async (
   }
 
   try {
-    const bgPath = path.join(process.cwd(), "public", "temp", "0", bg);
-    title.text = book.title;
-    content.text = verses.content;
-    author.text = `${book.title}-${verses.book_num}-${parseInt(verse_num) + 1}`;
+    const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_imge);
+    const data = {
+      titleText: book.title,
+      contentText: verses.content,
+      creditText: `${book.title}-${parseInt(chapter_num) + 1}-${parseInt(verse_num) + 1}`,
+    };
 
-    images = await generateImages(bgPath, title, content, author, 0, size, true, fontStyle);
-
-    const response = await axios.get(audioUrl, {
-      responseType: "arraybuffer",
-    });
-    audioPath = `${process.cwd()}/public/temp/0/sample.mp3`;
-    fs.writeFileSync(audioPath, response.data);
+    images = await generateImages(
+      bgPath,
+      data,
+      position,
+      font,
+      hasTitle,
+      hasAuthor,
+      size,
+      font.font_style || "Noto Sans"
+    );
   } catch (error) {
     console.log(error);
     throw new Error("Image Error");
+  }
+  try {
+    const response = await axios.get(audioUrl, { responseType: "arraybuffer" });
+
+    const dirPath = path.join(process.cwd(), "public/temp");
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
+
+    audioPath = path.join(dirPath, "sample.mp3");
+    fs.writeFileSync(audioPath, response.data);
+  } catch (error) {
+    throw new Error("Audio Error");
   }
 
   const videos = [];
@@ -186,21 +196,31 @@ router.get("/progress", (req, res) => {
   res.status(200).json({ status: progressData[id] || 0 });
 });
 
-router.post("/add", images.single("background_image"), async (req, res) => {
+router.post("/add", async (req, res) => {
   let projectId;
   try {
-    const data = JSON.parse(req.body.data);
-    const { name, fileData, title, content, author, size, id, type, style } = data;
-    const bg = req.file.filename;
+    const data = req.body;
+    const {
+      fileData,
+      size,
+      id,
+      type,
+      hasAuthor,
+      hasTitle,
+      position,
+      background_image,
+      font,
+      project_name,
+    } = data;
 
     const videos = [];
+    let audioPath;
 
     progressData[id] = 0;
 
     const addProject = await db1.projects.create({
       data: {
-        name: name,
-        title: title.text,
+        name: project_name,
       },
     });
 
@@ -217,13 +237,13 @@ router.post("/add", images.single("background_image"), async (req, res) => {
             (file[4] - 1).toString(), //verse_num
             file[5], //start_time
             file[6], //values
-            title,
-            content,
-            author,
+            hasTitle,
+            hasAuthor,
+            position,
+            background_image,
+            font,
             size,
-            bg,
-            projectId,
-            style
+            projectId
           );
 
           videos.push(...vid);
@@ -238,15 +258,17 @@ router.post("/add", images.single("background_image"), async (req, res) => {
         }
       } catch (err) {
         console.log(err.name, err);
-        await db1.projects.delete({
-          where: {
-            id: projectId,
-          },
-        });
+        if (projectId)
+          await db1.projects.delete({
+            where: {
+              id: projectId,
+            },
+          });
         let message;
         if (err.message === "Excel Error") message = "Invalid Excel Data";
         else if (err.message === "Image Error") message = "Error Generating Image";
         else if (err.message === "Video Error") message = "Error Generating Video";
+        else if (err.message === "Audio Error") message = "Error Dowloading Audio";
         else message = "Internal Server Error";
         return res.status(500).json({ message: message });
       }
@@ -268,12 +290,12 @@ router.post("/add", images.single("background_image"), async (req, res) => {
             (file[2] - 1).toString(), //book_id,
             (file[3] - 1).toString(), //chapter_num
             (file[4] - 1).toString(), //verse_num
-            title,
-            content,
-            author,
-            size,
-            bg,
-            style
+            hasTitle,
+            hasAuthor,
+            position,
+            background_image,
+            font,
+            size
           );
 
           images.push(img);
@@ -285,15 +307,23 @@ router.post("/add", images.single("background_image"), async (req, res) => {
             id: projectId,
           },
         });
-        return res.status(500).json({ message: "Error Generating Image", err: err });
+        throw new Error("Image Error");
       }
 
-      const response = await axios.get(fileData[0][0], {
-        responseType: "arraybuffer",
-      });
+      try {
+        const audioUrl = fileData[0][0];
+        const response = await axios.get(audioUrl, { responseType: "arraybuffer" });
 
-      const audioPath = `${process.cwd()}/public/temp/0/sample.mp3`;
-      fs.writeFileSync(audioPath, response.data);
+        const dirPath = path.join(process.cwd(), "public/temp");
+        if (!fs.existsSync(dirPath)) {
+          fs.mkdirSync(dirPath, { recursive: true });
+        }
+        audioPath = path.join(dirPath, "sample.mp3");
+        fs.writeFileSync(audioPath, response.data);
+      } catch (error) {
+        console.log(error);
+        throw new Error("Audio Error");
+      }
 
       const Values = fileData.map((file) => file[6]);
 
@@ -302,12 +332,13 @@ router.post("/add", images.single("background_image"), async (req, res) => {
         video = await generateVideo(audioPath, images, Values, "", projectId);
       } catch (err) {
         console.log(err);
-        await db1.projects.delete({
-          where: {
-            id: projectId,
-          },
-        });
-        return res.status(500).json({ message: "Error Generating Video", err: err });
+        if (projectId)
+          await db1.projects.delete({
+            where: {
+              id: projectId,
+            },
+          });
+        throw new Error("Video Error");
       }
 
       await db1.videos.create({
@@ -327,47 +358,28 @@ router.post("/add", images.single("background_image"), async (req, res) => {
       res.status(200).json({ videos: video, id: projectId });
     }
   } catch (err) {
-    console.log(projectId);
-    await db1.projects.delete({
-      where: {
-        id: projectId,
-      },
-    });
-    res.status(500).json({ message: "Internal Server Error", err: err });
+    console.log(err);
+    if (projectId)
+      await db1.projects.delete({
+        where: {
+          id: projectId,
+        },
+      });
+    let message;
+    if (err.message === "Excel Error") message = "Invalid Excel Data";
+    else if (err.message === "Image Error") message = "Error Generating Image";
+    else if (err.message === "Video Error") message = "Error Generating Video";
+    else if (err.message === "Audio Error") message = "Error Dowloading Audio";
+    else message = "Internal Server Error";
+    return res.status(500).json({ message: message });
   } finally {
-    fs.rmSync(path.join(process.cwd(), "public", "images", "0"), {
-      recursive: true,
-      force: true,
-    });
+    // fs.rmSync(path.join(process.cwd(), "public", "images", "0"), {
+    //   recursive: true,
+    //   force: true,
+    // });
 
     fs.rmSync(path.join(process.cwd(), "public", "temp"), { recursive: true, force: true });
   }
 });
-
-// router.post("/add", images.single("background_image"), async (req, res) => {
-//   try {
-//     // const name = JSON.parse(req.body.name) || "";
-
-//     const title = JSON.parse(req.body.title) || "";
-//     const content = JSON.parse(req.body.content) || "";
-//     const author = JSON.parse(req.body.author) || "";
-//     const size = JSON.parse(req.body.size) || "";
-//     const verseType = JSON.parse(req.body.versetype);
-//     const bg = req.file.filename;
-
-//     const ProjectId = addProject.id;
-//     const bgPath = path.join(process.cwd(), "public", "temp", bg);
-
-//     const images = await generateImages(bgPath, title, content, author, ProjectId, size, verseType);
-
-//     fs.unlinkSync(bgPath);
-//     fs.rmdirSync(path.join(process.cwd(), "public", "temp"));
-
-//     res.status(200).json({ images, id: ProjectId });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json({ message: "Unable to create Images" });
-//   }
-// });
 
 export default router;

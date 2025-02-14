@@ -78,6 +78,7 @@ const VideoComp = () => {
 
   return (
     <div className="bg-white select-none rounded-xl ">
+      ascas
       {true ? (
         <div className=" min-h-screen h-inherit w-full flex flex-col items-center gap-4">
           <TextField label="Title" className="w-2/6 mt-10" variant="outlined" onChange={(e) => setTitle(e.target.value)} value={title} />
@@ -181,6 +182,7 @@ const VideoComp = () => {
           {audio && fileList.length > 0 && (
             <Button onClick={handleGenerate} loading={generate} color="primary" className="w-30 h-12 rounded-xl px-4 mb-4 shadow-md">
               Generate
+              
             </Button>
           )}
           {video && (

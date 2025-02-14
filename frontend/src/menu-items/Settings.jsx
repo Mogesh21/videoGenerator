@@ -1,16 +1,24 @@
-import { SettingsOutlined } from '@mui/icons-material';
+import { SettingsOutlined, ArticleOutlined } from '@mui/icons-material';
 
 const Settings = {
   id: 'group-settings',
   title: 'Settings',
   type: 'group',
   children: [
+    // {
+    //   id: 'item-settings',
+    //   title: 'Style Preferences',
+    //   type: 'item',
+    //   icon: SettingsOutlined,
+    //   url: '/settings/preferences',
+    //   breadcrumbs: false
+    // },
     {
-      id: 'item-setiings',
-      title: 'Style Preferences',
+      id: 'item-templates',
+      title: 'Templates',
       type: 'item',
-      icon: SettingsOutlined,
-      url: '/settings/preferences',
+      icon: ArticleOutlined,
+      url: '/settings/templates',
       breadcrumbs: false
     }
   ]

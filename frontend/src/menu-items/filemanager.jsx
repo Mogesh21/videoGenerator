@@ -1,4 +1,4 @@
-import {  YoutubeOutlined } from '@ant-design/icons';
+import { YoutubeOutlined } from '@ant-design/icons';
 
 const filemanager = {
   id: 'group-filemanager',
@@ -17,7 +17,7 @@ const filemanager = {
       title: 'Videos',
       type: 'item',
       icon: YoutubeOutlined,
-      url: '/videos',
+      url: '/projects',
       breadcrumbs: false
     }
   ]

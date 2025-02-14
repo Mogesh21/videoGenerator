@@ -29,6 +29,7 @@ import avatar1 from 'assets/images/users/avatar-1.png';
 import avatar2 from 'assets/images/users/avatar-2.png';
 import avatar3 from 'assets/images/users/avatar-3.png';
 import avatar4 from 'assets/images/users/avatar-4.png';
+import { useNavigate } from 'react-router';
 
 // avatar style
 const avatarSX = {
@@ -50,6 +51,12 @@ const actionSX = {
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 
 export default function DashboardDefault() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate('/projects');
+  }, []);
+  // return;
   return (
     <Grid container rowSpacing={4.5} columnSpacing={2.75}>
       {/* row 1 */}

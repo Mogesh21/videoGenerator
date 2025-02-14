@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 // material-ui
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -20,11 +20,16 @@ import { handlerDrawerOpen, useGetMenuMaster } from 'api/menu';
 export default function DashboardLayout() {
   const { menuMasterLoading } = useGetMenuMaster();
   const downXL = useMediaQuery((theme) => theme.breakpoints.down('xl'));
+  const navigate = useNavigate();
 
   useEffect(() => {
     handlerDrawerOpen(!downXL);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [downXL]);
+
+  useEffect(() => {
+    navigate('/projects');
+  }, []);
 
   if (menuMasterLoading) return <Loader />;
 

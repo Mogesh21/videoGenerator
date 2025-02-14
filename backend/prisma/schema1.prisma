@@ -97,3 +97,18 @@ model videos {
 
   @@index([title_id], map: "title_idx")
 }
+
+model templates {
+  id               Int       @id @default(autoincrement())
+  name             String    @db.VarChar(45)
+  background_image String?   @db.VarChar(45)
+  font             String?   @db.Text
+  position         String?   @db.Text
+  hasAuthor        Int?      @default(0) @db.TinyInt
+  hasTitle         Int?      @default(0) @db.TinyInt
+  size             String?   @db.VarChar(100)
+  created_at       DateTime? @default(now()) @db.Timestamp(0)
+  updated_at       DateTime? @default(now()) @db.Timestamp(0)
+  deleted_at       DateTime? @db.Timestamp(0)
+  is_deleted       Int?      @default(0) @db.TinyInt
+}

@@ -25,7 +25,7 @@ const multimedia = {
     // },
     {
       id: 'create',
-      title: 'Create New',
+      title: 'Create Video',
       type: 'item',
       url: '/create/new',
       icon: icons.PlusCircleOutlined,

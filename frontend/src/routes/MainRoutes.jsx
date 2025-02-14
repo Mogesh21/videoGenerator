@@ -12,8 +12,11 @@ const VideoGenerator = Loadable(lazy(() => import('pages/video-generator/VideoCo
 const Images = Loadable(lazy(() => import('pages/file-manager/Images')));
 const Videos = Loadable(lazy(() => import('pages/file-manager/Videos')));
 const Projects = Loadable(lazy(() => import('pages/file-manager/Projects')));
-const Create = Loadable(lazy(() => import('pages/create/Create')));
+const Create = Loadable(lazy(() => import('pages/create/CreateVideo')));
 const Settings = Loadable(lazy(() => import('pages/settings/Settings')));
+const Templates = Loadable(lazy(() => import('pages/settings/Templates')));
+const CreateTemplate = Loadable(lazy(() => import('pages/settings/CreateTemplate')));
+const EditTemplate = Loadable(lazy(() => import('pages/settings/EditTemplate')));
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
@@ -26,10 +29,10 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element: <Projects />
+      element: <Dashboard />
     },
     {
-      path: '/videos',
+      path: '/projects',
       element: <Projects />
     },
     {
@@ -43,6 +46,18 @@ const MainRoutes = {
     {
       path: '/settings/preferences',
       element: <Settings />
+    },
+    {
+      path: '/settings/templates',
+      element: <Templates />
+    },
+    {
+      path: '/settings/templates/new',
+      element: <CreateTemplate />
+    },
+    {
+      path: '/settings/templates/edit',
+      element: <EditTemplate />
     }
     // {
     //   path: '/generate-image',

@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ant-table-thead tr th {
+  background-color: #4e95ff !important;
+  color: white !important;
+}
+.ant-pagination {
+  background-color: white !important;
+  margin: 0 !important;
+  padding-block: 10px !important;
+  border-radius: 0px 0px 10px 10px;
+}
+
+.ant-pagination-item {
+  border-radius: 50% !important;
+  background-color: #4e95ff !important;
+
+  a {
+    text-decoration: none;
+    color: white !important;
+  }
+}
