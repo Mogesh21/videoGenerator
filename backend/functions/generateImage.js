@@ -83,9 +83,12 @@ async function generateImages(
   const fontPath = path.join(process.cwd(), "font", `${fontSettings.title_font}.ttf`);
   const fontPath2 = path.join(process.cwd(), "font", `${fontSettings.content_font}.ttf`);
   const fontPath3 = path.join(process.cwd(), "font", `${fontSettings.credit_font}.ttf`);
-  if(fontSettings.title_font)registerFont(fontPath, { family: fontSettings.title_font });
-  if(fontSettings.content_font)registerFont(fontPath2, { family: fontSettings.content_font });
-  if(fontSettings.credit_font)registerFont(fontPath3, { family: fontSettings.credit_font });
+  if (fontSettings.title_font && fontSettings.title_font !== "Sans Serif")
+    registerFont(fontPath, { family: fontSettings.title_font });
+  if (fontSettings.content_font && fontSettings.content_font !== "Sans Serif")
+    registerFont(fontPath2, { family: fontSettings.content_font });
+  if (fontSettings.credit_font && fontSettings.credit_font !== "Sans Serif")
+    registerFont(fontPath3, { family: fontSettings.credit_font });
 
   const dir = `./public/images/0`;
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
