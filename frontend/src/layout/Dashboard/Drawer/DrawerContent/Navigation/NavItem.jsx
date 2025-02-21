@@ -16,11 +16,12 @@ export default function NavItem({ item, level }) {
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster.isDashboardDrawerOpened;
 
+
   const isSelected =
     !!matchPath({ path: item.url, end: false }, pathname) || pathname.startsWith(item.url) || menuMaster.openedItem === item.id;
 
   useEffect(() => {
-    if (matchPath({ path: item.url, end: false }, pathname)) {
+    if (matchPath({ path: item.url, end: false }, pathname) || pathname.startsWith(item.url)) {
       handlerActiveItem(item.id);
     }
   }, [pathname, item.url, item.id]);

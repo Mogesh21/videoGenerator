@@ -60,7 +60,7 @@ const VideoComp = () => {
         if (response.status === 200) {
           console.log(response);
           setVideo(response.data.video);
-          navigate('/videos');
+          navigate('/projects/videos');
         } else {
           // message.error({ content: response.data.err, duration: 2 });
         }

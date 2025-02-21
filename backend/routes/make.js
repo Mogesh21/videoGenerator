@@ -69,16 +69,7 @@ const createImage = async (
     creditText: `${book.title}-${parseInt(chapter_num) + 1}-${parseInt(verse_num) + 1}`,
   };
 
-  const images = await generateImages(
-    bgPath,
-    data,
-    position,
-    font,
-    hasTitle,
-    hasAuthor,
-    size,
-    font.font_style || "Noto Sans"
-  );
+  const images = await generateImages(bgPath, data, position, font, hasTitle, hasAuthor, size);
   const Image = path.join(process.cwd(), "public", "images", "0", images[0]);
 
   return Image;
@@ -98,7 +89,8 @@ const createVideo = async (
   background_imge,
   font,
   size,
-  projectId
+  projectId,
+  project_name
 ) => {
   let verses, book, audioPath, images;
   try {
@@ -134,6 +126,30 @@ const createVideo = async (
   }
 
   try {
+    const downloadFont = async (url, outputPath) => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Failed to fetch font: ${response.statusText}`);
+
+        const buffer = await response.arrayBuffer();
+        fs.writeFileSync(outputPath, Buffer.from(buffer));
+
+        console.log("Font downloaded successfully.");
+      } catch (error) {
+        throw new Error("Error downloading font:");
+      }
+    };
+
+    const fontUrl =
+      "https://fonts.gstatic.com/s/jacquard12/v7/vm8ydRLuXETEweL79J4rGf2yWHvH4Q.woff2";
+    const fontPath = path.join(process.cwd(), "font", "custom-font.tff");
+    // await downloadFont(fontUrl, fontPath);
+  } catch (err) {
+    console.log(err);
+    throw new Error("Font Error");
+  }
+
+  try {
     const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_imge);
     const data = {
       titleText: book.title,
@@ -141,16 +157,7 @@ const createVideo = async (
       creditText: `${book.title}-${parseInt(chapter_num) + 1}-${parseInt(verse_num) + 1}`,
     };
 
-    images = await generateImages(
-      bgPath,
-      data,
-      position,
-      font,
-      hasTitle,
-      hasAuthor,
-      size,
-      font.font_style || "Noto Sans"
-    );
+    images = await generateImages(bgPath, data, position, font, hasTitle, hasAuthor, size);
   } catch (error) {
     console.log(error);
     throw new Error("Image Error");
@@ -172,15 +179,17 @@ const createVideo = async (
   const videos = [];
   try {
     const Image = images.map((image) => path.join(process.cwd(), "public", "images", "0", image));
-
+    let i = 1;
     for (const img of Image) {
       const video = await generateVideo(
         audioPath,
         [img],
         [values + 1],
         secondsToHMS(start_time),
-        projectId
+        projectId,
+        `${project_name} - ${i}`
       );
+      i += 1;
       videos.push(video);
     }
   } catch (err) {
@@ -243,7 +252,8 @@ router.post("/add", async (req, res) => {
             background_image,
             font,
             size,
-            projectId
+            projectId,
+            project_name
           );
 
           videos.push(...vid);
@@ -266,6 +276,7 @@ router.post("/add", async (req, res) => {
           });
         let message;
         if (err.message === "Excel Error") message = "Invalid Excel Data";
+        else if (err.message === "Font Error") message = "Error Downloadind font";
         else if (err.message === "Image Error") message = "Error Generating Image";
         else if (err.message === "Video Error") message = "Error Generating Video";
         else if (err.message === "Audio Error") message = "Error Dowloading Audio";
@@ -302,11 +313,12 @@ router.post("/add", async (req, res) => {
           progressData[id] = Math.floor((images.length / fileData.length) * 60);
         }
       } catch (err) {
-        await db1.projects.delete({
-          where: {
-            id: projectId,
-          },
-        });
+        console.log(err);
+        // await db1.projects.delete({
+        //   where: {
+        //     id: projectId,
+        //   },
+        // });
         throw new Error("Image Error");
       }
 
@@ -329,15 +341,15 @@ router.post("/add", async (req, res) => {
 
       let video;
       try {
-        video = await generateVideo(audioPath, images, Values, "", projectId);
+        video = await generateVideo(audioPath, images, Values, "", projectId, project_name);
       } catch (err) {
         console.log(err);
-        if (projectId)
-          await db1.projects.delete({
-            where: {
-              id: projectId,
-            },
-          });
+        // if (projectId)
+        //   await db1.projects.delete({
+        //     where: {
+        //       id: projectId,
+        //     },
+        //   });
         throw new Error("Video Error");
       }
 
@@ -367,6 +379,7 @@ router.post("/add", async (req, res) => {
       });
     let message;
     if (err.message === "Excel Error") message = "Invalid Excel Data";
+    else if (err.message === "Font Error") message = "Error Downloading font";
     else if (err.message === "Image Error") message = "Error Generating Image";
     else if (err.message === "Video Error") message = "Error Generating Video";
     else if (err.message === "Audio Error") message = "Error Dowloading Audio";

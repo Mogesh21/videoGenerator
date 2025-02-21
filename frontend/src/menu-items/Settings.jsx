@@ -1,4 +1,4 @@
-import { SettingsOutlined, ArticleOutlined } from '@mui/icons-material';
+import { SettingsOutlined, TextFieldsOutlined, ArticleOutlined } from '@mui/icons-material';
 
 const Settings = {
   id: 'group-settings',
@@ -19,6 +19,14 @@ const Settings = {
       type: 'item',
       icon: ArticleOutlined,
       url: '/settings/templates',
+      breadcrumbs: false
+    },
+    {
+      id: 'item-fonts',
+      title: 'Fonts',
+      type: 'item',
+      icon: TextFieldsOutlined,
+      url: '/settings/fonts',
       breadcrumbs: false
     }
   ]

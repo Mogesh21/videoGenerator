@@ -4,6 +4,7 @@ import { SERVER_ADDRESS } from 'config/AppConfig';
 import React, { useEffect, useRef, useState } from 'react';
 import folderIcon from '../../assets/images/icons/5994710.png';
 import { useNavigate } from 'react-router';
+import JSZip from 'jszip';
 import { ArrowUpOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const Projects = () => {
@@ -39,7 +40,7 @@ const Projects = () => {
   }, []);
 
   const handleProject = (data) => {
-    navigate(`/videos/${data.id}`, { state: { id: data.id } });
+    navigate(`/projects/videos/${data.id}`, { state: { id: data.id } });
   };
 
   const handleSearch = (val) => {
@@ -79,13 +80,54 @@ const Projects = () => {
     }
   };
 
+  const handleDownload = async () => {
+    try {
+      const selectedData = projects.filter((val) => selected.includes(val.id));
+      selectedData.map(async (data) => {
+        const videosList = data.videos;
+
+        const urls = videosList.map((video) => `${SERVER_ADDRESS}/public/videos/${data.id}/${video.name}`);
+        const promises = urls.map(async (url) => {
+          const res = await fetch(url);
+          const blob = await res.blob();
+          return blob;
+        });
+        const files = await Promise.all(promises);
+        const zip = new JSZip();
+        const videos = zip.folder(data.name);
+        files.forEach((file) => {
+          videos.file(`${data.name}.mp4`, file);
+        });
+
+        const zipFile = await videos.generateAsync({ type: 'blob' });
+
+        const a = document.createElement('a');
+
+        a.download = data.name;
+
+        a.href = URL.createObjectURL(zipFile);
+
+        document.body.appendChild(a);
+        a.style.display = 'none';
+        a.click();
+        a.remove();
+      });
+    } catch (err) {
+      console.log(err);
+      message.error({ content: err.name || 'Unable to download', duration: 2 });
+    }
+  };
+
   return (
     <div className="min-h-full p-4 w-full rounded-xl bg-white flex flex-col items-center ">
       <div className="flex justify-between w-full items-center h-20 px-3">
         <div>Projects</div>
         <div className="flex gap-2">
+          <Button onClick={() => setSelected(projects.map((val) => val.id))}>Select All</Button>
           {selected.length > 0 && (
             <div className="flex gap-2">
+              <Button onClick={handleDownload}>Download</Button>
+
               <Button onClick={() => setSelected([])}>Unselect All</Button>
 
               <Popconfirm
@@ -109,8 +151,8 @@ const Projects = () => {
           <Input style={{ width: '14rem' }} placeholder="Search..." onChange={(e) => handleSearch(e.target.value)} />
         </div>
       </div>
-      <div className="flex flex-wrap gap-3 pl-2 pt-2 justify-start w-full">
-        <Checkbox.Group className="columns-[160px] w-full" value={selected} onChange={(val) => setSelected([...val])}>
+      <div className="flex flex-wrap gap-auto pl-2 pt-2 w-full">
+        <Checkbox.Group className="cursor-pointer columns-[160px] w-full" value={selected} onChange={(val) => setSelected([...val])}>
           {searchData.length > 0 ? (
             searchData.map(
               (data) =>

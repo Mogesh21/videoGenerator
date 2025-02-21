@@ -2,9 +2,16 @@ import path from "path";
 import ffmpeg from "fluent-ffmpeg";
 import fs from "fs";
 
-const VideoGenerator = async (audioUrl, Images, Values, start_time = "", projectId) => {
+const VideoGenerator = async (
+  audioUrl,
+  Images,
+  Values,
+  start_time = "",
+  projectId,
+  project_name
+) => {
   try {
-    const videoName = `${Date.now()}.mp4`;
+    const videoName = `${project_name}.mp4`;
 
     fs.mkdirSync(path.join(process.cwd(), "public", "videos", projectId.toString()), {
       recursive: true,
@@ -73,4 +80,3 @@ const VideoGenerator = async (audioUrl, Images, Values, start_time = "", project
 };
 
 export default VideoGenerator;
- 

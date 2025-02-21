@@ -22,3 +22,7 @@
     color: white !important;
   }
 }
+
+.ant-upload-list-item-name {
+  pointer-events: none;
+}

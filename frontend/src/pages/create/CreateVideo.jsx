@@ -109,14 +109,14 @@ const CreateVideo = () => {
         } else {
           setProgress(null);
           message.success({ content: 'Videos Generated Successfully', duration: 2 });
-          navigate(`/videos/${response.data.id}`, { state: { id: response.data.id } });
+          navigate(`/projects/videos/${response.data.id}`, { state: { id: response.data.id } });
         }
       } else {
         message.error({ content: 'Internal Server Error', duration: 2 });
       }
     } catch (err) {
       console.log(err);
-      message.error({ content: err.response?.data?.message, duration: 2 });
+      message.error({ content: err.response?.data?.message || 'Internal Server Error', duration: 2 });
     } finally {
       setLoading(false);
       clearInterval(prog);

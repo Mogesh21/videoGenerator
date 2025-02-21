@@ -1,6 +1,7 @@
 import canvas from "canvas";
 import fs from "fs";
 import path from "path";
+import fetch from "node-fetch";
 
 const { loadImage, createCanvas, registerFont } = canvas;
 
@@ -55,8 +56,7 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight, totalHeight = 0) {
   const xVal = align === "center" ? x + maxWidth / 2 : align === "right" ? x + maxWidth : x;
 
   const totalTextHeight = wrappedLines.length * lineHeight;
-
-  if (totalHeight) y = y + (totalHeight / 2 - totalTextHeight/2);
+  if (totalHeight) y = totalHeight / 2 - totalTextHeight / 2;
 
   wrappedLines.forEach((line) => {
     ctx.fillText(line, xVal, y);
@@ -73,74 +73,19 @@ async function generateImages(
   fontSettings,
   hasTitle,
   hasAuthor,
-  size,
-  fontStyle
+  size
 ) {
   const name = Date.now();
   const { width, height } = size;
   const createdImage = [];
+  let content_end = 0;
 
-  const fontPack = {
-    "Noto Sans": {
-      normal: "NotoSans-Regular.ttf",
-      bold: "NotoSans-Bold",
-      bolditalic: "NotoSans-BoldItalic.ttf",
-      italic: "NotoSans-Italic.ttf",
-    },
-    Kanit: {
-      normal: "Kanit-Regular.ttf",
-      bold: "Kanit-Bold.ttf",
-      bolditalic: "Kanit-BoldItalic.ttf",
-      italic: "Kanit-Italic.ttf",
-    },
-    "Noto Serif": {
-      normal: "NotoSerif.ttf",
-      bold: "NotoSerif_Bold.ttf",
-      bolditalic: "NotoSerif_BoldItalic.ttf",
-      italic: "NotoSerif_Italic.ttf",
-    },
-    Playfair: {
-      normal: "PlayfairDisplay.ttf",
-      bold: "PlayfairDisplay-Bold.ttf",
-      bolditalic: "PlayfairDisplay-BoldItalic.ttf",
-      italic: "PlayfairDisplay-Italic.ttf",
-    },
-    Poppins: {
-      normal: "Poppins-Regular.ttf",
-      bold: "Poppins-Bold.ttf",
-      bolditalic: "Poppins-BoldItalic.ttf",
-      italic: "Poppins-Italic.ttf",
-    },
-    Roboto: {
-      normal: "Roboto-Regular.ttf",
-      bold: "Roboto-Bold.ttf",
-      bolditalic: "Roboto-BoldItalic.ttf",
-      italic: "Roboto-Italic.ttf",
-    },
-    SourGummy: {
-      normal: "SourGummy.ttf",
-      bold: "SourGummy_Bold.ttf",
-      bolditalic: "SourGummy_BoldItalic.ttf",
-      italic: "SourGummy_Italic.ttf",
-    },
-  };
-
-  const registerElementFont = (elementStyle, elementType) => {
-    const styleKey = elementStyle || "normal";
-    const fontPath = path.join(process.cwd(), "font", fontPack[fontStyle][styleKey]);
-    registerFont(fontPath, { family: `${fontStyle}-${styleKey}-${elementType}` });
-  };
-
-  // Register fonts for each element if enabled
-  // if (hasTitle) {
-  //   registerElementFont(fontSettings.title_style, "title");
-  // }
-  // if (contentText) {
-  //   registerElementFont(fontSettings.content_style, "content");
-  // }
-  // if (hasAuthor) {
-  //   registerElementFont(fontSettings.credit_style, "credit");
-  // }
+  const fontPath = path.join(process.cwd(), "font", `${fontSettings.title_font}.ttf`);
+  const fontPath2 = path.join(process.cwd(), "font", `${fontSettings.content_font}.ttf`);
+  const fontPath3 = path.join(process.cwd(), "font", `${fontSettings.credit_font}.ttf`);
+  registerFont(fontPath, { family: fontSettings.title_font });
+  registerFont(fontPath2, { family: fontSettings.content_font });
+  registerFont(fontPath3, { family: fontSettings.credit_font });
 
   const dir = `./public/images/0`;
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -148,15 +93,15 @@ async function generateImages(
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
 
-  // Draw background
   const background = await loadImage(backgroundPath);
   ctx.drawImage(background, 0, 0, width, height);
 
-  // Render Title
   if (hasTitle) {
-    ctx.font = `${fontSettings.title_size}px ${fontStyle}-${
-      fontSettings.title_style || "normal"
-    }-title`;
+    let italic = "normal";
+    let bold = 100;
+    if (fontSettings.title_style.includes("italic")) italic = "italic";
+    if (fontSettings.title_style.includes("bold")) bold = 600;
+    ctx.font = `${italic} ${bold} ${fontSettings.title_size}px ${fontSettings.title_font}`;
     ctx.fillStyle = fontSettings.title_color;
     ctx.textAlign = fontSettings.title_align;
     wrapText(
@@ -165,42 +110,47 @@ async function generateImages(
       positions.title.x * 3,
       positions.title.y * 3 + fontSettings.title_size,
       fontSettings.title_width,
-      fontSettings.title_size * 1.3
+      (fontSettings.title_size / fontSettings.line_height) * 100
     );
   }
 
   // Render Content
-  if (contentText)
-    ctx.font = `${fontSettings.content_size}px ${fontStyle}-${
-      fontSettings.content_style || "normal"
-    }-content`;
-  ctx.fillStyle = fontSettings.content_color;
-  ctx.textAlign = fontSettings.content_align;
-  wrapText(
-    ctx,
-    contentText,
-    positions.content.x * 3,
-    positions.content.y * 3 + fontSettings.content_size,
-    fontSettings.content_width,
-    fontSettings.content_size * 1.3,
-    fontSettings.content_height
-  );
+  if (contentText) {
+    let italic = "normal";
+    let bold = 100;
+    if (fontSettings.content_style.includes("italic")) italic = "italic";
+    if (fontSettings.content_style.includes("bold")) bold = 600;
+    ctx.font = `${italic} ${bold} ${fontSettings.content_size}px ${fontSettings.content_font}`;
+    ctx.fillStyle = fontSettings.content_color;
+    ctx.textAlign = fontSettings.content_align;
+    content_end = wrapText(
+      ctx,
+      contentText,
+      positions.content.x * 3,
+      positions.content.y * 3 + fontSettings.content_size,
+      fontSettings.content_width,
+      (fontSettings.content_size / fontSettings.line_height) * 100,
+      // fontSettings.content_height,
+      height
+    );
+  }
 
   // Render Credit (Author)
   if (hasAuthor) {
-    ctx.font = `${fontSettings.credit_size}px ${fontStyle}-${
-      fontSettings.credit_style || "normal"
-    }-credit`;
-
+    let italic = "normal";
+    let bold = 100;
+    if (fontSettings.credit_style.includes("italic")) italic = "italic";
+    if (fontSettings.credit_style.includes("bold")) bold = 600;
+    ctx.font = `${italic} ${bold} ${fontSettings.credit_size}px ${fontSettings.credit_font}`;
     ctx.fillStyle = fontSettings.credit_color;
     ctx.textAlign = fontSettings.credit_align;
     wrapText(
       ctx,
       creditText,
       positions.credit.x * 3,
-      positions.credit.y * 3 + fontSettings.credit_size,
+      content_end + fontSettings.credit_size,
       fontSettings.credit_width,
-      fontSettings.credit_size * 1.3
+      (fontSettings.credit_size / fontSettings.line_height) * 100
     );
   }
 

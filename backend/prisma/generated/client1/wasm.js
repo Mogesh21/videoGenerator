@@ -219,6 +219,11 @@ exports.Prisma.TemplatesScalarFieldEnum = {
   is_deleted: 'is_deleted'
 };
 
+exports.Prisma.FontsScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -238,7 +243,8 @@ exports.Prisma.ModelName = {
   verse_sec: 'verse_sec',
   versions: 'versions',
   videos: 'videos',
-  templates: 'templates'
+  templates: 'templates',
+  fonts: 'fonts'
 };
 
 /**

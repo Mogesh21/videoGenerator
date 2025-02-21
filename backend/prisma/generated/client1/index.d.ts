@@ -53,6 +53,11 @@ export type videos = $Result.DefaultSelection<Prisma.$videosPayload>
  * 
  */
 export type templates = $Result.DefaultSelection<Prisma.$templatesPayload>
+/**
+ * Model fonts
+ * 
+ */
+export type fonts = $Result.DefaultSelection<Prisma.$fontsPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -256,6 +261,16 @@ export class PrismaClient<
     * ```
     */
   get templates(): Prisma.templatesDelegate<ExtArgs>;
+
+  /**
+   * `prisma.fonts`: Exposes CRUD operations for the **fonts** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Fonts
+    * const fonts = await prisma.fonts.findMany()
+    * ```
+    */
+  get fonts(): Prisma.fontsDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -704,7 +719,8 @@ export namespace Prisma {
     verse_sec: 'verse_sec',
     versions: 'versions',
     videos: 'videos',
-    templates: 'templates'
+    templates: 'templates',
+    fonts: 'fonts'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -720,7 +736,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "book_sec" | "images" | "projects" | "settings" | "verse_sec" | "versions" | "videos" | "templates"
+      modelProps: "book_sec" | "images" | "projects" | "settings" | "verse_sec" | "versions" | "videos" | "templates" | "fonts"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1249,6 +1265,72 @@ export namespace Prisma {
           count: {
             args: Prisma.templatesCountArgs<ExtArgs>
             result: $Utils.Optional<TemplatesCountAggregateOutputType> | number
+          }
+        }
+      }
+      fonts: {
+        payload: Prisma.$fontsPayload<ExtArgs>
+        fields: Prisma.fontsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.fontsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.fontsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
+          }
+          findFirst: {
+            args: Prisma.fontsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.fontsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
+          }
+          findMany: {
+            args: Prisma.fontsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>[]
+          }
+          create: {
+            args: Prisma.fontsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
+          }
+          createMany: {
+            args: Prisma.fontsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.fontsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
+          }
+          update: {
+            args: Prisma.fontsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
+          }
+          deleteMany: {
+            args: Prisma.fontsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.fontsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.fontsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
+          }
+          aggregate: {
+            args: Prisma.FontsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFonts>
+          }
+          groupBy: {
+            args: Prisma.fontsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FontsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.fontsCountArgs<ExtArgs>
+            result: $Utils.Optional<FontsCountAggregateOutputType> | number
           }
         }
       }
@@ -9031,6 +9113,839 @@ export namespace Prisma {
 
 
   /**
+   * Model fonts
+   */
+
+  export type AggregateFonts = {
+    _count: FontsCountAggregateOutputType | null
+    _avg: FontsAvgAggregateOutputType | null
+    _sum: FontsSumAggregateOutputType | null
+    _min: FontsMinAggregateOutputType | null
+    _max: FontsMaxAggregateOutputType | null
+  }
+
+  export type FontsAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type FontsSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type FontsMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+  }
+
+  export type FontsMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+  }
+
+  export type FontsCountAggregateOutputType = {
+    id: number
+    name: number
+    _all: number
+  }
+
+
+  export type FontsAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type FontsSumAggregateInputType = {
+    id?: true
+  }
+
+  export type FontsMinAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type FontsMaxAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type FontsCountAggregateInputType = {
+    id?: true
+    name?: true
+    _all?: true
+  }
+
+  export type FontsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which fonts to aggregate.
+     */
+    where?: fontsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of fonts to fetch.
+     */
+    orderBy?: fontsOrderByWithRelationInput | fontsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: fontsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` fonts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` fonts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned fonts
+    **/
+    _count?: true | FontsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FontsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FontsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FontsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FontsMaxAggregateInputType
+  }
+
+  export type GetFontsAggregateType<T extends FontsAggregateArgs> = {
+        [P in keyof T & keyof AggregateFonts]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFonts[P]>
+      : GetScalarType<T[P], AggregateFonts[P]>
+  }
+
+
+
+
+  export type fontsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: fontsWhereInput
+    orderBy?: fontsOrderByWithAggregationInput | fontsOrderByWithAggregationInput[]
+    by: FontsScalarFieldEnum[] | FontsScalarFieldEnum
+    having?: fontsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FontsCountAggregateInputType | true
+    _avg?: FontsAvgAggregateInputType
+    _sum?: FontsSumAggregateInputType
+    _min?: FontsMinAggregateInputType
+    _max?: FontsMaxAggregateInputType
+  }
+
+  export type FontsGroupByOutputType = {
+    id: number
+    name: string | null
+    _count: FontsCountAggregateOutputType | null
+    _avg: FontsAvgAggregateOutputType | null
+    _sum: FontsSumAggregateOutputType | null
+    _min: FontsMinAggregateOutputType | null
+    _max: FontsMaxAggregateOutputType | null
+  }
+
+  type GetFontsGroupByPayload<T extends fontsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FontsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FontsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FontsGroupByOutputType[P]>
+            : GetScalarType<T[P], FontsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type fontsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+  }, ExtArgs["result"]["fonts"]>
+
+
+  export type fontsSelectScalar = {
+    id?: boolean
+    name?: boolean
+  }
+
+
+  export type $fontsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "fonts"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string | null
+    }, ExtArgs["result"]["fonts"]>
+    composites: {}
+  }
+
+  type fontsGetPayload<S extends boolean | null | undefined | fontsDefaultArgs> = $Result.GetResult<Prisma.$fontsPayload, S>
+
+  type fontsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<fontsFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: FontsCountAggregateInputType | true
+    }
+
+  export interface fontsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['fonts'], meta: { name: 'fonts' } }
+    /**
+     * Find zero or one Fonts that matches the filter.
+     * @param {fontsFindUniqueArgs} args - Arguments to find a Fonts
+     * @example
+     * // Get one Fonts
+     * const fonts = await prisma.fonts.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends fontsFindUniqueArgs>(args: SelectSubset<T, fontsFindUniqueArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Fonts that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {fontsFindUniqueOrThrowArgs} args - Arguments to find a Fonts
+     * @example
+     * // Get one Fonts
+     * const fonts = await prisma.fonts.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends fontsFindUniqueOrThrowArgs>(args: SelectSubset<T, fontsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Fonts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {fontsFindFirstArgs} args - Arguments to find a Fonts
+     * @example
+     * // Get one Fonts
+     * const fonts = await prisma.fonts.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends fontsFindFirstArgs>(args?: SelectSubset<T, fontsFindFirstArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Fonts that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {fontsFindFirstOrThrowArgs} args - Arguments to find a Fonts
+     * @example
+     * // Get one Fonts
+     * const fonts = await prisma.fonts.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends fontsFindFirstOrThrowArgs>(args?: SelectSubset<T, fontsFindFirstOrThrowArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Fonts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {fontsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Fonts
+     * const fonts = await prisma.fonts.findMany()
+     * 
+     * // Get first 10 Fonts
+     * const fonts = await prisma.fonts.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const fontsWithIdOnly = await prisma.fonts.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends fontsFindManyArgs>(args?: SelectSubset<T, fontsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Fonts.
+     * @param {fontsCreateArgs} args - Arguments to create a Fonts.
+     * @example
+     * // Create one Fonts
+     * const Fonts = await prisma.fonts.create({
+     *   data: {
+     *     // ... data to create a Fonts
+     *   }
+     * })
+     * 
+     */
+    create<T extends fontsCreateArgs>(args: SelectSubset<T, fontsCreateArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Fonts.
+     * @param {fontsCreateManyArgs} args - Arguments to create many Fonts.
+     * @example
+     * // Create many Fonts
+     * const fonts = await prisma.fonts.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends fontsCreateManyArgs>(args?: SelectSubset<T, fontsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Fonts.
+     * @param {fontsDeleteArgs} args - Arguments to delete one Fonts.
+     * @example
+     * // Delete one Fonts
+     * const Fonts = await prisma.fonts.delete({
+     *   where: {
+     *     // ... filter to delete one Fonts
+     *   }
+     * })
+     * 
+     */
+    delete<T extends fontsDeleteArgs>(args: SelectSubset<T, fontsDeleteArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Fonts.
+     * @param {fontsUpdateArgs} args - Arguments to update one Fonts.
+     * @example
+     * // Update one Fonts
+     * const fonts = await prisma.fonts.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends fontsUpdateArgs>(args: SelectSubset<T, fontsUpdateArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Fonts.
+     * @param {fontsDeleteManyArgs} args - Arguments to filter Fonts to delete.
+     * @example
+     * // Delete a few Fonts
+     * const { count } = await prisma.fonts.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends fontsDeleteManyArgs>(args?: SelectSubset<T, fontsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Fonts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {fontsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Fonts
+     * const fonts = await prisma.fonts.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends fontsUpdateManyArgs>(args: SelectSubset<T, fontsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Fonts.
+     * @param {fontsUpsertArgs} args - Arguments to update or create a Fonts.
+     * @example
+     * // Update or create a Fonts
+     * const fonts = await prisma.fonts.upsert({
+     *   create: {
+     *     // ... data to create a Fonts
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Fonts we want to update
+     *   }
+     * })
+     */
+    upsert<T extends fontsUpsertArgs>(args: SelectSubset<T, fontsUpsertArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Fonts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {fontsCountArgs} args - Arguments to filter Fonts to count.
+     * @example
+     * // Count the number of Fonts
+     * const count = await prisma.fonts.count({
+     *   where: {
+     *     // ... the filter for the Fonts we want to count
+     *   }
+     * })
+    **/
+    count<T extends fontsCountArgs>(
+      args?: Subset<T, fontsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FontsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Fonts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FontsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FontsAggregateArgs>(args: Subset<T, FontsAggregateArgs>): Prisma.PrismaPromise<GetFontsAggregateType<T>>
+
+    /**
+     * Group by Fonts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {fontsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends fontsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: fontsGroupByArgs['orderBy'] }
+        : { orderBy?: fontsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, fontsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFontsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the fonts model
+   */
+  readonly fields: fontsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for fonts.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__fontsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the fonts model
+   */ 
+  interface fontsFieldRefs {
+    readonly id: FieldRef<"fonts", 'Int'>
+    readonly name: FieldRef<"fonts", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * fonts findUnique
+   */
+  export type fontsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * Filter, which fonts to fetch.
+     */
+    where: fontsWhereUniqueInput
+  }
+
+  /**
+   * fonts findUniqueOrThrow
+   */
+  export type fontsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * Filter, which fonts to fetch.
+     */
+    where: fontsWhereUniqueInput
+  }
+
+  /**
+   * fonts findFirst
+   */
+  export type fontsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * Filter, which fonts to fetch.
+     */
+    where?: fontsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of fonts to fetch.
+     */
+    orderBy?: fontsOrderByWithRelationInput | fontsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for fonts.
+     */
+    cursor?: fontsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` fonts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` fonts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of fonts.
+     */
+    distinct?: FontsScalarFieldEnum | FontsScalarFieldEnum[]
+  }
+
+  /**
+   * fonts findFirstOrThrow
+   */
+  export type fontsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * Filter, which fonts to fetch.
+     */
+    where?: fontsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of fonts to fetch.
+     */
+    orderBy?: fontsOrderByWithRelationInput | fontsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for fonts.
+     */
+    cursor?: fontsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` fonts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` fonts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of fonts.
+     */
+    distinct?: FontsScalarFieldEnum | FontsScalarFieldEnum[]
+  }
+
+  /**
+   * fonts findMany
+   */
+  export type fontsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * Filter, which fonts to fetch.
+     */
+    where?: fontsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of fonts to fetch.
+     */
+    orderBy?: fontsOrderByWithRelationInput | fontsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing fonts.
+     */
+    cursor?: fontsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` fonts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` fonts.
+     */
+    skip?: number
+    distinct?: FontsScalarFieldEnum | FontsScalarFieldEnum[]
+  }
+
+  /**
+   * fonts create
+   */
+  export type fontsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * The data needed to create a fonts.
+     */
+    data?: XOR<fontsCreateInput, fontsUncheckedCreateInput>
+  }
+
+  /**
+   * fonts createMany
+   */
+  export type fontsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many fonts.
+     */
+    data: fontsCreateManyInput | fontsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * fonts update
+   */
+  export type fontsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * The data needed to update a fonts.
+     */
+    data: XOR<fontsUpdateInput, fontsUncheckedUpdateInput>
+    /**
+     * Choose, which fonts to update.
+     */
+    where: fontsWhereUniqueInput
+  }
+
+  /**
+   * fonts updateMany
+   */
+  export type fontsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update fonts.
+     */
+    data: XOR<fontsUpdateManyMutationInput, fontsUncheckedUpdateManyInput>
+    /**
+     * Filter which fonts to update
+     */
+    where?: fontsWhereInput
+  }
+
+  /**
+   * fonts upsert
+   */
+  export type fontsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * The filter to search for the fonts to update in case it exists.
+     */
+    where: fontsWhereUniqueInput
+    /**
+     * In case the fonts found by the `where` argument doesn't exist, create a new fonts with this data.
+     */
+    create: XOR<fontsCreateInput, fontsUncheckedCreateInput>
+    /**
+     * In case the fonts was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<fontsUpdateInput, fontsUncheckedUpdateInput>
+  }
+
+  /**
+   * fonts delete
+   */
+  export type fontsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * Filter which fonts to delete.
+     */
+    where: fontsWhereUniqueInput
+  }
+
+  /**
+   * fonts deleteMany
+   */
+  export type fontsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which fonts to delete
+     */
+    where?: fontsWhereInput
+  }
+
+  /**
+   * fonts without action
+   */
+  export type fontsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -9163,6 +10078,14 @@ export namespace Prisma {
   };
 
   export type TemplatesScalarFieldEnum = (typeof TemplatesScalarFieldEnum)[keyof typeof TemplatesScalarFieldEnum]
+
+
+  export const FontsScalarFieldEnum: {
+    id: 'id',
+    name: 'name'
+  };
+
+  export type FontsScalarFieldEnum = (typeof FontsScalarFieldEnum)[keyof typeof FontsScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -9824,6 +10747,45 @@ export namespace Prisma {
     updated_at?: DateTimeNullableWithAggregatesFilter<"templates"> | Date | string | null
     deleted_at?: DateTimeNullableWithAggregatesFilter<"templates"> | Date | string | null
     is_deleted?: IntNullableWithAggregatesFilter<"templates"> | number | null
+  }
+
+  export type fontsWhereInput = {
+    AND?: fontsWhereInput | fontsWhereInput[]
+    OR?: fontsWhereInput[]
+    NOT?: fontsWhereInput | fontsWhereInput[]
+    id?: IntFilter<"fonts"> | number
+    name?: StringNullableFilter<"fonts"> | string | null
+  }
+
+  export type fontsOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrderInput | SortOrder
+  }
+
+  export type fontsWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: fontsWhereInput | fontsWhereInput[]
+    OR?: fontsWhereInput[]
+    NOT?: fontsWhereInput | fontsWhereInput[]
+    name?: StringNullableFilter<"fonts"> | string | null
+  }, "id">
+
+  export type fontsOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrderInput | SortOrder
+    _count?: fontsCountOrderByAggregateInput
+    _avg?: fontsAvgOrderByAggregateInput
+    _max?: fontsMaxOrderByAggregateInput
+    _min?: fontsMinOrderByAggregateInput
+    _sum?: fontsSumOrderByAggregateInput
+  }
+
+  export type fontsScalarWhereWithAggregatesInput = {
+    AND?: fontsScalarWhereWithAggregatesInput | fontsScalarWhereWithAggregatesInput[]
+    OR?: fontsScalarWhereWithAggregatesInput[]
+    NOT?: fontsScalarWhereWithAggregatesInput | fontsScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"fonts"> | number
+    name?: StringNullableWithAggregatesFilter<"fonts"> | string | null
   }
 
   export type book_secCreateInput = {
@@ -10490,6 +11452,38 @@ export namespace Prisma {
     is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
+  export type fontsCreateInput = {
+    name?: string | null
+  }
+
+  export type fontsUncheckedCreateInput = {
+    id?: number
+    name?: string | null
+  }
+
+  export type fontsUpdateInput = {
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type fontsUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type fontsCreateManyInput = {
+    id?: number
+    name?: string | null
+  }
+
+  export type fontsUpdateManyMutationInput = {
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type fontsUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -11064,6 +12058,29 @@ export namespace Prisma {
     hasAuthor?: SortOrder
     hasTitle?: SortOrder
     is_deleted?: SortOrder
+  }
+
+  export type fontsCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type fontsAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type fontsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type fontsMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type fontsSumOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -11716,6 +12733,10 @@ export namespace Prisma {
      * @deprecated Use templatesDefaultArgs instead
      */
     export type templatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = templatesDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use fontsDefaultArgs instead
+     */
+    export type fontsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = fontsDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

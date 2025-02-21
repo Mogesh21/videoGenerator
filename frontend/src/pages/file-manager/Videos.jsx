@@ -1,11 +1,14 @@
-import { Button, message, Image, Modal, Popconfirm, Checkbox } from 'antd';
+import { Button, message, Image, Modal, Popconfirm, Checkbox, Breadcrumb } from 'antd';
 import axios from 'axios';
 import { SERVER_ADDRESS } from 'config/AppConfig';
 import React, { useEffect, useRef, useState } from 'react';
 import { DeleteOutlined } from '@ant-design/icons';
 import ReactPlayer from 'react-player/lazy';
 import './Video.css';
+import navigation from '../../menu-items/index';
+import JSZip from 'jszip';
 import { useLocation, useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const Videos = () => {
   const navigate = useNavigate();
@@ -15,6 +18,17 @@ const Videos = () => {
   const [playing, setPlaying] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentVideo, setCurrentVideo] = useState({});
+  const items = [
+    {
+      title: <Link to="/projects">Projects</Link>
+    },
+    {
+      title: 'Videos'
+    },
+    {
+      title: data?.id
+    }
+  ];
 
   React.useEffect(() => {
     if (!isModalOpen) {
@@ -33,22 +47,15 @@ const Videos = () => {
       }
     } catch (err) {
       console.log(err);
-      navigate('/videos');
+      navigate('/projects/videos');
     }
   };
 
   useEffect(() => {
-    // console.log(location.state)
-    // if (!location.state?.data) {
-    //   fetchData();
-    // } else {
-    //   const val = location.state.data;
-    //   setData(val);
-    // }
     if (location?.state?.id) {
       fetchData(location.state.id);
     } else {
-      navigate('/videos');
+      navigate('/projects/videos');
     }
   }, []);
 
@@ -70,7 +77,8 @@ const Videos = () => {
       });
       if (response.status === 200) {
         message.success({ content: 'Video deleted Successfully', duration: 2 });
-        data.videos.length === 1 ? navigate('/videos') : setData({ ...data, videos: data.videos.filter((val) => val.id !== vid.id) });
+        console.log(data.videos.length);
+        data.videos.length === 1 ? navigate('/projects') : setData({ ...data, videos: data.videos.filter((val) => val.id !== vid.id) });
       }
     } catch (err) {
       console.log(err);
@@ -96,7 +104,7 @@ const Videos = () => {
         console.log(selected.length === data.videos.length);
         message.success({ content: 'Selected Videos Deleted Successfully', duration: 2 });
         setSelected([]);
-        data.videos.length === selected.length ? navigate('/videos') : fetchData(data.id);
+        data.videos.length === selected.length ? navigate('/projects') : fetchData(data.id);
       } else {
         throw new Error('Internal Server Error');
       }
@@ -106,27 +114,64 @@ const Videos = () => {
     }
   };
 
+  const handleDownload = async () => {
+    const selectedVideos = data.videos.filter((val) => selected.includes(val.id));
+    const urls = selectedVideos.map((video) => `${SERVER_ADDRESS}/public/videos/${data.id}/${video.name}`);
+    const promises = urls.map(async (url) => {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      return blob;
+    });
+    
+    const files = await Promise.all(promises);
+    const zip = new JSZip();
+    const videos = zip.folder(data.name);
+    files.forEach((file) => {
+      videos.file(`${data.name}.mp4`, file);
+    });
+
+    const zipFile = await videos.generateAsync({ type: 'blob' });
+
+    const a = document.createElement('a');
+
+    a.download = data.name;
+
+    a.href = URL.createObjectURL(zipFile);
+
+    document.body.appendChild(a);
+    a.style.display = 'none';
+    a.click();
+    a.remove();
+  };
+
   return (
     <div className="min-h-full p-4 w-full rounded-xl bg-white flex flex-col items-center ">
+      <div className="w-full ">
+        <Breadcrumb items={items} />
+      </div>
       <div className="flex justify-between w-full items-center h-20 px-3">
         <p className="text-2xl text-blue-600 font-bold pl-5">Videos</p>
-        {selected.length > 0 && (
-          <div className="flex gap-2">
-            <Button onClick={() => setSelected([])}>Unselect All</Button>
-            <Popconfirm
-              title="Delete selected video"
-              description="Are you sure to delete these videos?"
-              placement="left"
-              onConfirm={handleMultipleDelete}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button className="" type="default" danger>
-                <DeleteOutlined /> Delete Selected
-              </Button>
-            </Popconfirm>
-          </div>
-        )}
+        <div className="flex gap-2">
+          <Button onClick={() => setSelected(data.videos.map((val) => val.id))}>Select All</Button>
+          {selected.length > 0 && (
+            <div className="flex gap-2">
+              <Button onClick={handleDownload}>Download</Button>
+              <Button onClick={() => setSelected([])}>Unselect All</Button>
+              <Popconfirm
+                title="Delete selected video"
+                description="Are you sure to delete these videos?"
+                placement="left"
+                onConfirm={handleMultipleDelete}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button className="" type="default" danger>
+                  <DeleteOutlined /> Delete Selected
+                </Button>
+              </Popconfirm>
+            </div>
+          )}
+        </div>
       </div>
       <div className="min-h-full p-4 w-full rounded-xl bg-white flex flex-col gap-6 items-center">
         {/* <div className="text-2xl font-bold text-blue-600">{videos.title}</div> */}
@@ -153,7 +198,7 @@ const Videos = () => {
                     <Image
                       className="content-center cursor-pointer"
                       style={{ minWidth: '5rem', minHeight: '5rem' }}
-                      src="../src/assets/images/icons/video.png"
+                      src="../../src/assets/images/icons/video.png"
                       preview={false}
                       onClick={() => handleView(vid)}
                     />

@@ -2,6 +2,7 @@ import { lazy } from 'react';
 
 import Loadable from 'components/Loadable';
 import Dashboard from 'layout/Dashboard';
+import Fonts from 'pages/settings/Fonts';
 
 const Color = Loadable(lazy(() => import('pages/component-overview/color')));
 const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
@@ -36,7 +37,7 @@ const MainRoutes = {
       element: <Projects />
     },
     {
-      path: '/videos/*',
+      path: '/projects/videos/*',
       element: <Videos />
     },
     {
@@ -58,6 +59,10 @@ const MainRoutes = {
     {
       path: '/settings/templates/edit',
       element: <EditTemplate />
+    },
+    {
+      path: '/settings/fonts',
+      element: <Fonts />
     }
     // {
     //   path: '/generate-image',
