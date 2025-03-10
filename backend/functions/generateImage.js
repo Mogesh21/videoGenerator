@@ -1,7 +1,6 @@
 import canvas from "canvas";
 import fs from "fs";
 import path from "path";
-import fetch from "node-fetch";
 
 const { loadImage, createCanvas, registerFont } = canvas;
 

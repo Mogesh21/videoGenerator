@@ -4,6 +4,6 @@
     "module": "commonjs",
     "baseUrl": "src"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../backend/functions/makeVideo2.js"],
   "exclude": ["node_modules"]
 }

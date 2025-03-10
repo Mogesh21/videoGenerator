@@ -4,6 +4,7 @@ import readXlsxFile from 'read-excel-file';
 import axios from 'axios';
 import { SERVER_ADDRESS } from 'config/AppConfig';
 import { useNavigate } from 'react-router';
+// import makeVideo from 'utils/makeVideo';
 
 const CreateVideo = () => {
   const navigate = useNavigate();
@@ -16,10 +17,15 @@ const CreateVideo = () => {
   const [type, setType] = useState(false);
   const [progress, setProgress] = useState(null);
 
+  const updateProgress = (val) => {
+    setProgress(val);
+  };
+
   const fetchData = async () => {
     try {
       const response = await axios.get(`${SERVER_ADDRESS}/projects/videos`);
       if (response.status === 200) {
+        console.log('data', response.data);
         setData(response.data);
       } else {
         message.error({ content: 'Internal Server Error', duration: 2 });
@@ -47,7 +53,6 @@ const CreateVideo = () => {
 
   const onChange = async (doc) => {
     const data = await readXlsxFile(doc.file);
-    console.log(data);
     setFileData(data.slice(1));
   };
 
@@ -99,8 +104,9 @@ const CreateVideo = () => {
       current.project_name = name;
       current.type = type;
       current.fileData = fileData;
-      console.log(type);
-
+      // const resp = await axios.post(`${SERVER_ADDRESS}/data`, current);
+      // return;
+      // const verseData = resp.data;
       const response = await axios.post(`${SERVER_ADDRESS}/make/add`, current);
 
       if (response.status === 200) {

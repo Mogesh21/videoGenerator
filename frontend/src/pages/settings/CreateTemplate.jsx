@@ -38,12 +38,12 @@ const CreateTemplate = () => {
       title_size: 70,
       title_width: 180,
       title_color: '#FFFFFF',
-      title_style: '',
+      title_style: 'normal',
       title_align: 'center',
       title_font: 'Sans Serif',
       content_size: 50,
       content_color: '#FFFFFF',
-      content_style: '',
+      content_style: 'normal',
       content_width: 900,
       content_height: 700,
       content_font: 'Sans Serif',
@@ -52,7 +52,7 @@ const CreateTemplate = () => {
       credit_size: 50,
       credit_width: 300,
       credit_color: '#FFFFFF',
-      credit_style: '',
+      credit_style: 'normal',
       credit_align: 'center',
       credit_font: 'Sans Serif'
     },
@@ -90,6 +90,120 @@ const CreateTemplate = () => {
       img.src = e.target.result;
     };
     reader.readAsDataURL(file);
+  };
+
+  const textTimeline = [
+    { time: 0, text: 'Welcome to My Video', duration: 3 },
+    { time: 3, text: 'Canvas & Video Integration', duration: 3 },
+    { time: 6, text: 'Smooth Text Transitions', duration: 3 }
+  ];
+
+  const handleVideo = (files) => {
+    const file = files.file;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const video = document.createElement('video');
+
+    video.src = URL.createObjectURL(file);
+    video.muted = true;
+    video.loop = true;
+
+    video.onloadedmetadata = () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const totalDuration = 6;
+      video.play();
+
+      let startTime = Date.now(); // Track start time
+      let currentText = '';
+      let opacity = 0;
+      let fadeDirection = 1;
+      let i = 0;
+
+      const drawFrame = () => {
+        const elapsedTime = (Date.now() - startTime) / 1000; // Convert to seconds
+
+        if (elapsedTime >= totalDuration) {
+          console.log('Processing complete. Stopping...');
+          return; // Stop rendering after total duration is reached
+        }
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        console.log(i);
+        i += 1;
+        console.log('elapsed', elapsedTime);
+
+        let newText = '';
+
+        // Find the text to display at the current time
+        for (let entry of textTimeline) {
+          if (elapsedTime >= entry.time && elapsedTime < entry.time + entry.duration) {
+            newText = entry.text;
+            break;
+          }
+        }
+
+        // Handle text transitions (fade in/out)
+        if (newText !== currentText) {
+          fadeDirection = -1; // Start fade-out if text is changing
+        } else if (opacity < 1 && fadeDirection === 1) {
+          opacity += 0.02; // Smooth fade-in
+        }
+        if (opacity <= 0) {
+          currentText = newText;
+          fadeDirection = 1; // Start fade-in
+        }
+
+        if (currentText) {
+          ctx.globalAlpha = opacity;
+          ctx.font = 'bold 40px Arial';
+          ctx.fillStyle = 'white';
+          ctx.textAlign = 'center';
+          ctx.fillText(currentText, canvas.width / 2, canvas.height - 100);
+          ctx.globalAlpha = 1; // Reset alpha
+        }
+
+        opacity = Math.max(0, Math.min(1, opacity + fadeDirection * 0.02)); // Apply fade
+
+        requestAnimationFrame(drawFrame);
+      };
+
+      drawFrame();
+    };
+  };
+
+  const handleVideo2 = (event) => {
+    const file = event.file; // Get the video file
+    // setData((data) => ({ ...data, bg: file }));
+
+    const ctx = canvasRef.current.getContext('2d');
+    const video = document.createElement('video');
+
+    video.src = URL.createObjectURL(file);
+    video.crossOrigin = 'anonymous';
+    video.muted = true;
+    video.loop = true;
+    video.play();
+
+    video.onloadeddata = () => {
+      canvasRef.current.width = video.videoWidth;
+      canvasRef.current.height = video.videoHeight;
+
+      const drawFrame = () => {
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        ctx.drawImage(video, 0, 0, canvasRef.current.width, canvasRef.current.height);
+
+        if (data.hasTitle) {
+          drawTitle(ctx);
+        }
+
+        requestAnimationFrame(drawFrame);
+      };
+
+      drawFrame();
+    };
   };
 
   const fetchTemplates = async () => {
@@ -256,6 +370,14 @@ const CreateTemplate = () => {
     maxCount: 1,
     accept: '.png,.jpg,.jpeg',
     onChange: handleBg
+  };
+
+  const videoBgprops = {
+    listType: 'picture',
+    beforeUpload: () => false,
+    maxCount: 1,
+    accept: '.mp4,.HEIC,.mov,.gif',
+    onChange: handleVideo
   };
 
   const handleRatio = (val) => {
@@ -434,6 +556,11 @@ const CreateTemplate = () => {
             <Button type="primary">Upload Image</Button>
           </Upload>
           <div className="w-full border-b border-gray-400"></div>
+          <p className="text-md font-bold">Background Video:</p>
+          <Upload {...videoBgprops}>
+            <Button type="primary">Upload Video</Button>
+          </Upload>
+          <div className="w-full border-b border-gray-400"></div>
           <div className="selection-container flex flex-col gap-3">
             <div>
               <p className="text-md font-bold">Title:</p>
@@ -573,7 +700,7 @@ const CreateTemplate = () => {
                   setData({ ...data, font: { ...data.font, content_font: val } });
                 }}
               >
-                <Select.Option value="Sans Serif">"Sans Serif"</Select.Option>
+                <Select.Option value="Sans Serif">Sans Serif</Select.Option>
                 {fonts.map((font) => (
                   <Select.Option value={font.name}>{font.name}</Select.Option>
                 ))}
