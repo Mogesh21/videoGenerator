@@ -125,30 +125,6 @@ const createVideo = async (
     throw new Error("Excel Error");
   }
 
-  // try {
-  //   const downloadFont = async (url, outputPath) => {
-  //     try {
-  //       const response = await fetch(url);
-  //       if (!response.ok) throw new Error(`Failed to fetch font: ${response.statusText}`);
-
-  //       const buffer = await response.arrayBuffer();
-  //       fs.writeFileSync(outputPath, Buffer.from(buffer));
-
-  //       console.log("Font downloaded successfully.");
-  //     } catch (error) {
-  //       throw new Error("Error downloading font:");
-  //     }
-  //   };
-
-  //   const fontUrl =
-  //     "https://fonts.gstatic.com/s/jacquard12/v7/vm8ydRLuXETEweL79J4rGf2yWHvH4Q.woff2";
-  //   const fontPath = path.join(process.cwd(), "font", "custom-font.tff");
-  //   // await downloadFont(fontUrl, fontPath);
-  // } catch (err) {
-  //   console.log(err);
-  //   throw new Error("Font Error");
-  // }
-
   try {
     const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_imge);
     const data = {

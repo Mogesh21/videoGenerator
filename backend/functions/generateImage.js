@@ -80,6 +80,7 @@ async function generateImages(
   const createdImage = [];
   let content_end = 0;
 
+  console.log(fontSettings);
   const fontPath = path.join(process.cwd(), "font", `${fontSettings.title_font}.ttf`);
   const fontPath2 = path.join(process.cwd(), "font", `${fontSettings.content_font}.ttf`);
   const fontPath3 = path.join(process.cwd(), "font", `${fontSettings.credit_font}.ttf`);
@@ -112,16 +113,12 @@ async function generateImages(
   // fs.copyFileSync(fontPath3, tempFontPath3);
 
   if (fontSettings.title_font && fontSettings.title_font !== "Sans Serif") {
-    console.log(fontPath, fontPath2, fontPath3);
-    console.log("first");
     registerFont(fontPath, { family: fontSettings.title_font });
   }
   if (fontSettings.content_font && fontSettings.content_font !== "Sans Serif") {
-    console.log(fontPath, fontPath2, fontPath3);
     registerFont(fontPath2, { family: fontSettings.content_font });
   }
   if (fontSettings.credit_font && fontSettings.credit_font !== "Sans Serif") {
-    console.log(fontPath, fontPath2, fontPath3);
     registerFont(fontPath3, { family: fontSettings.credit_font });
   }
 
