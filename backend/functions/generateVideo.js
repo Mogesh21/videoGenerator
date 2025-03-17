@@ -23,8 +23,6 @@ const VideoGenerator = async (
       const command = ffmpeg();
 
       Images.forEach((image, index) => {
-        console.log(image);
-        console.log(Values);
         const duration = Values[index] || 5;
         command.input(image).inputOptions(["-loop 1", `-t ${duration}`]);
       });

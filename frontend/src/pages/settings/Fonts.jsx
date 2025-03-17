@@ -17,12 +17,13 @@ const Fonts = () => {
     }
   ];
 
-  const handleChange = async (files, name) => {
+  const handleChange = async (files, data) => {
     try {
+      const { name, id } = data;
       const { file } = files;
       if (file.status === 'done') {
         const formData = new FormData();
-        formData.append('data', JSON.stringify({ name: name }));
+        formData.append('data', JSON.stringify({ name: name, id: id }));
         formData.append('font', file.originFileObj);
         const response = await axios.put(`${SERVER_ADDRESS}/fonts/edit`, formData, {
           headers: {
@@ -31,7 +32,7 @@ const Fonts = () => {
         });
         if (response.status === 200) {
           message.success({ content: 'Font file Changed successfully', duration: 2 });
-          // fetchFonts();
+          fetchFonts();
         } else {
           throw new Error('Font Error');
         }
@@ -80,11 +81,15 @@ const Fonts = () => {
       dataIndex: 'name'
     },
     {
+      title: 'File Name',
+      dataIndex: 'file_name'
+    },
+    {
       title: 'Options',
       width: '30%',
       render: (_, data) => (
         <div className="flex gap-2 justify-end">
-          <Upload {...uploadProps} onChange={(file) => handleChange(file, data.name)}>
+          <Upload {...uploadProps} onChange={(file) => handleChange(file, data)}>
             <Button type="primary" color="red">
               Change
             </Button>

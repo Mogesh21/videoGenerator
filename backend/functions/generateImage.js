@@ -74,6 +74,7 @@ async function generateImages(
   hasAuthor,
   size
 ) {
+  console.log(titleText, contentText, creditText);
   const name = Date.now();
   const { width, height } = size;
   const createdImage = [];
@@ -82,12 +83,47 @@ async function generateImages(
   const fontPath = path.join(process.cwd(), "font", `${fontSettings.title_font}.ttf`);
   const fontPath2 = path.join(process.cwd(), "font", `${fontSettings.content_font}.ttf`);
   const fontPath3 = path.join(process.cwd(), "font", `${fontSettings.credit_font}.ttf`);
-  if (fontSettings.title_font && fontSettings.title_font !== "Sans Serif")
+
+  // const tempFontPath = path.join(process.cwd(), "public", "temp", `${fontSettings.title_font}.ttf`);
+  // const tempFontPath2 = path.join(
+  //   process.cwd(),
+  //   "public",
+  //   "temp",
+  //   `${fontSettings.content_font}.ttf`
+  // );
+  // const tempFontPath3 = path.join(
+  //   process.cwd(),
+  //   "public",
+  //   "temp",
+  //   `${fontSettings.credit_font}.ttf`
+  // );
+  // if (!fs.existsSync(path.dirname(tempFontPath))) {
+  //   fs.mkdirSync(path.dirname(tempFontPath), { recursive: true });
+  // }
+  // if (!fs.existsSync(path.dirname(tempFontPath2))) {
+  //   fs.mkdirSync(path.dirname(tempFontPath2), { recursive: true });
+  // }
+  // if (!fs.existsSync(path.dirname(tempFontPath3))) {
+  //   fs.mkdirSync(path.dirname(tempFontPath3), { recursive: true });
+  // }
+
+  // fs.copyFileSync(fontPath, tempFontPath);
+  // fs.copyFileSync(fontPath2, tempFontPath2);
+  // fs.copyFileSync(fontPath3, tempFontPath3);
+
+  if (fontSettings.title_font && fontSettings.title_font !== "Sans Serif") {
+    console.log(fontPath, fontPath2, fontPath3);
+    console.log("first");
     registerFont(fontPath, { family: fontSettings.title_font });
-  if (fontSettings.content_font && fontSettings.content_font !== "Sans Serif")
+  }
+  if (fontSettings.content_font && fontSettings.content_font !== "Sans Serif") {
+    console.log(fontPath, fontPath2, fontPath3);
     registerFont(fontPath2, { family: fontSettings.content_font });
-  if (fontSettings.credit_font && fontSettings.credit_font !== "Sans Serif")
+  }
+  if (fontSettings.credit_font && fontSettings.credit_font !== "Sans Serif") {
+    console.log(fontPath, fontPath2, fontPath3);
     registerFont(fontPath3, { family: fontSettings.credit_font });
+  }
 
   const dir = `./public/images/0`;
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });

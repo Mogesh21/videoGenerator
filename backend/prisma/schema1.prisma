@@ -114,6 +114,7 @@ model templates {
 }
 
 model fonts {
-  id   Int     @id @default(autoincrement())
-  name String? @db.VarChar(100)
+  id        Int     @id @default(autoincrement())
+  name      String? @db.VarChar(100)
+  file_name String? @default("") @db.VarChar(45)
 }

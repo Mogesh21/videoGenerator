@@ -125,29 +125,29 @@ const createVideo = async (
     throw new Error("Excel Error");
   }
 
-  try {
-    const downloadFont = async (url, outputPath) => {
-      try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`Failed to fetch font: ${response.statusText}`);
+  // try {
+  //   const downloadFont = async (url, outputPath) => {
+  //     try {
+  //       const response = await fetch(url);
+  //       if (!response.ok) throw new Error(`Failed to fetch font: ${response.statusText}`);
 
-        const buffer = await response.arrayBuffer();
-        fs.writeFileSync(outputPath, Buffer.from(buffer));
+  //       const buffer = await response.arrayBuffer();
+  //       fs.writeFileSync(outputPath, Buffer.from(buffer));
 
-        console.log("Font downloaded successfully.");
-      } catch (error) {
-        throw new Error("Error downloading font:");
-      }
-    };
+  //       console.log("Font downloaded successfully.");
+  //     } catch (error) {
+  //       throw new Error("Error downloading font:");
+  //     }
+  //   };
 
-    const fontUrl =
-      "https://fonts.gstatic.com/s/jacquard12/v7/vm8ydRLuXETEweL79J4rGf2yWHvH4Q.woff2";
-    const fontPath = path.join(process.cwd(), "font", "custom-font.tff");
-    // await downloadFont(fontUrl, fontPath);
-  } catch (err) {
-    console.log(err);
-    throw new Error("Font Error");
-  }
+  //   const fontUrl =
+  //     "https://fonts.gstatic.com/s/jacquard12/v7/vm8ydRLuXETEweL79J4rGf2yWHvH4Q.woff2";
+  //   const fontPath = path.join(process.cwd(), "font", "custom-font.tff");
+  //   // await downloadFont(fontUrl, fontPath);
+  // } catch (err) {
+  //   console.log(err);
+  //   throw new Error("Font Error");
+  // }
 
   try {
     const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_imge);
@@ -173,6 +173,7 @@ const createVideo = async (
     audioPath = path.join(dirPath, "sample.mp3");
     fs.writeFileSync(audioPath, response.data);
   } catch (error) {
+    console.log("audio error");
     throw new Error("Audio Error");
   }
 
@@ -268,12 +269,16 @@ router.post("/add", async (req, res) => {
         }
       } catch (err) {
         console.log(err.name, err);
-        if (projectId)
-          await db1.projects.delete({
-            where: {
-              id: projectId,
-            },
-          });
+        try {
+          if (projectId)
+            await db1.projects.delete({
+              where: {
+                id: projectId,
+              },
+            });
+        } catch (error) {
+          console.log(error);
+        }
         let message;
         if (err.message === "Excel Error") message = "Invalid Excel Data";
         else if (err.message === "Font Error") message = "Error Downloadind font";
@@ -314,11 +319,6 @@ router.post("/add", async (req, res) => {
         }
       } catch (err) {
         console.log(err);
-        // await db1.projects.delete({
-        //   where: {
-        //     id: projectId,
-        //   },
-        // });
         throw new Error("Image Error");
       }
 
@@ -344,12 +344,6 @@ router.post("/add", async (req, res) => {
         video = await generateVideo(audioPath, images, Values, "", projectId, project_name);
       } catch (err) {
         console.log(err);
-        // if (projectId)
-        //   await db1.projects.delete({
-        //     where: {
-        //       id: projectId,
-        //     },
-        //   });
         throw new Error("Video Error");
       }
 
@@ -371,12 +365,16 @@ router.post("/add", async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    if (projectId)
-      await db1.projects.delete({
-        where: {
-          id: projectId,
-        },
-      });
+    try {
+      if (projectId)
+        await db1.projects.delete({
+          where: {
+            id: projectId,
+          },
+        });
+    } catch (error) {
+      console.log(error);
+    }
     let message;
     if (err.message === "Excel Error") message = "Invalid Excel Data";
     else if (err.message === "Font Error") message = "Error Downloading font";

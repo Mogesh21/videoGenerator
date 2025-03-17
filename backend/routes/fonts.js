@@ -29,9 +29,11 @@ const fontStore = multer({
 router.post("/add", fontStore.single("font"), async (req, res) => {
   try {
     const { name } = JSON.parse(req.body.data);
+    const filename = req.file?.originalname;
     await prisma.fonts.create({
       data: {
         name: name,
+        file_name: filename,
       },
     });
     res.status(201).json({ message: "Font added successfully" });
@@ -53,6 +55,16 @@ router.get("/", async (req, res) => {
 
 router.put("/edit", fontStore.single("font"), async (req, res) => {
   try {
+    const { id } = JSON.parse(req.body.data);
+    const filename = req.file?.originalname;
+    await prisma.fonts.update({
+      data: {
+        file_name: filename,
+      },
+      where: {
+        id: id,
+      },
+    });
     res.status(200).json({ message: "Font updated successfully" });
   } catch (err) {
     console.log(err);

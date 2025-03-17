@@ -221,7 +221,8 @@ exports.Prisma.TemplatesScalarFieldEnum = {
 
 exports.Prisma.FontsScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  file_name: 'file_name'
 };
 
 exports.Prisma.SortOrder = {

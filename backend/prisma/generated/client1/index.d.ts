@@ -9135,16 +9135,19 @@ export namespace Prisma {
   export type FontsMinAggregateOutputType = {
     id: number | null
     name: string | null
+    file_name: string | null
   }
 
   export type FontsMaxAggregateOutputType = {
     id: number | null
     name: string | null
+    file_name: string | null
   }
 
   export type FontsCountAggregateOutputType = {
     id: number
     name: number
+    file_name: number
     _all: number
   }
 
@@ -9160,16 +9163,19 @@ export namespace Prisma {
   export type FontsMinAggregateInputType = {
     id?: true
     name?: true
+    file_name?: true
   }
 
   export type FontsMaxAggregateInputType = {
     id?: true
     name?: true
+    file_name?: true
   }
 
   export type FontsCountAggregateInputType = {
     id?: true
     name?: true
+    file_name?: true
     _all?: true
   }
 
@@ -9262,6 +9268,7 @@ export namespace Prisma {
   export type FontsGroupByOutputType = {
     id: number
     name: string | null
+    file_name: string | null
     _count: FontsCountAggregateOutputType | null
     _avg: FontsAvgAggregateOutputType | null
     _sum: FontsSumAggregateOutputType | null
@@ -9286,12 +9293,14 @@ export namespace Prisma {
   export type fontsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    file_name?: boolean
   }, ExtArgs["result"]["fonts"]>
 
 
   export type fontsSelectScalar = {
     id?: boolean
     name?: boolean
+    file_name?: boolean
   }
 
 
@@ -9301,6 +9310,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string | null
+      file_name: string | null
     }, ExtArgs["result"]["fonts"]>
     composites: {}
   }
@@ -9672,6 +9682,7 @@ export namespace Prisma {
   interface fontsFieldRefs {
     readonly id: FieldRef<"fonts", 'Int'>
     readonly name: FieldRef<"fonts", 'String'>
+    readonly file_name: FieldRef<"fonts", 'String'>
   }
     
 
@@ -10082,7 +10093,8 @@ export namespace Prisma {
 
   export const FontsScalarFieldEnum: {
     id: 'id',
-    name: 'name'
+    name: 'name',
+    file_name: 'file_name'
   };
 
   export type FontsScalarFieldEnum = (typeof FontsScalarFieldEnum)[keyof typeof FontsScalarFieldEnum]
@@ -10755,11 +10767,13 @@ export namespace Prisma {
     NOT?: fontsWhereInput | fontsWhereInput[]
     id?: IntFilter<"fonts"> | number
     name?: StringNullableFilter<"fonts"> | string | null
+    file_name?: StringNullableFilter<"fonts"> | string | null
   }
 
   export type fontsOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrderInput | SortOrder
+    file_name?: SortOrderInput | SortOrder
   }
 
   export type fontsWhereUniqueInput = Prisma.AtLeast<{
@@ -10768,11 +10782,13 @@ export namespace Prisma {
     OR?: fontsWhereInput[]
     NOT?: fontsWhereInput | fontsWhereInput[]
     name?: StringNullableFilter<"fonts"> | string | null
+    file_name?: StringNullableFilter<"fonts"> | string | null
   }, "id">
 
   export type fontsOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrderInput | SortOrder
+    file_name?: SortOrderInput | SortOrder
     _count?: fontsCountOrderByAggregateInput
     _avg?: fontsAvgOrderByAggregateInput
     _max?: fontsMaxOrderByAggregateInput
@@ -10786,6 +10802,7 @@ export namespace Prisma {
     NOT?: fontsScalarWhereWithAggregatesInput | fontsScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"fonts"> | number
     name?: StringNullableWithAggregatesFilter<"fonts"> | string | null
+    file_name?: StringNullableWithAggregatesFilter<"fonts"> | string | null
   }
 
   export type book_secCreateInput = {
@@ -11454,34 +11471,41 @@ export namespace Prisma {
 
   export type fontsCreateInput = {
     name?: string | null
+    file_name?: string | null
   }
 
   export type fontsUncheckedCreateInput = {
     id?: number
     name?: string | null
+    file_name?: string | null
   }
 
   export type fontsUpdateInput = {
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    file_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type fontsUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    file_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type fontsCreateManyInput = {
     id?: number
     name?: string | null
+    file_name?: string | null
   }
 
   export type fontsUpdateManyMutationInput = {
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    file_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type fontsUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    file_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -12063,6 +12087,7 @@ export namespace Prisma {
   export type fontsCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    file_name?: SortOrder
   }
 
   export type fontsAvgOrderByAggregateInput = {
@@ -12072,11 +12097,13 @@ export namespace Prisma {
   export type fontsMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    file_name?: SortOrder
   }
 
   export type fontsMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    file_name?: SortOrder
   }
 
   export type fontsSumOrderByAggregateInput = {
