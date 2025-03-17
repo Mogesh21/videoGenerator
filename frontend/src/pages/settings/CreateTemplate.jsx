@@ -555,11 +555,11 @@ const CreateTemplate = () => {
           <Upload {...bgprops}>
             <Button type="primary">Upload Image</Button>
           </Upload>
-          <div className="w-full border-b border-gray-400"></div>
+          {/* <div className="w-full border-b border-gray-400"></div>
           <p className="text-md font-bold">Background Video:</p>
           <Upload {...videoBgprops}>
             <Button type="primary">Upload Video</Button>
-          </Upload>
+          </Upload> */}
           <div className="w-full border-b border-gray-400"></div>
           <div className="selection-container flex flex-col gap-3">
             <div>
@@ -803,20 +803,7 @@ const CreateTemplate = () => {
                     <Select.Option value="italic">Italic</Select.Option>
                   </Select>
                 </div>
-                <div>
-                  <p>Font</p>
-                  <Select
-                    style={{ width: '10rem' }}
-                    value={data.font.credit_font}
-                    onChange={(val) => {
-                      setData({ ...data, font: { ...data.font, credit_font: val } });
-                    }}
-                  >
-                    {fonts.map((font) => (
-                      <Select.Option value={font.name}>{font.name}</Select.Option>
-                    ))}
-                  </Select>
-                </div>
+
                 <div>
                   <p>Color</p>
                   <input
