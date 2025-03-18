@@ -151,13 +151,17 @@ const Projects = () => {
           <Input style={{ width: '14rem' }} placeholder="Search..." onChange={(e) => handleSearch(e.target.value)} />
         </div>
       </div>
-      <div className="flex flex-wrap gap-auto pl-2 pt-2 w-full">
-        <Checkbox.Group className="cursor-pointer columns-[160px] w-full" value={selected} onChange={(val) => setSelected([...val])}>
+      <div className="pl-2 pt-2 w-full">
+        <Checkbox.Group
+          className="cursor-pointer w-full grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))]"
+          value={selected}
+          onChange={(val) => setSelected([...val])}
+        >
           {searchData.length > 0 ? (
             searchData.map(
               (data) =>
                 data.videos.length > 0 && (
-                  <div className="border w-40 h-40 flex flex-col items-center gap-1 cursor-pointer mt-2 relative" key={data.id}>
+                  <div className="border max-w-48 flex flex-col items-center gap-1 cursor-pointer mt-2 relative" key={data.id}>
                     <Checkbox value={data.id} className="z-1 px-2 py-1 absolute left-1 top-1" />
                     <img src={folderIcon} className="w-[70%] h-[70%]" onClick={() => handleProject(data)} />
                     <p className="m-0 text-center text-ellipsis whitespace-nowrap overflow-hidden w-full px-2">{data.name}</p>
