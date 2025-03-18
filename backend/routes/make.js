@@ -90,7 +90,8 @@ const createVideo = async (
   font,
   size,
   projectId,
-  project_name
+  project_name,
+  no
 ) => {
   let verses, book, audioPath, images;
   try {
@@ -156,17 +157,16 @@ const createVideo = async (
   const videos = [];
   try {
     const Image = images.map((image) => path.join(process.cwd(), "public", "images", "0", image));
-    let i = 1;
     for (const img of Image) {
+      const videoName = `${project_name} - ${no}`;
       const video = await generateVideo(
         audioPath,
         [img],
         [values + 1],
         secondsToHMS(start_time),
         projectId,
-        `${project_name} - ${i}`
+        videoName
       );
-      i += 1;
       videos.push(video);
     }
   } catch (err) {
@@ -214,6 +214,7 @@ router.post("/add", async (req, res) => {
 
     if (type === true) {
       try {
+        let i = 1;
         for (const file of fileData) {
           const vid = await createVideo(
             file[0], //audioUrl
@@ -230,9 +231,10 @@ router.post("/add", async (req, res) => {
             font,
             size,
             projectId,
-            project_name
+            project_name,
+            i
           );
-
+          i++;
           videos.push(...vid);
           progressData[id] = Math.floor((videos.length / fileData.length) * 100);
 
