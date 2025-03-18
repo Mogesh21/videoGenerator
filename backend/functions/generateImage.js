@@ -136,7 +136,7 @@ async function generateImages(
         positions.title.x * 3,
         positions.title.y * 3 + fontSettings.title_size,
         fontSettings.title_width,
-        (fontSettings.title_size / fontSettings.line_height) * 100
+        fontSettings.line_height
       );
     }
 
@@ -155,7 +155,7 @@ async function generateImages(
         positions.content.x * 3,
         positions.content.y * 3 + fontSettings.content_size,
         fontSettings.content_width,
-        (fontSettings.content_size / fontSettings.line_height) * 100,
+        fontSettings.line_height,
         height
       );
     }
@@ -175,7 +175,7 @@ async function generateImages(
         positions.credit.x * 3,
         content_end + fontSettings.credit_size,
         fontSettings.credit_width,
-        (fontSettings.credit_size / fontSettings.line_height) * 100
+        fontSettings.line_height
       );
     }
 
