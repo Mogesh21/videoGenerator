@@ -103,13 +103,13 @@ async function generateImages(
     // fs.copyFileSync(fontPath2, tempFontPath2);
     // fs.copyFileSync(fontPath3, tempFontPath3);
 
-    if (fontSettings.title_font && fontSettings.title_font !== "Sans Serif") {
+    if (hasTitle && fontSettings.title_font && fontSettings.title_font !== "Sans Serif") {
       registerFont(fontPath, { family: fontSettings.title_font });
     }
     if (fontSettings.content_font && fontSettings.content_font !== "Sans Serif") {
       registerFont(fontPath2, { family: fontSettings.content_font });
     }
-    if (fontSettings.credit_font && fontSettings.credit_font !== "Sans Serif") {
+    if (hasAuthor && fontSettings.credit_font && fontSettings.credit_font !== "Sans Serif") {
       registerFont(fontPath3, { family: fontSettings.credit_font });
     }
 
