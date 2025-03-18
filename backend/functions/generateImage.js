@@ -54,12 +54,12 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight, totalHeight = 0) {
   const align = ctx.textAlign;
   const xVal = align === "center" ? x + maxWidth / 2 : align === "right" ? x + maxWidth : x;
 
-  const totalTextHeight = wrappedLines.length * lineHeight * 3;
+  const totalTextHeight = wrappedLines.length * lineHeight;
   if (totalHeight) y = totalHeight / 2 - totalTextHeight / 2;
 
   wrappedLines.forEach((line) => {
     ctx.fillText(line, xVal, y);
-    y += lineHeight * 3;
+    y += lineHeight;
   });
 
   return y;
