@@ -51,7 +51,6 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight, totalHeight = 0) {
     wrappedLines.push(line);
   });
 
-  console.log(lineHeight);
   const align = ctx.textAlign;
   const xVal = align === "center" ? x + maxWidth / 2 : align === "right" ? x + maxWidth : x;
 
