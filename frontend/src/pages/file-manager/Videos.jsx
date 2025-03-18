@@ -26,7 +26,7 @@ const Videos = () => {
       title: 'Videos'
     },
     {
-      title: data?.id
+      title: data?.name
     }
   ];
 
@@ -150,7 +150,7 @@ const Videos = () => {
         <Breadcrumb items={items} />
       </div>
       <div className="flex justify-between w-full items-center h-20 px-3">
-        <p className="text-2xl text-blue-600 font-bold pl-5">Videos</p>
+        <p className="text-2xl text-blue-600 font-bold pl-5">{data.name?.toUpperCase()}</p>
         <div className="flex gap-2">
           <Button onClick={() => setSelected(data.videos.map((val) => val.id))}>Select All</Button>
           {selected.length > 0 && (
