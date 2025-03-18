@@ -16,6 +16,12 @@ const CreateTemplate = () => {
   const contentRef = useRef();
   const authorRef = useRef();
   const [fonts, setFonts] = useState([]);
+  const [texts, setTexts] = useState({
+    title: 'Title',
+    content:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis exercitationem deserunt incidunt placeat inventore, porro cum            mollitia quas, tempore accusamus esse voluptatum suscipit ea animi laborum harum quia! Doloribus, ipsum.',
+    author: ' Author'
+  });
   const [templates, setTemplates] = useState([]);
   const items = [
     {
@@ -466,7 +472,7 @@ const CreateTemplate = () => {
                 top: 10
               }}
             >
-              Title
+              {texts.title}
             </p>
           )}
           <p
@@ -489,8 +495,7 @@ const CreateTemplate = () => {
               top: '50px'
             }}
           >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis exercitationem deserunt incidunt placeat inventore, porro cum
-            mollitia quas, tempore accusamus esse voluptatum suscipit ea animi laborum harum quia! Doloribus, ipsum.
+            {texts.content}
           </p>
           {data.hasAuthor !== 0 && (
             <p
@@ -511,7 +516,7 @@ const CreateTemplate = () => {
                 right: 30
               }}
             >
-              Author or credit
+              {texts.author}
             </p>
           )}
         </div>
@@ -599,6 +604,14 @@ const CreateTemplate = () => {
                     defaultValue={data.font.title_align}
                     options={['left', 'center', 'right']}
                     onChange={(value) => setData({ ...data, font: { ...data.font, title_align: value } })}
+                  />
+                </div>
+                <div>
+                  <p>Preview Text</p>
+                  <textarea
+                    className="w-full border "
+                    value={texts.title}
+                    onChange={(e) => setTexts((prev) => ({ ...prev, title: e.target.value }))}
                   />
                 </div>
                 <div>
@@ -692,6 +705,15 @@ const CreateTemplate = () => {
               />
             </div>
             <div>
+              <p>Preview Text</p>
+              <textarea
+                className="w-full border "
+                value={texts.content}
+                rows={4}
+                onChange={(e) => setTexts((prev) => ({ ...prev, content: e.target.value }))}
+              />
+            </div>
+            <div>
               <p>Font</p>
               <Select
                 style={{ width: '10rem' }}
@@ -771,6 +793,14 @@ const CreateTemplate = () => {
                     defaultValue={data.font.credit_align}
                     options={['left', 'center', 'right']}
                     onChange={(value) => setData({ ...data, font: { ...data.font, credit_align: value } })}
+                  />
+                </div>
+                <div>
+                  <p>Preview Text</p>
+                  <textarea
+                    className="w-full border "
+                    value={texts.author}
+                    onChange={(e) => setTexts((prev) => ({ ...prev, author: e.target.value }))}
                   />
                 </div>
                 <div>

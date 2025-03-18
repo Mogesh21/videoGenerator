@@ -16,6 +16,12 @@ const EditTemplate = () => {
   const contentRef = useRef();
   const authorRef = useRef();
   const [urlParams] = useSearchParams();
+  const [texts, setTexts] = useState({
+    title: 'Title',
+    content:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis exercitationem deserunt incidunt placeat inventore, porro cum            mollitia quas, tempore accusamus esse voluptatum suscipit ea animi laborum harum quia! Doloribus, ipsum.',
+    author: ' Author'
+  });
   const [fonts, setFonts] = useState([]);
   const [templates, setTemplates] = useState([]);
   const items = [
@@ -433,7 +439,7 @@ const EditTemplate = () => {
                   // top: 10
                 }}
               >
-                Title
+                {texts.title}
               </p>
             )}
             <p
@@ -453,8 +459,7 @@ const EditTemplate = () => {
                 color: data.font.content_color
               }}
             >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis exercitationem deserunt incidunt placeat inventore, porro cum
-              mollitia quas, tempore accusamus esse voluptatum suscipit ea animi laborum harum quia! Doloribus, ipsum.
+              {texts.content}
             </p>
             {data.hasAuthor !== 0 && (
               <p
@@ -471,7 +476,7 @@ const EditTemplate = () => {
                   color: data.font.credit_color
                 }}
               >
-                Author or credit
+                {texts.author}
               </p>
             )}
           </div>
@@ -555,6 +560,14 @@ const EditTemplate = () => {
                     style={{ width: 'fit-content' }}
                     options={['left', 'center', 'right']}
                     onChange={(value) => setData({ ...data, font: { ...data.font, title_align: value } })}
+                  />
+                </div>
+                <div>
+                  <p>Preview Text</p>
+                  <textarea
+                    className="w-full border "
+                    value={texts.title}
+                    onChange={(e) => setTexts((prev) => ({ ...prev, title: e.target.value }))}
                   />
                 </div>
                 <div>
@@ -648,6 +661,15 @@ const EditTemplate = () => {
               />
             </div>
             <div>
+              <p>Preview Text</p>
+              <textarea
+                className="w-full border "
+                value={texts.content}
+                rows={4}
+                onChange={(e) => setTexts((prev) => ({ ...prev, content: e.target.value }))}
+              />
+            </div>
+            <div>
               <p>Font</p>
               <Select
                 style={{ width: '10rem' }}
@@ -727,6 +749,14 @@ const EditTemplate = () => {
                     style={{ width: 'fit-content' }}
                     options={['left', 'center', 'right']}
                     onChange={(value) => setData({ ...data, font: { ...data.font, credit_align: value } })}
+                  />
+                </div>
+                <div>
+                  <p>Preview Text</p>
+                  <textarea
+                    className="w-full border "
+                    value={texts.author}
+                    onChange={(e) => setTexts((prev) => ({ ...prev, author: e.target.value }))}
                   />
                 </div>
                 <div>
