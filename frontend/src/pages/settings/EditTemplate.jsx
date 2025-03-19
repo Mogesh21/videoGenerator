@@ -45,6 +45,7 @@ const EditTemplate = () => {
     intro: false,
     outro: false,
     font: {
+      bookName: '',
       font_style: '',
       title_size: 50,
       title_width: 100,
@@ -279,14 +280,15 @@ const EditTemplate = () => {
       }
       setData(newData);
       console.log(newData);
-      setLogo([
-        {
-          uid: 1,
-          name: 'logo.png',
-          status: 'done',
-          url: `${SERVER_ADDRESS}/public/backgroundImages/${current.logo_image}`
-        }
-      ]);
+      if (current.logo_image)
+        setLogo([
+          {
+            uid: 1,
+            name: 'logo.png',
+            status: 'done',
+            url: `${SERVER_ADDRESS}/public/backgroundImages/${current.logo_image}`
+          }
+        ]);
     }
   }, [templates]);
 
@@ -560,14 +562,30 @@ const EditTemplate = () => {
             </div>
           </div>
           <div className="w-full border-b border-gray-400"></div>
+          {(data.intro || data.outro) && (
+            <>
+              <div className="name-wrapper flex flex-col gap-3 w-[18rem]">
+                <p className="text-md font-bold">Book Name</p>
+                <Input
+                  value={data.font.bookName || ''}
+                  onChange={(e) => setData({ ...data, font: { ...data.font, bookName: e.target.value } })}
+                />
+              </div>
+              <div className="w-full border-b border-gray-400"></div>
+            </>
+          )}
           <p className="text-md font-bold">Background Image:</p>
           <Upload {...bgprops}>
             <Button type="primary">Upload Bg Image</Button>
           </Upload>
-          <p className="text-md font-bold">Logo Image:</p>
-          <Upload {...imageprops}>
-            <Button type="primary">Upload Logo Image</Button>
-          </Upload>
+          {(data.intro || data.outro) && (
+            <>
+              <p className="text-md font-bold">Logo Image:</p>
+              <Upload {...imageprops}>
+                <Button type="primary">Upload Logo Image</Button>
+              </Upload>
+            </>
+          )}
           <div className="w-full border-b border-gray-400"></div>
           <div className="selection-container flex flex-col gap-3">
             <div>

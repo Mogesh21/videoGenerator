@@ -67,7 +67,8 @@ router.post(
     try {
       const data = JSON.parse(req.body.data);
       const bg_name = req?.files["backgroundImage"][0].filename || "";
-      const logo_image = req?.files["logo_image"][0].filename || "";
+      const logo = req?.files["logo_image"];
+      const logo_image = logo ? logo[0].filename : "";
       await prisma.templates.create({
         data: {
           name: data.name,

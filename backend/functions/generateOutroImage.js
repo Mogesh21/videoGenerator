@@ -1,6 +1,8 @@
-import { registerFont, loadImage, createCanvas } from "canvas";
-import path from "path";
+import canvas from "canvas";
 import fs from "fs";
+import path from "path";
+
+const { loadImage, createCanvas, registerFont } = canvas;
 
 export async function generateOutroImage(backgroundPath, logoPath, title, fontSettings, size) {
   try {

@@ -171,7 +171,7 @@ const createVideo = async (
       const newValues = [];
       if (intro) {
         images.push(path.join(process.cwd(), "public", "images", "0", "intro.png"));
-        newValues.push(3);
+        newValues.push(4);
       }
       images.push(img);
       newValues.push(values + 1);
@@ -241,26 +241,15 @@ router.post("/add", async (req, res) => {
       try {
         let i = 1;
 
-        if (intro || outro) {
-          const book = await db2.versions.findFirst({
-            select: {
-              id: true,
-              version_name: true,
-            },
-            where: {
-              id: parseInt(fileData[0][1]),
-            },
-          });
-          if (intro) {
-            const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
-            const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
-            await generateIntroImage(bgPath, logoPath, book.version_name, font, size);
-          }
-          if (outro) {
-            const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
-            const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
-            await generateOutroImage(bgPath, logoPath, book.version_name, font, size);
-          }
+        if (intro) {
+          const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
+          const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
+          await generateIntroImage(bgPath, logoPath, font.bookName || "", font, size);
+        }
+        if (outro) {
+          const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
+          const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
+          await generateOutroImage(bgPath, logoPath, font.bookName || "", font, size);
         }
 
         for (const file of fileData) {
@@ -328,21 +317,12 @@ router.post("/add", async (req, res) => {
     } else {
       const images = [];
       try {
-        const book = await db2.versions.findFirst({
-          select: {
-            id: true,
-            version_name: true,
-          },
-          where: {
-            id: parseInt(fileData[0][1]),
-          },
-        });
-
+        console.log(font.bookName);
         //Intro
         if (intro) {
           const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
           const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
-          await generateIntroImage(bgPath, logoPath, book.version_name, font, size);
+          await generateIntroImage(bgPath, logoPath, font.bookName || "", font, size);
           images.push(path.join(process.cwd(), "public", "images", "0", "intro.png"));
         }
 
@@ -362,14 +342,14 @@ router.post("/add", async (req, res) => {
           );
 
           images.push(img);
-          progressData[id] = Math.floor((images.length / fileData.length) * 60);
+          progressData[id] = Math.floor((images.length / fileData.length) * 30);
         }
 
         //Outro
         if (outro) {
           const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
           const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
-          await generateOutroImage(bgPath, logoPath, book.version_name, font, size);
+          await generateOutroImage(bgPath, logoPath, font.bookName || "", font, size);
           images.push(path.join(process.cwd(), "public", "images", "0", "outro.png"));
         }
       } catch (err) {

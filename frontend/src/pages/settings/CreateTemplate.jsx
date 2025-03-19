@@ -43,6 +43,7 @@ const CreateTemplate = () => {
     intro: false,
     outro: false,
     font: {
+      bookName: '',
       font_style: '',
       title_size: 70,
       title_width: 180,
@@ -431,9 +432,6 @@ const CreateTemplate = () => {
       } else if (!data.bg) {
         message.error({ content: 'Please upload the bg image' });
         return;
-      } else if (!data.logo_image) {
-        message.error({ content: 'Please upload the logo image' });
-        return;
       }
       const exists = templates.filter((temp) => temp.name.toLowerCase() === data.name.toLowerCase()).length > 0;
       if (!exists) {
@@ -587,14 +585,30 @@ const CreateTemplate = () => {
             </div>
           </div>
           <div className="w-full border-b border-gray-400"></div>
+          {(data.intro || data.outro) && (
+            <>
+              <div className="name-wrapper flex flex-col gap-3 w-[18rem]">
+                <p className="text-md font-bold">Book Name</p>
+                <Input
+                  value={data.font.bookName || ''}
+                  onChange={(e) => setData({ ...data, font: { ...data.font, bookName: e.target.value } })}
+                />
+              </div>
+              <div className="w-full border-b border-gray-400"></div>
+            </>
+          )}
           <p className="text-md font-bold">Background Image:</p>
           <Upload {...bgprops}>
             <Button type="primary">Upload Image</Button>
           </Upload>
-          <p className="text-md font-bold">Logo Image:</p>
-          <Upload {...imageprops}>
-            <Button type="primary">Upload Logo Image</Button>
-          </Upload>
+          {(data.intro || data.outro) && (
+            <>
+              <p className="text-md font-bold">Logo Image:</p>
+              <Upload {...imageprops}>
+                <Button type="primary">Upload Logo Image</Button>
+              </Upload>
+            </>
+          )}
 
           {/* <div className="w-full border-b border-gray-400"></div>
           <p className="text-md font-bold">Background Video:</p>

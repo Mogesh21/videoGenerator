@@ -1,6 +1,8 @@
-import { registerFont, loadImage, createCanvas } from "canvas";
-import path from "path";
+import canvas from "canvas";
 import fs from "fs";
+import path from "path";
+
+const { loadImage, createCanvas, registerFont } = canvas;
 
 function wrapText(ctx, text, x, y, maxWidth) {
   const paragraphs = text.split("\\n");
@@ -23,6 +25,8 @@ function wrapText(ctx, text, x, y, maxWidth) {
     }
     wrappedLines.push(line);
   });
+  
+  console.log(x);
 
   const xVal = x;
   wrappedLines.forEach((line) => {
