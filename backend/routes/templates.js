@@ -109,7 +109,10 @@ router.put(
       const logo = req?.files["logo_image"];
       const logo_image = logo ? logo[0].filename : data.logo_image;
       if (logo) {
-        fs.rmSync(`./public/backgroundImages/${data.logo_image}`);
+        const stats = fs.statSync(`./public/backgroundImages/${data.logo_image}`);
+        if (stats.isFile()) {
+          fs.rmSync(`./public/backgroundImages/${data.logo_image}`);
+        }
       }
 
       await prisma.templates.update({
