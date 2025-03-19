@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Input, message, Radio, Segmented, Select, Slider, Upload } from 'antd';
+import { Breadcrumb, Button, Input, message, Radio, Segmented, Select, Slider, Switch, Upload } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { Draggable } from 'gsap/Draggable';
@@ -20,7 +20,7 @@ const CreateTemplate = () => {
     title: 'Title',
     content:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis exercitationem deserunt incidunt placeat inventore, porro cum            mollitia quas, tempore accusamus esse voluptatum suscipit ea animi laborum harum quia! Doloribus, ipsum.',
-    author: ' Author'
+    author: ' Subtitle-1-1'
   });
   const [templates, setTemplates] = useState([]);
   const items = [
@@ -39,6 +39,9 @@ const CreateTemplate = () => {
       height: 1080
     },
     bg: '',
+    logo_image: '',
+    intro: false,
+    outro: false,
     font: {
       font_style: '',
       title_size: 70,
@@ -96,6 +99,11 @@ const CreateTemplate = () => {
       img.src = e.target.result;
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleImage = async (event) => {
+    const file = event.file;
+    setData((data) => ({ ...data, logo_image: file }));
   };
 
   const textTimeline = [
@@ -378,6 +386,14 @@ const CreateTemplate = () => {
     onChange: handleBg
   };
 
+  const imageprops = {
+    listType: 'picture',
+    beforeUpload: () => false,
+    maxCount: 1,
+    accept: '.png,.jpg,.jpeg',
+    onChange: handleImage
+  };
+
   const videoBgprops = {
     listType: 'picture',
     beforeUpload: () => false,
@@ -415,11 +431,15 @@ const CreateTemplate = () => {
       } else if (!data.bg) {
         message.error({ content: 'Please upload the bg image' });
         return;
+      } else if (!data.logo_image) {
+        message.error({ content: 'Please upload the logo image' });
+        return;
       }
       const exists = templates.filter((temp) => temp.name.toLowerCase() === data.name.toLowerCase()).length > 0;
       if (!exists) {
         formData.append('data', JSON.stringify(data));
         formData.append('backgroundImage', data.bg);
+        formData.append('logo_image', data.logo_image);
         const response = await axios.post(`${SERVER_ADDRESS}/templates/create`, formData);
         if (response.status === 200) {
           message.success({ content: 'Template Created Successfully' });
@@ -556,10 +576,26 @@ const CreateTemplate = () => {
             </Radio.Group>
           </div>
           <div className="w-full border-b border-gray-400"></div>
+          <div className="grid grid-cols-2">
+            <div>
+              <p className="text-md font-bold">Intro:</p>
+              <Switch className="w-fit" onChange={(val) => setData((prev) => ({ ...prev, intro: val }))} />
+            </div>
+            <div>
+              <p className="text-md font-bold">Outro:</p>
+              <Switch className="w-fit" onChange={(val) => setData((prev) => ({ ...prev, outro: val }))} />
+            </div>
+          </div>
+          <div className="w-full border-b border-gray-400"></div>
           <p className="text-md font-bold">Background Image:</p>
           <Upload {...bgprops}>
             <Button type="primary">Upload Image</Button>
           </Upload>
+          <p className="text-md font-bold">Logo Image:</p>
+          <Upload {...imageprops}>
+            <Button type="primary">Upload Logo Image</Button>
+          </Upload>
+
           {/* <div className="w-full border-b border-gray-400"></div>
           <p className="text-md font-bold">Background Video:</p>
           <Upload {...videoBgprops}>
@@ -609,7 +645,7 @@ const CreateTemplate = () => {
                 <div>
                   <p>Preview Text</p>
                   <textarea
-                    className="w-full border "
+                    className="w-full border"
                     value={texts.title}
                     onChange={(e) => setTexts((prev) => ({ ...prev, title: e.target.value }))}
                   />
@@ -757,7 +793,7 @@ const CreateTemplate = () => {
           <div className="w-full border-b border-gray-400"></div>
           <div className="selection-container flex flex-col gap-3 bg-white">
             <div>
-              <p className="text-md font-bold">Author:</p>
+              <p className="text-md font-bold">Sub Title:</p>
               <Radio.Group
                 value={data.hasAuthor}
                 onChange={(e) => setData({ ...data, hasAuthor: e.target.value })}

@@ -31,8 +31,11 @@ router.get("/", async (req, res) => {
       select: {
         id: true,
         name: true,
+        intro: true,
+        outro: true,
         position: true,
         background_image: true,
+        logo_image: true,
         font: true,
         hasAuthor: true,
         hasTitle: true,
@@ -54,57 +57,85 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/create", images.single("backgroundImage"), async (req, res) => {
-  try {
-    const data = JSON.parse(req.body.data);
-    const bg_name = req?.file.filename || "";
-    await prisma.templates.create({
-      data: {
-        name: data.name,
-        background_image: bg_name,
-        position: JSON.stringify(data.position),
-        font: JSON.stringify(data.font),
-        hasAuthor: parseInt(data.hasAuthor),
-        hasTitle: parseInt(data.hasTitle),
-        size: JSON.stringify(data.size),
-      },
-    });
-    res.status(200).end();
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-router.put("/edit", images.single("backgroundImage"), async (req, res) => {
-  try {
-    const data = JSON.parse(req.body.data);
-    const bg_name = req?.file?.filename || data.background_image;
-
-    if (req?.file?.filename) {
-      fs.rmSync(`./public/backgroundImages/${data.background_image}`);
+router.post(
+  "/create",
+  images.fields([
+    { name: "backgroundImage", maxCount: 1 },
+    { name: "logo_image", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    try {
+      const data = JSON.parse(req.body.data);
+      const bg_name = req?.files["backgroundImage"][0].filename || "";
+      const logo_image = req?.files["logo_image"][0].filename || "";
+      await prisma.templates.create({
+        data: {
+          name: data.name,
+          background_image: bg_name,
+          logo_image: logo_image,
+          position: JSON.stringify(data.position),
+          font: JSON.stringify(data.font),
+          hasAuthor: parseInt(data.hasAuthor),
+          hasTitle: parseInt(data.hasTitle),
+          size: JSON.stringify(data.size),
+          intro: data.intro,
+          outro: data.outro,
+        },
+      });
+      res.status(200).end();
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
-
-    await prisma.templates.update({
-      data: {
-        name: data.name,
-        background_image: bg_name,
-        position: JSON.stringify(data.position),
-        font: JSON.stringify(data.font),
-        hasAuthor: parseInt(data.hasAuthor),
-        hasTitle: parseInt(data.hasTitle),
-        size: JSON.stringify(data.size),
-      },
-      where: {
-        id: data.id,
-      },
-    });
-    res.status(200).end();
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
   }
-});
+);
+
+router.put(
+  "/edit",
+  images.fields([
+    { name: "backgroundImage", maxCount: 1 },
+    { name: "logo_image", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    try {
+      const data = JSON.parse(req.body.data);
+
+      const bg = req?.files["backgroundImage"];
+      const bg_name = bg ? bg[0].filename : data.background_image;
+      if (bg) {
+        fs.rmSync(`./public/backgroundImages/${data.background_image}`);
+      }
+
+      const logo = req?.files["logo_image"];
+      const logo_image = logo ? logo[0].filename : data.logo_image;
+      if (logo) {
+        fs.rmSync(`./public/backgroundImages/${data.logo_image}`);
+      }
+
+      await prisma.templates.update({
+        data: {
+          name: data.name,
+          background_image: bg_name,
+          logo_image: logo_image,
+          position: JSON.stringify(data.position),
+          font: JSON.stringify(data.font),
+          hasAuthor: parseInt(data.hasAuthor),
+          hasTitle: parseInt(data.hasTitle),
+          size: JSON.stringify(data.size),
+          intro: data.intro,
+          outro: data.outro,
+        },
+        where: {
+          id: data.id,
+        },
+      });
+      res.status(200).end();
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+);
 
 router.put("/delete", async (req, res) => {
   try {
@@ -125,4 +156,5 @@ router.put("/delete", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 export default router;

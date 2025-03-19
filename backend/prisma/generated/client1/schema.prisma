@@ -15,6 +15,12 @@ model book_sec {
   chapter_count Int    @db.UnsignedInt
 }
 
+model fonts {
+  id        Int     @id @default(autoincrement())
+  name      String? @db.VarChar(100)
+  file_name String? @default("") @db.VarChar(45)
+}
+
 model images {
   id         Int       @id @default(autoincrement())
   title_id   Int
@@ -23,7 +29,6 @@ model images {
   updated_at DateTime? @default(now()) @db.Timestamp(0)
   deleted_at DateTime? @db.Timestamp(0)
   is_deleted Int?      @default(0) @db.TinyInt
-  projects   projects  @relation(fields: [title_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "title")
 
   @@index([title_id], map: "title_idx")
 }
@@ -37,8 +42,7 @@ model projects {
   updated_at DateTime? @default(now()) @db.Timestamp(0)
   deleted_at DateTime? @db.Timestamp(0)
   is_deleted Int?      @default(0) @db.TinyInt
-  images     images[]
-  videos     videos[]
+  videos     videos[]  @relation("ProjectVideos")
 }
 
 model settings {
@@ -53,6 +57,24 @@ model settings {
   credit_size   Int?
   credit_color  String? @db.VarChar(45)
   credit_style  String? @db.VarChar(45)
+}
+
+model templates {
+  id               Int       @id @default(autoincrement())
+  name             String    @db.VarChar(45)
+  background_image String?   @db.VarChar(45)
+  logo_image       String    @db.VarChar(45)
+  intro            Boolean?  @default(false)
+  outro            Boolean?  @default(false)
+  font             String?   @db.Text
+  position         String?   @db.Text
+  hasAuthor        Int?      @default(0) @db.TinyInt
+  hasTitle         Int?      @default(0) @db.TinyInt
+  size             String?   @db.VarChar(100)
+  created_at       DateTime? @default(now()) @db.Timestamp(0)
+  updated_at       DateTime? @default(now()) @db.Timestamp(0)
+  deleted_at       DateTime? @db.Timestamp(0)
+  is_deleted       Int?      @default(0) @db.TinyInt
 }
 
 model verse_sec {
@@ -93,28 +115,7 @@ model videos {
   updated_at DateTime? @default(now()) @db.Timestamp(0)
   deleted_at DateTime? @db.Timestamp(0)
   is_deleted Int?      @default(0) @db.TinyInt
-  projects   projects  @relation(fields: [title_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "videoTitle")
+  project    projects  @relation("ProjectVideos", fields: [title_id], references: [id])
 
   @@index([title_id], map: "title_idx")
-}
-
-model templates {
-  id               Int       @id @default(autoincrement())
-  name             String    @db.VarChar(45)
-  background_image String?   @db.VarChar(45)
-  font             String?   @db.Text
-  position         String?   @db.Text
-  hasAuthor        Int?      @default(0) @db.TinyInt
-  hasTitle         Int?      @default(0) @db.TinyInt
-  size             String?   @db.VarChar(100)
-  created_at       DateTime? @default(now()) @db.Timestamp(0)
-  updated_at       DateTime? @default(now()) @db.Timestamp(0)
-  deleted_at       DateTime? @db.Timestamp(0)
-  is_deleted       Int?      @default(0) @db.TinyInt
-}
-
-model fonts {
-  id        Int     @id @default(autoincrement())
-  name      String? @db.VarChar(100)
-  file_name String? @default("") @db.VarChar(45)
 }

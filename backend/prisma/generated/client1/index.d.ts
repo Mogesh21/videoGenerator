@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type book_sec = $Result.DefaultSelection<Prisma.$book_secPayload>
 /**
+ * Model fonts
+ * 
+ */
+export type fonts = $Result.DefaultSelection<Prisma.$fontsPayload>
+/**
  * Model images
  * 
  */
@@ -34,6 +39,11 @@ export type projects = $Result.DefaultSelection<Prisma.$projectsPayload>
  */
 export type settings = $Result.DefaultSelection<Prisma.$settingsPayload>
 /**
+ * Model templates
+ * 
+ */
+export type templates = $Result.DefaultSelection<Prisma.$templatesPayload>
+/**
  * Model verse_sec
  * 
  */
@@ -48,16 +58,6 @@ export type versions = $Result.DefaultSelection<Prisma.$versionsPayload>
  * 
  */
 export type videos = $Result.DefaultSelection<Prisma.$videosPayload>
-/**
- * Model templates
- * 
- */
-export type templates = $Result.DefaultSelection<Prisma.$templatesPayload>
-/**
- * Model fonts
- * 
- */
-export type fonts = $Result.DefaultSelection<Prisma.$fontsPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -193,6 +193,16 @@ export class PrismaClient<
   get book_sec(): Prisma.book_secDelegate<ExtArgs>;
 
   /**
+   * `prisma.fonts`: Exposes CRUD operations for the **fonts** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Fonts
+    * const fonts = await prisma.fonts.findMany()
+    * ```
+    */
+  get fonts(): Prisma.fontsDelegate<ExtArgs>;
+
+  /**
    * `prisma.images`: Exposes CRUD operations for the **images** model.
     * Example usage:
     * ```ts
@@ -223,6 +233,16 @@ export class PrismaClient<
   get settings(): Prisma.settingsDelegate<ExtArgs>;
 
   /**
+   * `prisma.templates`: Exposes CRUD operations for the **templates** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Templates
+    * const templates = await prisma.templates.findMany()
+    * ```
+    */
+  get templates(): Prisma.templatesDelegate<ExtArgs>;
+
+  /**
    * `prisma.verse_sec`: Exposes CRUD operations for the **verse_sec** model.
     * Example usage:
     * ```ts
@@ -251,26 +271,6 @@ export class PrismaClient<
     * ```
     */
   get videos(): Prisma.videosDelegate<ExtArgs>;
-
-  /**
-   * `prisma.templates`: Exposes CRUD operations for the **templates** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Templates
-    * const templates = await prisma.templates.findMany()
-    * ```
-    */
-  get templates(): Prisma.templatesDelegate<ExtArgs>;
-
-  /**
-   * `prisma.fonts`: Exposes CRUD operations for the **fonts** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Fonts
-    * const fonts = await prisma.fonts.findMany()
-    * ```
-    */
-  get fonts(): Prisma.fontsDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -713,14 +713,14 @@ export namespace Prisma {
 
   export const ModelName: {
     book_sec: 'book_sec',
+    fonts: 'fonts',
     images: 'images',
     projects: 'projects',
     settings: 'settings',
+    templates: 'templates',
     verse_sec: 'verse_sec',
     versions: 'versions',
-    videos: 'videos',
-    templates: 'templates',
-    fonts: 'fonts'
+    videos: 'videos'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -736,7 +736,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "book_sec" | "images" | "projects" | "settings" | "verse_sec" | "versions" | "videos" | "templates" | "fonts"
+      modelProps: "book_sec" | "fonts" | "images" | "projects" | "settings" | "templates" | "verse_sec" | "versions" | "videos"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -803,6 +803,72 @@ export namespace Prisma {
           count: {
             args: Prisma.book_secCountArgs<ExtArgs>
             result: $Utils.Optional<Book_secCountAggregateOutputType> | number
+          }
+        }
+      }
+      fonts: {
+        payload: Prisma.$fontsPayload<ExtArgs>
+        fields: Prisma.fontsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.fontsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.fontsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
+          }
+          findFirst: {
+            args: Prisma.fontsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.fontsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
+          }
+          findMany: {
+            args: Prisma.fontsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>[]
+          }
+          create: {
+            args: Prisma.fontsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
+          }
+          createMany: {
+            args: Prisma.fontsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.fontsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
+          }
+          update: {
+            args: Prisma.fontsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
+          }
+          deleteMany: {
+            args: Prisma.fontsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.fontsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.fontsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
+          }
+          aggregate: {
+            args: Prisma.FontsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFonts>
+          }
+          groupBy: {
+            args: Prisma.fontsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FontsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.fontsCountArgs<ExtArgs>
+            result: $Utils.Optional<FontsCountAggregateOutputType> | number
           }
         }
       }
@@ -1004,6 +1070,72 @@ export namespace Prisma {
           }
         }
       }
+      templates: {
+        payload: Prisma.$templatesPayload<ExtArgs>
+        fields: Prisma.templatesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.templatesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.templatesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
+          }
+          findFirst: {
+            args: Prisma.templatesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.templatesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
+          }
+          findMany: {
+            args: Prisma.templatesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>[]
+          }
+          create: {
+            args: Prisma.templatesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
+          }
+          createMany: {
+            args: Prisma.templatesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.templatesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
+          }
+          update: {
+            args: Prisma.templatesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
+          }
+          deleteMany: {
+            args: Prisma.templatesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.templatesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.templatesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
+          }
+          aggregate: {
+            args: Prisma.TemplatesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTemplates>
+          }
+          groupBy: {
+            args: Prisma.templatesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TemplatesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.templatesCountArgs<ExtArgs>
+            result: $Utils.Optional<TemplatesCountAggregateOutputType> | number
+          }
+        }
+      }
       verse_sec: {
         payload: Prisma.$verse_secPayload<ExtArgs>
         fields: Prisma.verse_secFieldRefs
@@ -1202,138 +1334,6 @@ export namespace Prisma {
           }
         }
       }
-      templates: {
-        payload: Prisma.$templatesPayload<ExtArgs>
-        fields: Prisma.templatesFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.templatesFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$templatesPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.templatesFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
-          }
-          findFirst: {
-            args: Prisma.templatesFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$templatesPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.templatesFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
-          }
-          findMany: {
-            args: Prisma.templatesFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$templatesPayload>[]
-          }
-          create: {
-            args: Prisma.templatesCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
-          }
-          createMany: {
-            args: Prisma.templatesCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.templatesDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
-          }
-          update: {
-            args: Prisma.templatesUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
-          }
-          deleteMany: {
-            args: Prisma.templatesDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.templatesUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.templatesUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$templatesPayload>
-          }
-          aggregate: {
-            args: Prisma.TemplatesAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateTemplates>
-          }
-          groupBy: {
-            args: Prisma.templatesGroupByArgs<ExtArgs>
-            result: $Utils.Optional<TemplatesGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.templatesCountArgs<ExtArgs>
-            result: $Utils.Optional<TemplatesCountAggregateOutputType> | number
-          }
-        }
-      }
-      fonts: {
-        payload: Prisma.$fontsPayload<ExtArgs>
-        fields: Prisma.fontsFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.fontsFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$fontsPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.fontsFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
-          }
-          findFirst: {
-            args: Prisma.fontsFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$fontsPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.fontsFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
-          }
-          findMany: {
-            args: Prisma.fontsFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$fontsPayload>[]
-          }
-          create: {
-            args: Prisma.fontsCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
-          }
-          createMany: {
-            args: Prisma.fontsCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.fontsDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
-          }
-          update: {
-            args: Prisma.fontsUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
-          }
-          deleteMany: {
-            args: Prisma.fontsDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.fontsUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.fontsUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$fontsPayload>
-          }
-          aggregate: {
-            args: Prisma.FontsAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateFonts>
-          }
-          groupBy: {
-            args: Prisma.fontsGroupByArgs<ExtArgs>
-            result: $Utils.Optional<FontsGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.fontsCountArgs<ExtArgs>
-            result: $Utils.Optional<FontsCountAggregateOutputType> | number
-          }
-        }
-      }
     }
   } & {
     other: {
@@ -1495,12 +1495,10 @@ export namespace Prisma {
    */
 
   export type ProjectsCountOutputType = {
-    images: number
     videos: number
   }
 
   export type ProjectsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    images?: boolean | ProjectsCountOutputTypeCountImagesArgs
     videos?: boolean | ProjectsCountOutputTypeCountVideosArgs
   }
 
@@ -1513,13 +1511,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the ProjectsCountOutputType
      */
     select?: ProjectsCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * ProjectsCountOutputType without action
-   */
-  export type ProjectsCountOutputTypeCountImagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: imagesWhereInput
   }
 
   /**
@@ -2394,6 +2385,850 @@ export namespace Prisma {
 
 
   /**
+   * Model fonts
+   */
+
+  export type AggregateFonts = {
+    _count: FontsCountAggregateOutputType | null
+    _avg: FontsAvgAggregateOutputType | null
+    _sum: FontsSumAggregateOutputType | null
+    _min: FontsMinAggregateOutputType | null
+    _max: FontsMaxAggregateOutputType | null
+  }
+
+  export type FontsAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type FontsSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type FontsMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    file_name: string | null
+  }
+
+  export type FontsMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    file_name: string | null
+  }
+
+  export type FontsCountAggregateOutputType = {
+    id: number
+    name: number
+    file_name: number
+    _all: number
+  }
+
+
+  export type FontsAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type FontsSumAggregateInputType = {
+    id?: true
+  }
+
+  export type FontsMinAggregateInputType = {
+    id?: true
+    name?: true
+    file_name?: true
+  }
+
+  export type FontsMaxAggregateInputType = {
+    id?: true
+    name?: true
+    file_name?: true
+  }
+
+  export type FontsCountAggregateInputType = {
+    id?: true
+    name?: true
+    file_name?: true
+    _all?: true
+  }
+
+  export type FontsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which fonts to aggregate.
+     */
+    where?: fontsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of fonts to fetch.
+     */
+    orderBy?: fontsOrderByWithRelationInput | fontsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: fontsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` fonts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` fonts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned fonts
+    **/
+    _count?: true | FontsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FontsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FontsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FontsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FontsMaxAggregateInputType
+  }
+
+  export type GetFontsAggregateType<T extends FontsAggregateArgs> = {
+        [P in keyof T & keyof AggregateFonts]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFonts[P]>
+      : GetScalarType<T[P], AggregateFonts[P]>
+  }
+
+
+
+
+  export type fontsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: fontsWhereInput
+    orderBy?: fontsOrderByWithAggregationInput | fontsOrderByWithAggregationInput[]
+    by: FontsScalarFieldEnum[] | FontsScalarFieldEnum
+    having?: fontsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FontsCountAggregateInputType | true
+    _avg?: FontsAvgAggregateInputType
+    _sum?: FontsSumAggregateInputType
+    _min?: FontsMinAggregateInputType
+    _max?: FontsMaxAggregateInputType
+  }
+
+  export type FontsGroupByOutputType = {
+    id: number
+    name: string | null
+    file_name: string | null
+    _count: FontsCountAggregateOutputType | null
+    _avg: FontsAvgAggregateOutputType | null
+    _sum: FontsSumAggregateOutputType | null
+    _min: FontsMinAggregateOutputType | null
+    _max: FontsMaxAggregateOutputType | null
+  }
+
+  type GetFontsGroupByPayload<T extends fontsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FontsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FontsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FontsGroupByOutputType[P]>
+            : GetScalarType<T[P], FontsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type fontsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    file_name?: boolean
+  }, ExtArgs["result"]["fonts"]>
+
+
+  export type fontsSelectScalar = {
+    id?: boolean
+    name?: boolean
+    file_name?: boolean
+  }
+
+
+  export type $fontsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "fonts"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string | null
+      file_name: string | null
+    }, ExtArgs["result"]["fonts"]>
+    composites: {}
+  }
+
+  type fontsGetPayload<S extends boolean | null | undefined | fontsDefaultArgs> = $Result.GetResult<Prisma.$fontsPayload, S>
+
+  type fontsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<fontsFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: FontsCountAggregateInputType | true
+    }
+
+  export interface fontsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['fonts'], meta: { name: 'fonts' } }
+    /**
+     * Find zero or one Fonts that matches the filter.
+     * @param {fontsFindUniqueArgs} args - Arguments to find a Fonts
+     * @example
+     * // Get one Fonts
+     * const fonts = await prisma.fonts.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends fontsFindUniqueArgs>(args: SelectSubset<T, fontsFindUniqueArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Fonts that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {fontsFindUniqueOrThrowArgs} args - Arguments to find a Fonts
+     * @example
+     * // Get one Fonts
+     * const fonts = await prisma.fonts.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends fontsFindUniqueOrThrowArgs>(args: SelectSubset<T, fontsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Fonts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {fontsFindFirstArgs} args - Arguments to find a Fonts
+     * @example
+     * // Get one Fonts
+     * const fonts = await prisma.fonts.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends fontsFindFirstArgs>(args?: SelectSubset<T, fontsFindFirstArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Fonts that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {fontsFindFirstOrThrowArgs} args - Arguments to find a Fonts
+     * @example
+     * // Get one Fonts
+     * const fonts = await prisma.fonts.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends fontsFindFirstOrThrowArgs>(args?: SelectSubset<T, fontsFindFirstOrThrowArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Fonts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {fontsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Fonts
+     * const fonts = await prisma.fonts.findMany()
+     * 
+     * // Get first 10 Fonts
+     * const fonts = await prisma.fonts.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const fontsWithIdOnly = await prisma.fonts.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends fontsFindManyArgs>(args?: SelectSubset<T, fontsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Fonts.
+     * @param {fontsCreateArgs} args - Arguments to create a Fonts.
+     * @example
+     * // Create one Fonts
+     * const Fonts = await prisma.fonts.create({
+     *   data: {
+     *     // ... data to create a Fonts
+     *   }
+     * })
+     * 
+     */
+    create<T extends fontsCreateArgs>(args: SelectSubset<T, fontsCreateArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Fonts.
+     * @param {fontsCreateManyArgs} args - Arguments to create many Fonts.
+     * @example
+     * // Create many Fonts
+     * const fonts = await prisma.fonts.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends fontsCreateManyArgs>(args?: SelectSubset<T, fontsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Fonts.
+     * @param {fontsDeleteArgs} args - Arguments to delete one Fonts.
+     * @example
+     * // Delete one Fonts
+     * const Fonts = await prisma.fonts.delete({
+     *   where: {
+     *     // ... filter to delete one Fonts
+     *   }
+     * })
+     * 
+     */
+    delete<T extends fontsDeleteArgs>(args: SelectSubset<T, fontsDeleteArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Fonts.
+     * @param {fontsUpdateArgs} args - Arguments to update one Fonts.
+     * @example
+     * // Update one Fonts
+     * const fonts = await prisma.fonts.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends fontsUpdateArgs>(args: SelectSubset<T, fontsUpdateArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Fonts.
+     * @param {fontsDeleteManyArgs} args - Arguments to filter Fonts to delete.
+     * @example
+     * // Delete a few Fonts
+     * const { count } = await prisma.fonts.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends fontsDeleteManyArgs>(args?: SelectSubset<T, fontsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Fonts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {fontsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Fonts
+     * const fonts = await prisma.fonts.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends fontsUpdateManyArgs>(args: SelectSubset<T, fontsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Fonts.
+     * @param {fontsUpsertArgs} args - Arguments to update or create a Fonts.
+     * @example
+     * // Update or create a Fonts
+     * const fonts = await prisma.fonts.upsert({
+     *   create: {
+     *     // ... data to create a Fonts
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Fonts we want to update
+     *   }
+     * })
+     */
+    upsert<T extends fontsUpsertArgs>(args: SelectSubset<T, fontsUpsertArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Fonts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {fontsCountArgs} args - Arguments to filter Fonts to count.
+     * @example
+     * // Count the number of Fonts
+     * const count = await prisma.fonts.count({
+     *   where: {
+     *     // ... the filter for the Fonts we want to count
+     *   }
+     * })
+    **/
+    count<T extends fontsCountArgs>(
+      args?: Subset<T, fontsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FontsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Fonts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FontsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FontsAggregateArgs>(args: Subset<T, FontsAggregateArgs>): Prisma.PrismaPromise<GetFontsAggregateType<T>>
+
+    /**
+     * Group by Fonts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {fontsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends fontsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: fontsGroupByArgs['orderBy'] }
+        : { orderBy?: fontsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, fontsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFontsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the fonts model
+   */
+  readonly fields: fontsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for fonts.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__fontsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the fonts model
+   */ 
+  interface fontsFieldRefs {
+    readonly id: FieldRef<"fonts", 'Int'>
+    readonly name: FieldRef<"fonts", 'String'>
+    readonly file_name: FieldRef<"fonts", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * fonts findUnique
+   */
+  export type fontsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * Filter, which fonts to fetch.
+     */
+    where: fontsWhereUniqueInput
+  }
+
+  /**
+   * fonts findUniqueOrThrow
+   */
+  export type fontsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * Filter, which fonts to fetch.
+     */
+    where: fontsWhereUniqueInput
+  }
+
+  /**
+   * fonts findFirst
+   */
+  export type fontsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * Filter, which fonts to fetch.
+     */
+    where?: fontsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of fonts to fetch.
+     */
+    orderBy?: fontsOrderByWithRelationInput | fontsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for fonts.
+     */
+    cursor?: fontsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` fonts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` fonts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of fonts.
+     */
+    distinct?: FontsScalarFieldEnum | FontsScalarFieldEnum[]
+  }
+
+  /**
+   * fonts findFirstOrThrow
+   */
+  export type fontsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * Filter, which fonts to fetch.
+     */
+    where?: fontsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of fonts to fetch.
+     */
+    orderBy?: fontsOrderByWithRelationInput | fontsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for fonts.
+     */
+    cursor?: fontsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` fonts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` fonts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of fonts.
+     */
+    distinct?: FontsScalarFieldEnum | FontsScalarFieldEnum[]
+  }
+
+  /**
+   * fonts findMany
+   */
+  export type fontsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * Filter, which fonts to fetch.
+     */
+    where?: fontsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of fonts to fetch.
+     */
+    orderBy?: fontsOrderByWithRelationInput | fontsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing fonts.
+     */
+    cursor?: fontsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` fonts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` fonts.
+     */
+    skip?: number
+    distinct?: FontsScalarFieldEnum | FontsScalarFieldEnum[]
+  }
+
+  /**
+   * fonts create
+   */
+  export type fontsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * The data needed to create a fonts.
+     */
+    data?: XOR<fontsCreateInput, fontsUncheckedCreateInput>
+  }
+
+  /**
+   * fonts createMany
+   */
+  export type fontsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many fonts.
+     */
+    data: fontsCreateManyInput | fontsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * fonts update
+   */
+  export type fontsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * The data needed to update a fonts.
+     */
+    data: XOR<fontsUpdateInput, fontsUncheckedUpdateInput>
+    /**
+     * Choose, which fonts to update.
+     */
+    where: fontsWhereUniqueInput
+  }
+
+  /**
+   * fonts updateMany
+   */
+  export type fontsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update fonts.
+     */
+    data: XOR<fontsUpdateManyMutationInput, fontsUncheckedUpdateManyInput>
+    /**
+     * Filter which fonts to update
+     */
+    where?: fontsWhereInput
+  }
+
+  /**
+   * fonts upsert
+   */
+  export type fontsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * The filter to search for the fonts to update in case it exists.
+     */
+    where: fontsWhereUniqueInput
+    /**
+     * In case the fonts found by the `where` argument doesn't exist, create a new fonts with this data.
+     */
+    create: XOR<fontsCreateInput, fontsUncheckedCreateInput>
+    /**
+     * In case the fonts was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<fontsUpdateInput, fontsUncheckedUpdateInput>
+  }
+
+  /**
+   * fonts delete
+   */
+  export type fontsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+    /**
+     * Filter which fonts to delete.
+     */
+    where: fontsWhereUniqueInput
+  }
+
+  /**
+   * fonts deleteMany
+   */
+  export type fontsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which fonts to delete
+     */
+    where?: fontsWhereInput
+  }
+
+  /**
+   * fonts without action
+   */
+  export type fontsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the fonts
+     */
+    select?: fontsSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Model images
    */
 
@@ -2615,7 +3450,6 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     is_deleted?: boolean
-    projects?: boolean | projectsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["images"]>
 
 
@@ -2629,15 +3463,10 @@ export namespace Prisma {
     is_deleted?: boolean
   }
 
-  export type imagesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    projects?: boolean | projectsDefaultArgs<ExtArgs>
-  }
 
   export type $imagesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "images"
-    objects: {
-      projects: Prisma.$projectsPayload<ExtArgs>
-    }
+    objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
       title_id: number
@@ -2986,7 +3815,6 @@ export namespace Prisma {
    */
   export interface Prisma__imagesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    projects<T extends projectsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, projectsDefaultArgs<ExtArgs>>): Prisma__projectsClient<$Result.GetResult<Prisma.$projectsPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3036,10 +3864,6 @@ export namespace Prisma {
      */
     select?: imagesSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
-    /**
      * Filter, which images to fetch.
      */
     where: imagesWhereUniqueInput
@@ -3054,10 +3878,6 @@ export namespace Prisma {
      */
     select?: imagesSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
-    /**
      * Filter, which images to fetch.
      */
     where: imagesWhereUniqueInput
@@ -3071,10 +3891,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the images
      */
     select?: imagesSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
     /**
      * Filter, which images to fetch.
      */
@@ -3120,10 +3936,6 @@ export namespace Prisma {
      */
     select?: imagesSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
-    /**
      * Filter, which images to fetch.
      */
     where?: imagesWhereInput
@@ -3168,10 +3980,6 @@ export namespace Prisma {
      */
     select?: imagesSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
-    /**
      * Filter, which images to fetch.
      */
     where?: imagesWhereInput
@@ -3211,10 +4019,6 @@ export namespace Prisma {
      */
     select?: imagesSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
-    /**
      * The data needed to create a images.
      */
     data: XOR<imagesCreateInput, imagesUncheckedCreateInput>
@@ -3239,10 +4043,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the images
      */
     select?: imagesSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
     /**
      * The data needed to update a images.
      */
@@ -3276,10 +4076,6 @@ export namespace Prisma {
      */
     select?: imagesSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
-    /**
      * The filter to search for the images to update in case it exists.
      */
     where: imagesWhereUniqueInput
@@ -3301,10 +4097,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the images
      */
     select?: imagesSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
     /**
      * Filter which images to delete.
      */
@@ -3329,10 +4121,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the images
      */
     select?: imagesSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
   }
 
 
@@ -3562,7 +4350,6 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     is_deleted?: boolean
-    images?: boolean | projects$imagesArgs<ExtArgs>
     videos?: boolean | projects$videosArgs<ExtArgs>
     _count?: boolean | ProjectsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["projects"]>
@@ -3580,7 +4367,6 @@ export namespace Prisma {
   }
 
   export type projectsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    images?: boolean | projects$imagesArgs<ExtArgs>
     videos?: boolean | projects$videosArgs<ExtArgs>
     _count?: boolean | ProjectsCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -3588,7 +4374,6 @@ export namespace Prisma {
   export type $projectsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "projects"
     objects: {
-      images: Prisma.$imagesPayload<ExtArgs>[]
       videos: Prisma.$videosPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -3940,7 +4725,6 @@ export namespace Prisma {
    */
   export interface Prisma__projectsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    images<T extends projects$imagesArgs<ExtArgs> = {}>(args?: Subset<T, projects$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$imagesPayload<ExtArgs>, T, "findMany"> | Null>
     videos<T extends projects$videosArgs<ExtArgs> = {}>(args?: Subset<T, projects$videosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$videosPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4275,26 +5059,6 @@ export namespace Prisma {
      * Filter which projects to delete
      */
     where?: projectsWhereInput
-  }
-
-  /**
-   * projects.images
-   */
-  export type projects$imagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the images
-     */
-    select?: imagesSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: imagesInclude<ExtArgs> | null
-    where?: imagesWhereInput
-    orderBy?: imagesOrderByWithRelationInput | imagesOrderByWithRelationInput[]
-    cursor?: imagesWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ImagesScalarFieldEnum | ImagesScalarFieldEnum[]
   }
 
   /**
@@ -5273,6 +6037,994 @@ export namespace Prisma {
      * Select specific fields to fetch from the settings
      */
     select?: settingsSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model templates
+   */
+
+  export type AggregateTemplates = {
+    _count: TemplatesCountAggregateOutputType | null
+    _avg: TemplatesAvgAggregateOutputType | null
+    _sum: TemplatesSumAggregateOutputType | null
+    _min: TemplatesMinAggregateOutputType | null
+    _max: TemplatesMaxAggregateOutputType | null
+  }
+
+  export type TemplatesAvgAggregateOutputType = {
+    id: number | null
+    hasAuthor: number | null
+    hasTitle: number | null
+    is_deleted: number | null
+  }
+
+  export type TemplatesSumAggregateOutputType = {
+    id: number | null
+    hasAuthor: number | null
+    hasTitle: number | null
+    is_deleted: number | null
+  }
+
+  export type TemplatesMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    background_image: string | null
+    logo_image: string | null
+    intro: boolean | null
+    outro: boolean | null
+    font: string | null
+    position: string | null
+    hasAuthor: number | null
+    hasTitle: number | null
+    size: string | null
+    created_at: Date | null
+    updated_at: Date | null
+    deleted_at: Date | null
+    is_deleted: number | null
+  }
+
+  export type TemplatesMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    background_image: string | null
+    logo_image: string | null
+    intro: boolean | null
+    outro: boolean | null
+    font: string | null
+    position: string | null
+    hasAuthor: number | null
+    hasTitle: number | null
+    size: string | null
+    created_at: Date | null
+    updated_at: Date | null
+    deleted_at: Date | null
+    is_deleted: number | null
+  }
+
+  export type TemplatesCountAggregateOutputType = {
+    id: number
+    name: number
+    background_image: number
+    logo_image: number
+    intro: number
+    outro: number
+    font: number
+    position: number
+    hasAuthor: number
+    hasTitle: number
+    size: number
+    created_at: number
+    updated_at: number
+    deleted_at: number
+    is_deleted: number
+    _all: number
+  }
+
+
+  export type TemplatesAvgAggregateInputType = {
+    id?: true
+    hasAuthor?: true
+    hasTitle?: true
+    is_deleted?: true
+  }
+
+  export type TemplatesSumAggregateInputType = {
+    id?: true
+    hasAuthor?: true
+    hasTitle?: true
+    is_deleted?: true
+  }
+
+  export type TemplatesMinAggregateInputType = {
+    id?: true
+    name?: true
+    background_image?: true
+    logo_image?: true
+    intro?: true
+    outro?: true
+    font?: true
+    position?: true
+    hasAuthor?: true
+    hasTitle?: true
+    size?: true
+    created_at?: true
+    updated_at?: true
+    deleted_at?: true
+    is_deleted?: true
+  }
+
+  export type TemplatesMaxAggregateInputType = {
+    id?: true
+    name?: true
+    background_image?: true
+    logo_image?: true
+    intro?: true
+    outro?: true
+    font?: true
+    position?: true
+    hasAuthor?: true
+    hasTitle?: true
+    size?: true
+    created_at?: true
+    updated_at?: true
+    deleted_at?: true
+    is_deleted?: true
+  }
+
+  export type TemplatesCountAggregateInputType = {
+    id?: true
+    name?: true
+    background_image?: true
+    logo_image?: true
+    intro?: true
+    outro?: true
+    font?: true
+    position?: true
+    hasAuthor?: true
+    hasTitle?: true
+    size?: true
+    created_at?: true
+    updated_at?: true
+    deleted_at?: true
+    is_deleted?: true
+    _all?: true
+  }
+
+  export type TemplatesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which templates to aggregate.
+     */
+    where?: templatesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of templates to fetch.
+     */
+    orderBy?: templatesOrderByWithRelationInput | templatesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: templatesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` templates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` templates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned templates
+    **/
+    _count?: true | TemplatesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TemplatesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TemplatesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TemplatesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TemplatesMaxAggregateInputType
+  }
+
+  export type GetTemplatesAggregateType<T extends TemplatesAggregateArgs> = {
+        [P in keyof T & keyof AggregateTemplates]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTemplates[P]>
+      : GetScalarType<T[P], AggregateTemplates[P]>
+  }
+
+
+
+
+  export type templatesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: templatesWhereInput
+    orderBy?: templatesOrderByWithAggregationInput | templatesOrderByWithAggregationInput[]
+    by: TemplatesScalarFieldEnum[] | TemplatesScalarFieldEnum
+    having?: templatesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TemplatesCountAggregateInputType | true
+    _avg?: TemplatesAvgAggregateInputType
+    _sum?: TemplatesSumAggregateInputType
+    _min?: TemplatesMinAggregateInputType
+    _max?: TemplatesMaxAggregateInputType
+  }
+
+  export type TemplatesGroupByOutputType = {
+    id: number
+    name: string
+    background_image: string | null
+    logo_image: string
+    intro: boolean | null
+    outro: boolean | null
+    font: string | null
+    position: string | null
+    hasAuthor: number | null
+    hasTitle: number | null
+    size: string | null
+    created_at: Date | null
+    updated_at: Date | null
+    deleted_at: Date | null
+    is_deleted: number | null
+    _count: TemplatesCountAggregateOutputType | null
+    _avg: TemplatesAvgAggregateOutputType | null
+    _sum: TemplatesSumAggregateOutputType | null
+    _min: TemplatesMinAggregateOutputType | null
+    _max: TemplatesMaxAggregateOutputType | null
+  }
+
+  type GetTemplatesGroupByPayload<T extends templatesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TemplatesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TemplatesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TemplatesGroupByOutputType[P]>
+            : GetScalarType<T[P], TemplatesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type templatesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    background_image?: boolean
+    logo_image?: boolean
+    intro?: boolean
+    outro?: boolean
+    font?: boolean
+    position?: boolean
+    hasAuthor?: boolean
+    hasTitle?: boolean
+    size?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    deleted_at?: boolean
+    is_deleted?: boolean
+  }, ExtArgs["result"]["templates"]>
+
+
+  export type templatesSelectScalar = {
+    id?: boolean
+    name?: boolean
+    background_image?: boolean
+    logo_image?: boolean
+    intro?: boolean
+    outro?: boolean
+    font?: boolean
+    position?: boolean
+    hasAuthor?: boolean
+    hasTitle?: boolean
+    size?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    deleted_at?: boolean
+    is_deleted?: boolean
+  }
+
+
+  export type $templatesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "templates"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+      background_image: string | null
+      logo_image: string
+      intro: boolean | null
+      outro: boolean | null
+      font: string | null
+      position: string | null
+      hasAuthor: number | null
+      hasTitle: number | null
+      size: string | null
+      created_at: Date | null
+      updated_at: Date | null
+      deleted_at: Date | null
+      is_deleted: number | null
+    }, ExtArgs["result"]["templates"]>
+    composites: {}
+  }
+
+  type templatesGetPayload<S extends boolean | null | undefined | templatesDefaultArgs> = $Result.GetResult<Prisma.$templatesPayload, S>
+
+  type templatesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<templatesFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: TemplatesCountAggregateInputType | true
+    }
+
+  export interface templatesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['templates'], meta: { name: 'templates' } }
+    /**
+     * Find zero or one Templates that matches the filter.
+     * @param {templatesFindUniqueArgs} args - Arguments to find a Templates
+     * @example
+     * // Get one Templates
+     * const templates = await prisma.templates.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends templatesFindUniqueArgs>(args: SelectSubset<T, templatesFindUniqueArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Templates that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {templatesFindUniqueOrThrowArgs} args - Arguments to find a Templates
+     * @example
+     * // Get one Templates
+     * const templates = await prisma.templates.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends templatesFindUniqueOrThrowArgs>(args: SelectSubset<T, templatesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Templates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {templatesFindFirstArgs} args - Arguments to find a Templates
+     * @example
+     * // Get one Templates
+     * const templates = await prisma.templates.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends templatesFindFirstArgs>(args?: SelectSubset<T, templatesFindFirstArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Templates that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {templatesFindFirstOrThrowArgs} args - Arguments to find a Templates
+     * @example
+     * // Get one Templates
+     * const templates = await prisma.templates.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends templatesFindFirstOrThrowArgs>(args?: SelectSubset<T, templatesFindFirstOrThrowArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Templates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {templatesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Templates
+     * const templates = await prisma.templates.findMany()
+     * 
+     * // Get first 10 Templates
+     * const templates = await prisma.templates.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const templatesWithIdOnly = await prisma.templates.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends templatesFindManyArgs>(args?: SelectSubset<T, templatesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Templates.
+     * @param {templatesCreateArgs} args - Arguments to create a Templates.
+     * @example
+     * // Create one Templates
+     * const Templates = await prisma.templates.create({
+     *   data: {
+     *     // ... data to create a Templates
+     *   }
+     * })
+     * 
+     */
+    create<T extends templatesCreateArgs>(args: SelectSubset<T, templatesCreateArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Templates.
+     * @param {templatesCreateManyArgs} args - Arguments to create many Templates.
+     * @example
+     * // Create many Templates
+     * const templates = await prisma.templates.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends templatesCreateManyArgs>(args?: SelectSubset<T, templatesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Templates.
+     * @param {templatesDeleteArgs} args - Arguments to delete one Templates.
+     * @example
+     * // Delete one Templates
+     * const Templates = await prisma.templates.delete({
+     *   where: {
+     *     // ... filter to delete one Templates
+     *   }
+     * })
+     * 
+     */
+    delete<T extends templatesDeleteArgs>(args: SelectSubset<T, templatesDeleteArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Templates.
+     * @param {templatesUpdateArgs} args - Arguments to update one Templates.
+     * @example
+     * // Update one Templates
+     * const templates = await prisma.templates.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends templatesUpdateArgs>(args: SelectSubset<T, templatesUpdateArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Templates.
+     * @param {templatesDeleteManyArgs} args - Arguments to filter Templates to delete.
+     * @example
+     * // Delete a few Templates
+     * const { count } = await prisma.templates.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends templatesDeleteManyArgs>(args?: SelectSubset<T, templatesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Templates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {templatesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Templates
+     * const templates = await prisma.templates.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends templatesUpdateManyArgs>(args: SelectSubset<T, templatesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Templates.
+     * @param {templatesUpsertArgs} args - Arguments to update or create a Templates.
+     * @example
+     * // Update or create a Templates
+     * const templates = await prisma.templates.upsert({
+     *   create: {
+     *     // ... data to create a Templates
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Templates we want to update
+     *   }
+     * })
+     */
+    upsert<T extends templatesUpsertArgs>(args: SelectSubset<T, templatesUpsertArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Templates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {templatesCountArgs} args - Arguments to filter Templates to count.
+     * @example
+     * // Count the number of Templates
+     * const count = await prisma.templates.count({
+     *   where: {
+     *     // ... the filter for the Templates we want to count
+     *   }
+     * })
+    **/
+    count<T extends templatesCountArgs>(
+      args?: Subset<T, templatesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TemplatesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Templates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TemplatesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TemplatesAggregateArgs>(args: Subset<T, TemplatesAggregateArgs>): Prisma.PrismaPromise<GetTemplatesAggregateType<T>>
+
+    /**
+     * Group by Templates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {templatesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends templatesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: templatesGroupByArgs['orderBy'] }
+        : { orderBy?: templatesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, templatesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTemplatesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the templates model
+   */
+  readonly fields: templatesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for templates.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__templatesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the templates model
+   */ 
+  interface templatesFieldRefs {
+    readonly id: FieldRef<"templates", 'Int'>
+    readonly name: FieldRef<"templates", 'String'>
+    readonly background_image: FieldRef<"templates", 'String'>
+    readonly logo_image: FieldRef<"templates", 'String'>
+    readonly intro: FieldRef<"templates", 'Boolean'>
+    readonly outro: FieldRef<"templates", 'Boolean'>
+    readonly font: FieldRef<"templates", 'String'>
+    readonly position: FieldRef<"templates", 'String'>
+    readonly hasAuthor: FieldRef<"templates", 'Int'>
+    readonly hasTitle: FieldRef<"templates", 'Int'>
+    readonly size: FieldRef<"templates", 'String'>
+    readonly created_at: FieldRef<"templates", 'DateTime'>
+    readonly updated_at: FieldRef<"templates", 'DateTime'>
+    readonly deleted_at: FieldRef<"templates", 'DateTime'>
+    readonly is_deleted: FieldRef<"templates", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * templates findUnique
+   */
+  export type templatesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * Filter, which templates to fetch.
+     */
+    where: templatesWhereUniqueInput
+  }
+
+  /**
+   * templates findUniqueOrThrow
+   */
+  export type templatesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * Filter, which templates to fetch.
+     */
+    where: templatesWhereUniqueInput
+  }
+
+  /**
+   * templates findFirst
+   */
+  export type templatesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * Filter, which templates to fetch.
+     */
+    where?: templatesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of templates to fetch.
+     */
+    orderBy?: templatesOrderByWithRelationInput | templatesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for templates.
+     */
+    cursor?: templatesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` templates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` templates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of templates.
+     */
+    distinct?: TemplatesScalarFieldEnum | TemplatesScalarFieldEnum[]
+  }
+
+  /**
+   * templates findFirstOrThrow
+   */
+  export type templatesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * Filter, which templates to fetch.
+     */
+    where?: templatesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of templates to fetch.
+     */
+    orderBy?: templatesOrderByWithRelationInput | templatesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for templates.
+     */
+    cursor?: templatesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` templates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` templates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of templates.
+     */
+    distinct?: TemplatesScalarFieldEnum | TemplatesScalarFieldEnum[]
+  }
+
+  /**
+   * templates findMany
+   */
+  export type templatesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * Filter, which templates to fetch.
+     */
+    where?: templatesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of templates to fetch.
+     */
+    orderBy?: templatesOrderByWithRelationInput | templatesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing templates.
+     */
+    cursor?: templatesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` templates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` templates.
+     */
+    skip?: number
+    distinct?: TemplatesScalarFieldEnum | TemplatesScalarFieldEnum[]
+  }
+
+  /**
+   * templates create
+   */
+  export type templatesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * The data needed to create a templates.
+     */
+    data: XOR<templatesCreateInput, templatesUncheckedCreateInput>
+  }
+
+  /**
+   * templates createMany
+   */
+  export type templatesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many templates.
+     */
+    data: templatesCreateManyInput | templatesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * templates update
+   */
+  export type templatesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * The data needed to update a templates.
+     */
+    data: XOR<templatesUpdateInput, templatesUncheckedUpdateInput>
+    /**
+     * Choose, which templates to update.
+     */
+    where: templatesWhereUniqueInput
+  }
+
+  /**
+   * templates updateMany
+   */
+  export type templatesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update templates.
+     */
+    data: XOR<templatesUpdateManyMutationInput, templatesUncheckedUpdateManyInput>
+    /**
+     * Filter which templates to update
+     */
+    where?: templatesWhereInput
+  }
+
+  /**
+   * templates upsert
+   */
+  export type templatesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * The filter to search for the templates to update in case it exists.
+     */
+    where: templatesWhereUniqueInput
+    /**
+     * In case the templates found by the `where` argument doesn't exist, create a new templates with this data.
+     */
+    create: XOR<templatesCreateInput, templatesUncheckedCreateInput>
+    /**
+     * In case the templates was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<templatesUpdateInput, templatesUncheckedUpdateInput>
+  }
+
+  /**
+   * templates delete
+   */
+  export type templatesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
+    /**
+     * Filter which templates to delete.
+     */
+    where: templatesWhereUniqueInput
+  }
+
+  /**
+   * templates deleteMany
+   */
+  export type templatesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which templates to delete
+     */
+    where?: templatesWhereInput
+  }
+
+  /**
+   * templates without action
+   */
+  export type templatesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the templates
+     */
+    select?: templatesSelect<ExtArgs> | null
   }
 
 
@@ -7436,7 +9188,7 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     is_deleted?: boolean
-    projects?: boolean | projectsDefaultArgs<ExtArgs>
+    project?: boolean | projectsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["videos"]>
 
 
@@ -7451,13 +9203,13 @@ export namespace Prisma {
   }
 
   export type videosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    projects?: boolean | projectsDefaultArgs<ExtArgs>
+    project?: boolean | projectsDefaultArgs<ExtArgs>
   }
 
   export type $videosPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "videos"
     objects: {
-      projects: Prisma.$projectsPayload<ExtArgs>
+      project: Prisma.$projectsPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -7807,7 +9559,7 @@ export namespace Prisma {
    */
   export interface Prisma__videosClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    projects<T extends projectsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, projectsDefaultArgs<ExtArgs>>): Prisma__projectsClient<$Result.GetResult<Prisma.$projectsPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    project<T extends projectsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, projectsDefaultArgs<ExtArgs>>): Prisma__projectsClient<$Result.GetResult<Prisma.$projectsPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8158,1805 +9910,6 @@ export namespace Prisma {
 
 
   /**
-   * Model templates
-   */
-
-  export type AggregateTemplates = {
-    _count: TemplatesCountAggregateOutputType | null
-    _avg: TemplatesAvgAggregateOutputType | null
-    _sum: TemplatesSumAggregateOutputType | null
-    _min: TemplatesMinAggregateOutputType | null
-    _max: TemplatesMaxAggregateOutputType | null
-  }
-
-  export type TemplatesAvgAggregateOutputType = {
-    id: number | null
-    hasAuthor: number | null
-    hasTitle: number | null
-    is_deleted: number | null
-  }
-
-  export type TemplatesSumAggregateOutputType = {
-    id: number | null
-    hasAuthor: number | null
-    hasTitle: number | null
-    is_deleted: number | null
-  }
-
-  export type TemplatesMinAggregateOutputType = {
-    id: number | null
-    name: string | null
-    background_image: string | null
-    font: string | null
-    position: string | null
-    hasAuthor: number | null
-    hasTitle: number | null
-    size: string | null
-    created_at: Date | null
-    updated_at: Date | null
-    deleted_at: Date | null
-    is_deleted: number | null
-  }
-
-  export type TemplatesMaxAggregateOutputType = {
-    id: number | null
-    name: string | null
-    background_image: string | null
-    font: string | null
-    position: string | null
-    hasAuthor: number | null
-    hasTitle: number | null
-    size: string | null
-    created_at: Date | null
-    updated_at: Date | null
-    deleted_at: Date | null
-    is_deleted: number | null
-  }
-
-  export type TemplatesCountAggregateOutputType = {
-    id: number
-    name: number
-    background_image: number
-    font: number
-    position: number
-    hasAuthor: number
-    hasTitle: number
-    size: number
-    created_at: number
-    updated_at: number
-    deleted_at: number
-    is_deleted: number
-    _all: number
-  }
-
-
-  export type TemplatesAvgAggregateInputType = {
-    id?: true
-    hasAuthor?: true
-    hasTitle?: true
-    is_deleted?: true
-  }
-
-  export type TemplatesSumAggregateInputType = {
-    id?: true
-    hasAuthor?: true
-    hasTitle?: true
-    is_deleted?: true
-  }
-
-  export type TemplatesMinAggregateInputType = {
-    id?: true
-    name?: true
-    background_image?: true
-    font?: true
-    position?: true
-    hasAuthor?: true
-    hasTitle?: true
-    size?: true
-    created_at?: true
-    updated_at?: true
-    deleted_at?: true
-    is_deleted?: true
-  }
-
-  export type TemplatesMaxAggregateInputType = {
-    id?: true
-    name?: true
-    background_image?: true
-    font?: true
-    position?: true
-    hasAuthor?: true
-    hasTitle?: true
-    size?: true
-    created_at?: true
-    updated_at?: true
-    deleted_at?: true
-    is_deleted?: true
-  }
-
-  export type TemplatesCountAggregateInputType = {
-    id?: true
-    name?: true
-    background_image?: true
-    font?: true
-    position?: true
-    hasAuthor?: true
-    hasTitle?: true
-    size?: true
-    created_at?: true
-    updated_at?: true
-    deleted_at?: true
-    is_deleted?: true
-    _all?: true
-  }
-
-  export type TemplatesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which templates to aggregate.
-     */
-    where?: templatesWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of templates to fetch.
-     */
-    orderBy?: templatesOrderByWithRelationInput | templatesOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: templatesWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` templates from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` templates.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned templates
-    **/
-    _count?: true | TemplatesCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: TemplatesAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: TemplatesSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: TemplatesMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: TemplatesMaxAggregateInputType
-  }
-
-  export type GetTemplatesAggregateType<T extends TemplatesAggregateArgs> = {
-        [P in keyof T & keyof AggregateTemplates]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateTemplates[P]>
-      : GetScalarType<T[P], AggregateTemplates[P]>
-  }
-
-
-
-
-  export type templatesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: templatesWhereInput
-    orderBy?: templatesOrderByWithAggregationInput | templatesOrderByWithAggregationInput[]
-    by: TemplatesScalarFieldEnum[] | TemplatesScalarFieldEnum
-    having?: templatesScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: TemplatesCountAggregateInputType | true
-    _avg?: TemplatesAvgAggregateInputType
-    _sum?: TemplatesSumAggregateInputType
-    _min?: TemplatesMinAggregateInputType
-    _max?: TemplatesMaxAggregateInputType
-  }
-
-  export type TemplatesGroupByOutputType = {
-    id: number
-    name: string
-    background_image: string | null
-    font: string | null
-    position: string | null
-    hasAuthor: number | null
-    hasTitle: number | null
-    size: string | null
-    created_at: Date | null
-    updated_at: Date | null
-    deleted_at: Date | null
-    is_deleted: number | null
-    _count: TemplatesCountAggregateOutputType | null
-    _avg: TemplatesAvgAggregateOutputType | null
-    _sum: TemplatesSumAggregateOutputType | null
-    _min: TemplatesMinAggregateOutputType | null
-    _max: TemplatesMaxAggregateOutputType | null
-  }
-
-  type GetTemplatesGroupByPayload<T extends templatesGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<TemplatesGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof TemplatesGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], TemplatesGroupByOutputType[P]>
-            : GetScalarType<T[P], TemplatesGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type templatesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    background_image?: boolean
-    font?: boolean
-    position?: boolean
-    hasAuthor?: boolean
-    hasTitle?: boolean
-    size?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    deleted_at?: boolean
-    is_deleted?: boolean
-  }, ExtArgs["result"]["templates"]>
-
-
-  export type templatesSelectScalar = {
-    id?: boolean
-    name?: boolean
-    background_image?: boolean
-    font?: boolean
-    position?: boolean
-    hasAuthor?: boolean
-    hasTitle?: boolean
-    size?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    deleted_at?: boolean
-    is_deleted?: boolean
-  }
-
-
-  export type $templatesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "templates"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      name: string
-      background_image: string | null
-      font: string | null
-      position: string | null
-      hasAuthor: number | null
-      hasTitle: number | null
-      size: string | null
-      created_at: Date | null
-      updated_at: Date | null
-      deleted_at: Date | null
-      is_deleted: number | null
-    }, ExtArgs["result"]["templates"]>
-    composites: {}
-  }
-
-  type templatesGetPayload<S extends boolean | null | undefined | templatesDefaultArgs> = $Result.GetResult<Prisma.$templatesPayload, S>
-
-  type templatesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<templatesFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: TemplatesCountAggregateInputType | true
-    }
-
-  export interface templatesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['templates'], meta: { name: 'templates' } }
-    /**
-     * Find zero or one Templates that matches the filter.
-     * @param {templatesFindUniqueArgs} args - Arguments to find a Templates
-     * @example
-     * // Get one Templates
-     * const templates = await prisma.templates.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends templatesFindUniqueArgs>(args: SelectSubset<T, templatesFindUniqueArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
-
-    /**
-     * Find one Templates that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {templatesFindUniqueOrThrowArgs} args - Arguments to find a Templates
-     * @example
-     * // Get one Templates
-     * const templates = await prisma.templates.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends templatesFindUniqueOrThrowArgs>(args: SelectSubset<T, templatesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
-
-    /**
-     * Find the first Templates that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {templatesFindFirstArgs} args - Arguments to find a Templates
-     * @example
-     * // Get one Templates
-     * const templates = await prisma.templates.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends templatesFindFirstArgs>(args?: SelectSubset<T, templatesFindFirstArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
-
-    /**
-     * Find the first Templates that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {templatesFindFirstOrThrowArgs} args - Arguments to find a Templates
-     * @example
-     * // Get one Templates
-     * const templates = await prisma.templates.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends templatesFindFirstOrThrowArgs>(args?: SelectSubset<T, templatesFindFirstOrThrowArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
-
-    /**
-     * Find zero or more Templates that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {templatesFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Templates
-     * const templates = await prisma.templates.findMany()
-     * 
-     * // Get first 10 Templates
-     * const templates = await prisma.templates.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const templatesWithIdOnly = await prisma.templates.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends templatesFindManyArgs>(args?: SelectSubset<T, templatesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "findMany">>
-
-    /**
-     * Create a Templates.
-     * @param {templatesCreateArgs} args - Arguments to create a Templates.
-     * @example
-     * // Create one Templates
-     * const Templates = await prisma.templates.create({
-     *   data: {
-     *     // ... data to create a Templates
-     *   }
-     * })
-     * 
-     */
-    create<T extends templatesCreateArgs>(args: SelectSubset<T, templatesCreateArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "create">, never, ExtArgs>
-
-    /**
-     * Create many Templates.
-     * @param {templatesCreateManyArgs} args - Arguments to create many Templates.
-     * @example
-     * // Create many Templates
-     * const templates = await prisma.templates.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends templatesCreateManyArgs>(args?: SelectSubset<T, templatesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Templates.
-     * @param {templatesDeleteArgs} args - Arguments to delete one Templates.
-     * @example
-     * // Delete one Templates
-     * const Templates = await prisma.templates.delete({
-     *   where: {
-     *     // ... filter to delete one Templates
-     *   }
-     * })
-     * 
-     */
-    delete<T extends templatesDeleteArgs>(args: SelectSubset<T, templatesDeleteArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "delete">, never, ExtArgs>
-
-    /**
-     * Update one Templates.
-     * @param {templatesUpdateArgs} args - Arguments to update one Templates.
-     * @example
-     * // Update one Templates
-     * const templates = await prisma.templates.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends templatesUpdateArgs>(args: SelectSubset<T, templatesUpdateArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "update">, never, ExtArgs>
-
-    /**
-     * Delete zero or more Templates.
-     * @param {templatesDeleteManyArgs} args - Arguments to filter Templates to delete.
-     * @example
-     * // Delete a few Templates
-     * const { count } = await prisma.templates.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends templatesDeleteManyArgs>(args?: SelectSubset<T, templatesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Templates.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {templatesUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Templates
-     * const templates = await prisma.templates.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends templatesUpdateManyArgs>(args: SelectSubset<T, templatesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Templates.
-     * @param {templatesUpsertArgs} args - Arguments to update or create a Templates.
-     * @example
-     * // Update or create a Templates
-     * const templates = await prisma.templates.upsert({
-     *   create: {
-     *     // ... data to create a Templates
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Templates we want to update
-     *   }
-     * })
-     */
-    upsert<T extends templatesUpsertArgs>(args: SelectSubset<T, templatesUpsertArgs<ExtArgs>>): Prisma__templatesClient<$Result.GetResult<Prisma.$templatesPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
-
-
-    /**
-     * Count the number of Templates.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {templatesCountArgs} args - Arguments to filter Templates to count.
-     * @example
-     * // Count the number of Templates
-     * const count = await prisma.templates.count({
-     *   where: {
-     *     // ... the filter for the Templates we want to count
-     *   }
-     * })
-    **/
-    count<T extends templatesCountArgs>(
-      args?: Subset<T, templatesCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], TemplatesCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Templates.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TemplatesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends TemplatesAggregateArgs>(args: Subset<T, TemplatesAggregateArgs>): Prisma.PrismaPromise<GetTemplatesAggregateType<T>>
-
-    /**
-     * Group by Templates.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {templatesGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends templatesGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: templatesGroupByArgs['orderBy'] }
-        : { orderBy?: templatesGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, templatesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTemplatesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the templates model
-   */
-  readonly fields: templatesFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for templates.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__templatesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the templates model
-   */ 
-  interface templatesFieldRefs {
-    readonly id: FieldRef<"templates", 'Int'>
-    readonly name: FieldRef<"templates", 'String'>
-    readonly background_image: FieldRef<"templates", 'String'>
-    readonly font: FieldRef<"templates", 'String'>
-    readonly position: FieldRef<"templates", 'String'>
-    readonly hasAuthor: FieldRef<"templates", 'Int'>
-    readonly hasTitle: FieldRef<"templates", 'Int'>
-    readonly size: FieldRef<"templates", 'String'>
-    readonly created_at: FieldRef<"templates", 'DateTime'>
-    readonly updated_at: FieldRef<"templates", 'DateTime'>
-    readonly deleted_at: FieldRef<"templates", 'DateTime'>
-    readonly is_deleted: FieldRef<"templates", 'Int'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * templates findUnique
-   */
-  export type templatesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the templates
-     */
-    select?: templatesSelect<ExtArgs> | null
-    /**
-     * Filter, which templates to fetch.
-     */
-    where: templatesWhereUniqueInput
-  }
-
-  /**
-   * templates findUniqueOrThrow
-   */
-  export type templatesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the templates
-     */
-    select?: templatesSelect<ExtArgs> | null
-    /**
-     * Filter, which templates to fetch.
-     */
-    where: templatesWhereUniqueInput
-  }
-
-  /**
-   * templates findFirst
-   */
-  export type templatesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the templates
-     */
-    select?: templatesSelect<ExtArgs> | null
-    /**
-     * Filter, which templates to fetch.
-     */
-    where?: templatesWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of templates to fetch.
-     */
-    orderBy?: templatesOrderByWithRelationInput | templatesOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for templates.
-     */
-    cursor?: templatesWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` templates from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` templates.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of templates.
-     */
-    distinct?: TemplatesScalarFieldEnum | TemplatesScalarFieldEnum[]
-  }
-
-  /**
-   * templates findFirstOrThrow
-   */
-  export type templatesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the templates
-     */
-    select?: templatesSelect<ExtArgs> | null
-    /**
-     * Filter, which templates to fetch.
-     */
-    where?: templatesWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of templates to fetch.
-     */
-    orderBy?: templatesOrderByWithRelationInput | templatesOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for templates.
-     */
-    cursor?: templatesWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` templates from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` templates.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of templates.
-     */
-    distinct?: TemplatesScalarFieldEnum | TemplatesScalarFieldEnum[]
-  }
-
-  /**
-   * templates findMany
-   */
-  export type templatesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the templates
-     */
-    select?: templatesSelect<ExtArgs> | null
-    /**
-     * Filter, which templates to fetch.
-     */
-    where?: templatesWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of templates to fetch.
-     */
-    orderBy?: templatesOrderByWithRelationInput | templatesOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing templates.
-     */
-    cursor?: templatesWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` templates from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` templates.
-     */
-    skip?: number
-    distinct?: TemplatesScalarFieldEnum | TemplatesScalarFieldEnum[]
-  }
-
-  /**
-   * templates create
-   */
-  export type templatesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the templates
-     */
-    select?: templatesSelect<ExtArgs> | null
-    /**
-     * The data needed to create a templates.
-     */
-    data: XOR<templatesCreateInput, templatesUncheckedCreateInput>
-  }
-
-  /**
-   * templates createMany
-   */
-  export type templatesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many templates.
-     */
-    data: templatesCreateManyInput | templatesCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * templates update
-   */
-  export type templatesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the templates
-     */
-    select?: templatesSelect<ExtArgs> | null
-    /**
-     * The data needed to update a templates.
-     */
-    data: XOR<templatesUpdateInput, templatesUncheckedUpdateInput>
-    /**
-     * Choose, which templates to update.
-     */
-    where: templatesWhereUniqueInput
-  }
-
-  /**
-   * templates updateMany
-   */
-  export type templatesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update templates.
-     */
-    data: XOR<templatesUpdateManyMutationInput, templatesUncheckedUpdateManyInput>
-    /**
-     * Filter which templates to update
-     */
-    where?: templatesWhereInput
-  }
-
-  /**
-   * templates upsert
-   */
-  export type templatesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the templates
-     */
-    select?: templatesSelect<ExtArgs> | null
-    /**
-     * The filter to search for the templates to update in case it exists.
-     */
-    where: templatesWhereUniqueInput
-    /**
-     * In case the templates found by the `where` argument doesn't exist, create a new templates with this data.
-     */
-    create: XOR<templatesCreateInput, templatesUncheckedCreateInput>
-    /**
-     * In case the templates was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<templatesUpdateInput, templatesUncheckedUpdateInput>
-  }
-
-  /**
-   * templates delete
-   */
-  export type templatesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the templates
-     */
-    select?: templatesSelect<ExtArgs> | null
-    /**
-     * Filter which templates to delete.
-     */
-    where: templatesWhereUniqueInput
-  }
-
-  /**
-   * templates deleteMany
-   */
-  export type templatesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which templates to delete
-     */
-    where?: templatesWhereInput
-  }
-
-  /**
-   * templates without action
-   */
-  export type templatesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the templates
-     */
-    select?: templatesSelect<ExtArgs> | null
-  }
-
-
-  /**
-   * Model fonts
-   */
-
-  export type AggregateFonts = {
-    _count: FontsCountAggregateOutputType | null
-    _avg: FontsAvgAggregateOutputType | null
-    _sum: FontsSumAggregateOutputType | null
-    _min: FontsMinAggregateOutputType | null
-    _max: FontsMaxAggregateOutputType | null
-  }
-
-  export type FontsAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type FontsSumAggregateOutputType = {
-    id: number | null
-  }
-
-  export type FontsMinAggregateOutputType = {
-    id: number | null
-    name: string | null
-    file_name: string | null
-  }
-
-  export type FontsMaxAggregateOutputType = {
-    id: number | null
-    name: string | null
-    file_name: string | null
-  }
-
-  export type FontsCountAggregateOutputType = {
-    id: number
-    name: number
-    file_name: number
-    _all: number
-  }
-
-
-  export type FontsAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type FontsSumAggregateInputType = {
-    id?: true
-  }
-
-  export type FontsMinAggregateInputType = {
-    id?: true
-    name?: true
-    file_name?: true
-  }
-
-  export type FontsMaxAggregateInputType = {
-    id?: true
-    name?: true
-    file_name?: true
-  }
-
-  export type FontsCountAggregateInputType = {
-    id?: true
-    name?: true
-    file_name?: true
-    _all?: true
-  }
-
-  export type FontsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which fonts to aggregate.
-     */
-    where?: fontsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of fonts to fetch.
-     */
-    orderBy?: fontsOrderByWithRelationInput | fontsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: fontsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` fonts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` fonts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned fonts
-    **/
-    _count?: true | FontsCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: FontsAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: FontsSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: FontsMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: FontsMaxAggregateInputType
-  }
-
-  export type GetFontsAggregateType<T extends FontsAggregateArgs> = {
-        [P in keyof T & keyof AggregateFonts]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateFonts[P]>
-      : GetScalarType<T[P], AggregateFonts[P]>
-  }
-
-
-
-
-  export type fontsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: fontsWhereInput
-    orderBy?: fontsOrderByWithAggregationInput | fontsOrderByWithAggregationInput[]
-    by: FontsScalarFieldEnum[] | FontsScalarFieldEnum
-    having?: fontsScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: FontsCountAggregateInputType | true
-    _avg?: FontsAvgAggregateInputType
-    _sum?: FontsSumAggregateInputType
-    _min?: FontsMinAggregateInputType
-    _max?: FontsMaxAggregateInputType
-  }
-
-  export type FontsGroupByOutputType = {
-    id: number
-    name: string | null
-    file_name: string | null
-    _count: FontsCountAggregateOutputType | null
-    _avg: FontsAvgAggregateOutputType | null
-    _sum: FontsSumAggregateOutputType | null
-    _min: FontsMinAggregateOutputType | null
-    _max: FontsMaxAggregateOutputType | null
-  }
-
-  type GetFontsGroupByPayload<T extends fontsGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<FontsGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof FontsGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], FontsGroupByOutputType[P]>
-            : GetScalarType<T[P], FontsGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type fontsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    file_name?: boolean
-  }, ExtArgs["result"]["fonts"]>
-
-
-  export type fontsSelectScalar = {
-    id?: boolean
-    name?: boolean
-    file_name?: boolean
-  }
-
-
-  export type $fontsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "fonts"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      name: string | null
-      file_name: string | null
-    }, ExtArgs["result"]["fonts"]>
-    composites: {}
-  }
-
-  type fontsGetPayload<S extends boolean | null | undefined | fontsDefaultArgs> = $Result.GetResult<Prisma.$fontsPayload, S>
-
-  type fontsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<fontsFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: FontsCountAggregateInputType | true
-    }
-
-  export interface fontsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['fonts'], meta: { name: 'fonts' } }
-    /**
-     * Find zero or one Fonts that matches the filter.
-     * @param {fontsFindUniqueArgs} args - Arguments to find a Fonts
-     * @example
-     * // Get one Fonts
-     * const fonts = await prisma.fonts.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends fontsFindUniqueArgs>(args: SelectSubset<T, fontsFindUniqueArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
-
-    /**
-     * Find one Fonts that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {fontsFindUniqueOrThrowArgs} args - Arguments to find a Fonts
-     * @example
-     * // Get one Fonts
-     * const fonts = await prisma.fonts.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends fontsFindUniqueOrThrowArgs>(args: SelectSubset<T, fontsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
-
-    /**
-     * Find the first Fonts that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {fontsFindFirstArgs} args - Arguments to find a Fonts
-     * @example
-     * // Get one Fonts
-     * const fonts = await prisma.fonts.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends fontsFindFirstArgs>(args?: SelectSubset<T, fontsFindFirstArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
-
-    /**
-     * Find the first Fonts that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {fontsFindFirstOrThrowArgs} args - Arguments to find a Fonts
-     * @example
-     * // Get one Fonts
-     * const fonts = await prisma.fonts.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends fontsFindFirstOrThrowArgs>(args?: SelectSubset<T, fontsFindFirstOrThrowArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
-
-    /**
-     * Find zero or more Fonts that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {fontsFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Fonts
-     * const fonts = await prisma.fonts.findMany()
-     * 
-     * // Get first 10 Fonts
-     * const fonts = await prisma.fonts.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const fontsWithIdOnly = await prisma.fonts.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends fontsFindManyArgs>(args?: SelectSubset<T, fontsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "findMany">>
-
-    /**
-     * Create a Fonts.
-     * @param {fontsCreateArgs} args - Arguments to create a Fonts.
-     * @example
-     * // Create one Fonts
-     * const Fonts = await prisma.fonts.create({
-     *   data: {
-     *     // ... data to create a Fonts
-     *   }
-     * })
-     * 
-     */
-    create<T extends fontsCreateArgs>(args: SelectSubset<T, fontsCreateArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "create">, never, ExtArgs>
-
-    /**
-     * Create many Fonts.
-     * @param {fontsCreateManyArgs} args - Arguments to create many Fonts.
-     * @example
-     * // Create many Fonts
-     * const fonts = await prisma.fonts.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends fontsCreateManyArgs>(args?: SelectSubset<T, fontsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Fonts.
-     * @param {fontsDeleteArgs} args - Arguments to delete one Fonts.
-     * @example
-     * // Delete one Fonts
-     * const Fonts = await prisma.fonts.delete({
-     *   where: {
-     *     // ... filter to delete one Fonts
-     *   }
-     * })
-     * 
-     */
-    delete<T extends fontsDeleteArgs>(args: SelectSubset<T, fontsDeleteArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "delete">, never, ExtArgs>
-
-    /**
-     * Update one Fonts.
-     * @param {fontsUpdateArgs} args - Arguments to update one Fonts.
-     * @example
-     * // Update one Fonts
-     * const fonts = await prisma.fonts.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends fontsUpdateArgs>(args: SelectSubset<T, fontsUpdateArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "update">, never, ExtArgs>
-
-    /**
-     * Delete zero or more Fonts.
-     * @param {fontsDeleteManyArgs} args - Arguments to filter Fonts to delete.
-     * @example
-     * // Delete a few Fonts
-     * const { count } = await prisma.fonts.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends fontsDeleteManyArgs>(args?: SelectSubset<T, fontsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Fonts.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {fontsUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Fonts
-     * const fonts = await prisma.fonts.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends fontsUpdateManyArgs>(args: SelectSubset<T, fontsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Fonts.
-     * @param {fontsUpsertArgs} args - Arguments to update or create a Fonts.
-     * @example
-     * // Update or create a Fonts
-     * const fonts = await prisma.fonts.upsert({
-     *   create: {
-     *     // ... data to create a Fonts
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Fonts we want to update
-     *   }
-     * })
-     */
-    upsert<T extends fontsUpsertArgs>(args: SelectSubset<T, fontsUpsertArgs<ExtArgs>>): Prisma__fontsClient<$Result.GetResult<Prisma.$fontsPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
-
-
-    /**
-     * Count the number of Fonts.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {fontsCountArgs} args - Arguments to filter Fonts to count.
-     * @example
-     * // Count the number of Fonts
-     * const count = await prisma.fonts.count({
-     *   where: {
-     *     // ... the filter for the Fonts we want to count
-     *   }
-     * })
-    **/
-    count<T extends fontsCountArgs>(
-      args?: Subset<T, fontsCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], FontsCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Fonts.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {FontsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends FontsAggregateArgs>(args: Subset<T, FontsAggregateArgs>): Prisma.PrismaPromise<GetFontsAggregateType<T>>
-
-    /**
-     * Group by Fonts.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {fontsGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends fontsGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: fontsGroupByArgs['orderBy'] }
-        : { orderBy?: fontsGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, fontsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFontsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the fonts model
-   */
-  readonly fields: fontsFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for fonts.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__fontsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the fonts model
-   */ 
-  interface fontsFieldRefs {
-    readonly id: FieldRef<"fonts", 'Int'>
-    readonly name: FieldRef<"fonts", 'String'>
-    readonly file_name: FieldRef<"fonts", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * fonts findUnique
-   */
-  export type fontsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the fonts
-     */
-    select?: fontsSelect<ExtArgs> | null
-    /**
-     * Filter, which fonts to fetch.
-     */
-    where: fontsWhereUniqueInput
-  }
-
-  /**
-   * fonts findUniqueOrThrow
-   */
-  export type fontsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the fonts
-     */
-    select?: fontsSelect<ExtArgs> | null
-    /**
-     * Filter, which fonts to fetch.
-     */
-    where: fontsWhereUniqueInput
-  }
-
-  /**
-   * fonts findFirst
-   */
-  export type fontsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the fonts
-     */
-    select?: fontsSelect<ExtArgs> | null
-    /**
-     * Filter, which fonts to fetch.
-     */
-    where?: fontsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of fonts to fetch.
-     */
-    orderBy?: fontsOrderByWithRelationInput | fontsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for fonts.
-     */
-    cursor?: fontsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` fonts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` fonts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of fonts.
-     */
-    distinct?: FontsScalarFieldEnum | FontsScalarFieldEnum[]
-  }
-
-  /**
-   * fonts findFirstOrThrow
-   */
-  export type fontsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the fonts
-     */
-    select?: fontsSelect<ExtArgs> | null
-    /**
-     * Filter, which fonts to fetch.
-     */
-    where?: fontsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of fonts to fetch.
-     */
-    orderBy?: fontsOrderByWithRelationInput | fontsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for fonts.
-     */
-    cursor?: fontsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` fonts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` fonts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of fonts.
-     */
-    distinct?: FontsScalarFieldEnum | FontsScalarFieldEnum[]
-  }
-
-  /**
-   * fonts findMany
-   */
-  export type fontsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the fonts
-     */
-    select?: fontsSelect<ExtArgs> | null
-    /**
-     * Filter, which fonts to fetch.
-     */
-    where?: fontsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of fonts to fetch.
-     */
-    orderBy?: fontsOrderByWithRelationInput | fontsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing fonts.
-     */
-    cursor?: fontsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` fonts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` fonts.
-     */
-    skip?: number
-    distinct?: FontsScalarFieldEnum | FontsScalarFieldEnum[]
-  }
-
-  /**
-   * fonts create
-   */
-  export type fontsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the fonts
-     */
-    select?: fontsSelect<ExtArgs> | null
-    /**
-     * The data needed to create a fonts.
-     */
-    data?: XOR<fontsCreateInput, fontsUncheckedCreateInput>
-  }
-
-  /**
-   * fonts createMany
-   */
-  export type fontsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many fonts.
-     */
-    data: fontsCreateManyInput | fontsCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * fonts update
-   */
-  export type fontsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the fonts
-     */
-    select?: fontsSelect<ExtArgs> | null
-    /**
-     * The data needed to update a fonts.
-     */
-    data: XOR<fontsUpdateInput, fontsUncheckedUpdateInput>
-    /**
-     * Choose, which fonts to update.
-     */
-    where: fontsWhereUniqueInput
-  }
-
-  /**
-   * fonts updateMany
-   */
-  export type fontsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update fonts.
-     */
-    data: XOR<fontsUpdateManyMutationInput, fontsUncheckedUpdateManyInput>
-    /**
-     * Filter which fonts to update
-     */
-    where?: fontsWhereInput
-  }
-
-  /**
-   * fonts upsert
-   */
-  export type fontsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the fonts
-     */
-    select?: fontsSelect<ExtArgs> | null
-    /**
-     * The filter to search for the fonts to update in case it exists.
-     */
-    where: fontsWhereUniqueInput
-    /**
-     * In case the fonts found by the `where` argument doesn't exist, create a new fonts with this data.
-     */
-    create: XOR<fontsCreateInput, fontsUncheckedCreateInput>
-    /**
-     * In case the fonts was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<fontsUpdateInput, fontsUncheckedUpdateInput>
-  }
-
-  /**
-   * fonts delete
-   */
-  export type fontsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the fonts
-     */
-    select?: fontsSelect<ExtArgs> | null
-    /**
-     * Filter which fonts to delete.
-     */
-    where: fontsWhereUniqueInput
-  }
-
-  /**
-   * fonts deleteMany
-   */
-  export type fontsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which fonts to delete
-     */
-    where?: fontsWhereInput
-  }
-
-  /**
-   * fonts without action
-   */
-  export type fontsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the fonts
-     */
-    select?: fontsSelect<ExtArgs> | null
-  }
-
-
-  /**
    * Enums
    */
 
@@ -9978,6 +9931,15 @@ export namespace Prisma {
   };
 
   export type Book_secScalarFieldEnum = (typeof Book_secScalarFieldEnum)[keyof typeof Book_secScalarFieldEnum]
+
+
+  export const FontsScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    file_name: 'file_name'
+  };
+
+  export type FontsScalarFieldEnum = (typeof FontsScalarFieldEnum)[keyof typeof FontsScalarFieldEnum]
 
 
   export const ImagesScalarFieldEnum: {
@@ -10022,6 +9984,27 @@ export namespace Prisma {
   };
 
   export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
+
+
+  export const TemplatesScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    background_image: 'background_image',
+    logo_image: 'logo_image',
+    intro: 'intro',
+    outro: 'outro',
+    font: 'font',
+    position: 'position',
+    hasAuthor: 'hasAuthor',
+    hasTitle: 'hasTitle',
+    size: 'size',
+    created_at: 'created_at',
+    updated_at: 'updated_at',
+    deleted_at: 'deleted_at',
+    is_deleted: 'is_deleted'
+  };
+
+  export type TemplatesScalarFieldEnum = (typeof TemplatesScalarFieldEnum)[keyof typeof TemplatesScalarFieldEnum]
 
 
   export const Verse_secScalarFieldEnum: {
@@ -10073,33 +10056,6 @@ export namespace Prisma {
   export type VideosScalarFieldEnum = (typeof VideosScalarFieldEnum)[keyof typeof VideosScalarFieldEnum]
 
 
-  export const TemplatesScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    background_image: 'background_image',
-    font: 'font',
-    position: 'position',
-    hasAuthor: 'hasAuthor',
-    hasTitle: 'hasTitle',
-    size: 'size',
-    created_at: 'created_at',
-    updated_at: 'updated_at',
-    deleted_at: 'deleted_at',
-    is_deleted: 'is_deleted'
-  };
-
-  export type TemplatesScalarFieldEnum = (typeof TemplatesScalarFieldEnum)[keyof typeof TemplatesScalarFieldEnum]
-
-
-  export const FontsScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    file_name: 'file_name'
-  };
-
-  export type FontsScalarFieldEnum = (typeof FontsScalarFieldEnum)[keyof typeof FontsScalarFieldEnum]
-
-
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -10139,6 +10095,13 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -10201,6 +10164,50 @@ export namespace Prisma {
     chapter_count?: IntWithAggregatesFilter<"book_sec"> | number
   }
 
+  export type fontsWhereInput = {
+    AND?: fontsWhereInput | fontsWhereInput[]
+    OR?: fontsWhereInput[]
+    NOT?: fontsWhereInput | fontsWhereInput[]
+    id?: IntFilter<"fonts"> | number
+    name?: StringNullableFilter<"fonts"> | string | null
+    file_name?: StringNullableFilter<"fonts"> | string | null
+  }
+
+  export type fontsOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrderInput | SortOrder
+    file_name?: SortOrderInput | SortOrder
+  }
+
+  export type fontsWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: fontsWhereInput | fontsWhereInput[]
+    OR?: fontsWhereInput[]
+    NOT?: fontsWhereInput | fontsWhereInput[]
+    name?: StringNullableFilter<"fonts"> | string | null
+    file_name?: StringNullableFilter<"fonts"> | string | null
+  }, "id">
+
+  export type fontsOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrderInput | SortOrder
+    file_name?: SortOrderInput | SortOrder
+    _count?: fontsCountOrderByAggregateInput
+    _avg?: fontsAvgOrderByAggregateInput
+    _max?: fontsMaxOrderByAggregateInput
+    _min?: fontsMinOrderByAggregateInput
+    _sum?: fontsSumOrderByAggregateInput
+  }
+
+  export type fontsScalarWhereWithAggregatesInput = {
+    AND?: fontsScalarWhereWithAggregatesInput | fontsScalarWhereWithAggregatesInput[]
+    OR?: fontsScalarWhereWithAggregatesInput[]
+    NOT?: fontsScalarWhereWithAggregatesInput | fontsScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"fonts"> | number
+    name?: StringNullableWithAggregatesFilter<"fonts"> | string | null
+    file_name?: StringNullableWithAggregatesFilter<"fonts"> | string | null
+  }
+
   export type imagesWhereInput = {
     AND?: imagesWhereInput | imagesWhereInput[]
     OR?: imagesWhereInput[]
@@ -10212,7 +10219,6 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"images"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"images"> | Date | string | null
     is_deleted?: IntNullableFilter<"images"> | number | null
-    projects?: XOR<ProjectsRelationFilter, projectsWhereInput>
   }
 
   export type imagesOrderByWithRelationInput = {
@@ -10223,7 +10229,6 @@ export namespace Prisma {
     updated_at?: SortOrderInput | SortOrder
     deleted_at?: SortOrderInput | SortOrder
     is_deleted?: SortOrderInput | SortOrder
-    projects?: projectsOrderByWithRelationInput
   }
 
   export type imagesWhereUniqueInput = Prisma.AtLeast<{
@@ -10237,7 +10242,6 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"images"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"images"> | Date | string | null
     is_deleted?: IntNullableFilter<"images"> | number | null
-    projects?: XOR<ProjectsRelationFilter, projectsWhereInput>
   }, "id">
 
   export type imagesOrderByWithAggregationInput = {
@@ -10280,7 +10284,6 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"projects"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"projects"> | Date | string | null
     is_deleted?: IntNullableFilter<"projects"> | number | null
-    images?: ImagesListRelationFilter
     videos?: VideosListRelationFilter
   }
 
@@ -10293,7 +10296,6 @@ export namespace Prisma {
     updated_at?: SortOrderInput | SortOrder
     deleted_at?: SortOrderInput | SortOrder
     is_deleted?: SortOrderInput | SortOrder
-    images?: imagesOrderByRelationAggregateInput
     videos?: videosOrderByRelationAggregateInput
   }
 
@@ -10309,7 +10311,6 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"projects"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"projects"> | Date | string | null
     is_deleted?: IntNullableFilter<"projects"> | number | null
-    images?: ImagesListRelationFilter
     videos?: VideosListRelationFilter
   }, "id">
 
@@ -10425,6 +10426,110 @@ export namespace Prisma {
     credit_size?: IntNullableWithAggregatesFilter<"settings"> | number | null
     credit_color?: StringNullableWithAggregatesFilter<"settings"> | string | null
     credit_style?: StringNullableWithAggregatesFilter<"settings"> | string | null
+  }
+
+  export type templatesWhereInput = {
+    AND?: templatesWhereInput | templatesWhereInput[]
+    OR?: templatesWhereInput[]
+    NOT?: templatesWhereInput | templatesWhereInput[]
+    id?: IntFilter<"templates"> | number
+    name?: StringFilter<"templates"> | string
+    background_image?: StringNullableFilter<"templates"> | string | null
+    logo_image?: StringFilter<"templates"> | string
+    intro?: BoolNullableFilter<"templates"> | boolean | null
+    outro?: BoolNullableFilter<"templates"> | boolean | null
+    font?: StringNullableFilter<"templates"> | string | null
+    position?: StringNullableFilter<"templates"> | string | null
+    hasAuthor?: IntNullableFilter<"templates"> | number | null
+    hasTitle?: IntNullableFilter<"templates"> | number | null
+    size?: StringNullableFilter<"templates"> | string | null
+    created_at?: DateTimeNullableFilter<"templates"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"templates"> | Date | string | null
+    deleted_at?: DateTimeNullableFilter<"templates"> | Date | string | null
+    is_deleted?: IntNullableFilter<"templates"> | number | null
+  }
+
+  export type templatesOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    background_image?: SortOrderInput | SortOrder
+    logo_image?: SortOrder
+    intro?: SortOrderInput | SortOrder
+    outro?: SortOrderInput | SortOrder
+    font?: SortOrderInput | SortOrder
+    position?: SortOrderInput | SortOrder
+    hasAuthor?: SortOrderInput | SortOrder
+    hasTitle?: SortOrderInput | SortOrder
+    size?: SortOrderInput | SortOrder
+    created_at?: SortOrderInput | SortOrder
+    updated_at?: SortOrderInput | SortOrder
+    deleted_at?: SortOrderInput | SortOrder
+    is_deleted?: SortOrderInput | SortOrder
+  }
+
+  export type templatesWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: templatesWhereInput | templatesWhereInput[]
+    OR?: templatesWhereInput[]
+    NOT?: templatesWhereInput | templatesWhereInput[]
+    name?: StringFilter<"templates"> | string
+    background_image?: StringNullableFilter<"templates"> | string | null
+    logo_image?: StringFilter<"templates"> | string
+    intro?: BoolNullableFilter<"templates"> | boolean | null
+    outro?: BoolNullableFilter<"templates"> | boolean | null
+    font?: StringNullableFilter<"templates"> | string | null
+    position?: StringNullableFilter<"templates"> | string | null
+    hasAuthor?: IntNullableFilter<"templates"> | number | null
+    hasTitle?: IntNullableFilter<"templates"> | number | null
+    size?: StringNullableFilter<"templates"> | string | null
+    created_at?: DateTimeNullableFilter<"templates"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"templates"> | Date | string | null
+    deleted_at?: DateTimeNullableFilter<"templates"> | Date | string | null
+    is_deleted?: IntNullableFilter<"templates"> | number | null
+  }, "id">
+
+  export type templatesOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    background_image?: SortOrderInput | SortOrder
+    logo_image?: SortOrder
+    intro?: SortOrderInput | SortOrder
+    outro?: SortOrderInput | SortOrder
+    font?: SortOrderInput | SortOrder
+    position?: SortOrderInput | SortOrder
+    hasAuthor?: SortOrderInput | SortOrder
+    hasTitle?: SortOrderInput | SortOrder
+    size?: SortOrderInput | SortOrder
+    created_at?: SortOrderInput | SortOrder
+    updated_at?: SortOrderInput | SortOrder
+    deleted_at?: SortOrderInput | SortOrder
+    is_deleted?: SortOrderInput | SortOrder
+    _count?: templatesCountOrderByAggregateInput
+    _avg?: templatesAvgOrderByAggregateInput
+    _max?: templatesMaxOrderByAggregateInput
+    _min?: templatesMinOrderByAggregateInput
+    _sum?: templatesSumOrderByAggregateInput
+  }
+
+  export type templatesScalarWhereWithAggregatesInput = {
+    AND?: templatesScalarWhereWithAggregatesInput | templatesScalarWhereWithAggregatesInput[]
+    OR?: templatesScalarWhereWithAggregatesInput[]
+    NOT?: templatesScalarWhereWithAggregatesInput | templatesScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"templates"> | number
+    name?: StringWithAggregatesFilter<"templates"> | string
+    background_image?: StringNullableWithAggregatesFilter<"templates"> | string | null
+    logo_image?: StringWithAggregatesFilter<"templates"> | string
+    intro?: BoolNullableWithAggregatesFilter<"templates"> | boolean | null
+    outro?: BoolNullableWithAggregatesFilter<"templates"> | boolean | null
+    font?: StringNullableWithAggregatesFilter<"templates"> | string | null
+    position?: StringNullableWithAggregatesFilter<"templates"> | string | null
+    hasAuthor?: IntNullableWithAggregatesFilter<"templates"> | number | null
+    hasTitle?: IntNullableWithAggregatesFilter<"templates"> | number | null
+    size?: StringNullableWithAggregatesFilter<"templates"> | string | null
+    created_at?: DateTimeNullableWithAggregatesFilter<"templates"> | Date | string | null
+    updated_at?: DateTimeNullableWithAggregatesFilter<"templates"> | Date | string | null
+    deleted_at?: DateTimeNullableWithAggregatesFilter<"templates"> | Date | string | null
+    is_deleted?: IntNullableWithAggregatesFilter<"templates"> | number | null
   }
 
   export type verse_secWhereInput = {
@@ -10616,7 +10721,7 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"videos"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"videos"> | Date | string | null
     is_deleted?: IntNullableFilter<"videos"> | number | null
-    projects?: XOR<ProjectsRelationFilter, projectsWhereInput>
+    project?: XOR<ProjectsRelationFilter, projectsWhereInput>
   }
 
   export type videosOrderByWithRelationInput = {
@@ -10627,7 +10732,7 @@ export namespace Prisma {
     updated_at?: SortOrderInput | SortOrder
     deleted_at?: SortOrderInput | SortOrder
     is_deleted?: SortOrderInput | SortOrder
-    projects?: projectsOrderByWithRelationInput
+    project?: projectsOrderByWithRelationInput
   }
 
   export type videosWhereUniqueInput = Prisma.AtLeast<{
@@ -10641,7 +10746,7 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"videos"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"videos"> | Date | string | null
     is_deleted?: IntNullableFilter<"videos"> | number | null
-    projects?: XOR<ProjectsRelationFilter, projectsWhereInput>
+    project?: XOR<ProjectsRelationFilter, projectsWhereInput>
   }, "id">
 
   export type videosOrderByWithAggregationInput = {
@@ -10670,139 +10775,6 @@ export namespace Prisma {
     updated_at?: DateTimeNullableWithAggregatesFilter<"videos"> | Date | string | null
     deleted_at?: DateTimeNullableWithAggregatesFilter<"videos"> | Date | string | null
     is_deleted?: IntNullableWithAggregatesFilter<"videos"> | number | null
-  }
-
-  export type templatesWhereInput = {
-    AND?: templatesWhereInput | templatesWhereInput[]
-    OR?: templatesWhereInput[]
-    NOT?: templatesWhereInput | templatesWhereInput[]
-    id?: IntFilter<"templates"> | number
-    name?: StringFilter<"templates"> | string
-    background_image?: StringNullableFilter<"templates"> | string | null
-    font?: StringNullableFilter<"templates"> | string | null
-    position?: StringNullableFilter<"templates"> | string | null
-    hasAuthor?: IntNullableFilter<"templates"> | number | null
-    hasTitle?: IntNullableFilter<"templates"> | number | null
-    size?: StringNullableFilter<"templates"> | string | null
-    created_at?: DateTimeNullableFilter<"templates"> | Date | string | null
-    updated_at?: DateTimeNullableFilter<"templates"> | Date | string | null
-    deleted_at?: DateTimeNullableFilter<"templates"> | Date | string | null
-    is_deleted?: IntNullableFilter<"templates"> | number | null
-  }
-
-  export type templatesOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    background_image?: SortOrderInput | SortOrder
-    font?: SortOrderInput | SortOrder
-    position?: SortOrderInput | SortOrder
-    hasAuthor?: SortOrderInput | SortOrder
-    hasTitle?: SortOrderInput | SortOrder
-    size?: SortOrderInput | SortOrder
-    created_at?: SortOrderInput | SortOrder
-    updated_at?: SortOrderInput | SortOrder
-    deleted_at?: SortOrderInput | SortOrder
-    is_deleted?: SortOrderInput | SortOrder
-  }
-
-  export type templatesWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: templatesWhereInput | templatesWhereInput[]
-    OR?: templatesWhereInput[]
-    NOT?: templatesWhereInput | templatesWhereInput[]
-    name?: StringFilter<"templates"> | string
-    background_image?: StringNullableFilter<"templates"> | string | null
-    font?: StringNullableFilter<"templates"> | string | null
-    position?: StringNullableFilter<"templates"> | string | null
-    hasAuthor?: IntNullableFilter<"templates"> | number | null
-    hasTitle?: IntNullableFilter<"templates"> | number | null
-    size?: StringNullableFilter<"templates"> | string | null
-    created_at?: DateTimeNullableFilter<"templates"> | Date | string | null
-    updated_at?: DateTimeNullableFilter<"templates"> | Date | string | null
-    deleted_at?: DateTimeNullableFilter<"templates"> | Date | string | null
-    is_deleted?: IntNullableFilter<"templates"> | number | null
-  }, "id">
-
-  export type templatesOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    background_image?: SortOrderInput | SortOrder
-    font?: SortOrderInput | SortOrder
-    position?: SortOrderInput | SortOrder
-    hasAuthor?: SortOrderInput | SortOrder
-    hasTitle?: SortOrderInput | SortOrder
-    size?: SortOrderInput | SortOrder
-    created_at?: SortOrderInput | SortOrder
-    updated_at?: SortOrderInput | SortOrder
-    deleted_at?: SortOrderInput | SortOrder
-    is_deleted?: SortOrderInput | SortOrder
-    _count?: templatesCountOrderByAggregateInput
-    _avg?: templatesAvgOrderByAggregateInput
-    _max?: templatesMaxOrderByAggregateInput
-    _min?: templatesMinOrderByAggregateInput
-    _sum?: templatesSumOrderByAggregateInput
-  }
-
-  export type templatesScalarWhereWithAggregatesInput = {
-    AND?: templatesScalarWhereWithAggregatesInput | templatesScalarWhereWithAggregatesInput[]
-    OR?: templatesScalarWhereWithAggregatesInput[]
-    NOT?: templatesScalarWhereWithAggregatesInput | templatesScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"templates"> | number
-    name?: StringWithAggregatesFilter<"templates"> | string
-    background_image?: StringNullableWithAggregatesFilter<"templates"> | string | null
-    font?: StringNullableWithAggregatesFilter<"templates"> | string | null
-    position?: StringNullableWithAggregatesFilter<"templates"> | string | null
-    hasAuthor?: IntNullableWithAggregatesFilter<"templates"> | number | null
-    hasTitle?: IntNullableWithAggregatesFilter<"templates"> | number | null
-    size?: StringNullableWithAggregatesFilter<"templates"> | string | null
-    created_at?: DateTimeNullableWithAggregatesFilter<"templates"> | Date | string | null
-    updated_at?: DateTimeNullableWithAggregatesFilter<"templates"> | Date | string | null
-    deleted_at?: DateTimeNullableWithAggregatesFilter<"templates"> | Date | string | null
-    is_deleted?: IntNullableWithAggregatesFilter<"templates"> | number | null
-  }
-
-  export type fontsWhereInput = {
-    AND?: fontsWhereInput | fontsWhereInput[]
-    OR?: fontsWhereInput[]
-    NOT?: fontsWhereInput | fontsWhereInput[]
-    id?: IntFilter<"fonts"> | number
-    name?: StringNullableFilter<"fonts"> | string | null
-    file_name?: StringNullableFilter<"fonts"> | string | null
-  }
-
-  export type fontsOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrderInput | SortOrder
-    file_name?: SortOrderInput | SortOrder
-  }
-
-  export type fontsWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: fontsWhereInput | fontsWhereInput[]
-    OR?: fontsWhereInput[]
-    NOT?: fontsWhereInput | fontsWhereInput[]
-    name?: StringNullableFilter<"fonts"> | string | null
-    file_name?: StringNullableFilter<"fonts"> | string | null
-  }, "id">
-
-  export type fontsOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrderInput | SortOrder
-    file_name?: SortOrderInput | SortOrder
-    _count?: fontsCountOrderByAggregateInput
-    _avg?: fontsAvgOrderByAggregateInput
-    _max?: fontsMaxOrderByAggregateInput
-    _min?: fontsMinOrderByAggregateInput
-    _sum?: fontsSumOrderByAggregateInput
-  }
-
-  export type fontsScalarWhereWithAggregatesInput = {
-    AND?: fontsScalarWhereWithAggregatesInput | fontsScalarWhereWithAggregatesInput[]
-    OR?: fontsScalarWhereWithAggregatesInput[]
-    NOT?: fontsScalarWhereWithAggregatesInput | fontsScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"fonts"> | number
-    name?: StringNullableWithAggregatesFilter<"fonts"> | string | null
-    file_name?: StringNullableWithAggregatesFilter<"fonts"> | string | null
   }
 
   export type book_secCreateInput = {
@@ -10854,13 +10826,52 @@ export namespace Prisma {
     chapter_count?: IntFieldUpdateOperationsInput | number
   }
 
+  export type fontsCreateInput = {
+    name?: string | null
+    file_name?: string | null
+  }
+
+  export type fontsUncheckedCreateInput = {
+    id?: number
+    name?: string | null
+    file_name?: string | null
+  }
+
+  export type fontsUpdateInput = {
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    file_name?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type fontsUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    file_name?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type fontsCreateManyInput = {
+    id?: number
+    name?: string | null
+    file_name?: string | null
+  }
+
+  export type fontsUpdateManyMutationInput = {
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    file_name?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type fontsUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    file_name?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type imagesCreateInput = {
+    title_id: number
     name: string
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     is_deleted?: number | null
-    projects: projectsCreateNestedOneWithoutImagesInput
   }
 
   export type imagesUncheckedCreateInput = {
@@ -10874,12 +10885,12 @@ export namespace Prisma {
   }
 
   export type imagesUpdateInput = {
+    title_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-    projects?: projectsUpdateOneRequiredWithoutImagesNestedInput
   }
 
   export type imagesUncheckedUpdateInput = {
@@ -10903,6 +10914,7 @@ export namespace Prisma {
   }
 
   export type imagesUpdateManyMutationInput = {
+    title_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10928,8 +10940,7 @@ export namespace Prisma {
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     is_deleted?: number | null
-    images?: imagesCreateNestedManyWithoutProjectsInput
-    videos?: videosCreateNestedManyWithoutProjectsInput
+    videos?: videosCreateNestedManyWithoutProjectInput
   }
 
   export type projectsUncheckedCreateInput = {
@@ -10941,8 +10952,7 @@ export namespace Prisma {
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     is_deleted?: number | null
-    images?: imagesUncheckedCreateNestedManyWithoutProjectsInput
-    videos?: videosUncheckedCreateNestedManyWithoutProjectsInput
+    videos?: videosUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type projectsUpdateInput = {
@@ -10953,8 +10963,7 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-    images?: imagesUpdateManyWithoutProjectsNestedInput
-    videos?: videosUpdateManyWithoutProjectsNestedInput
+    videos?: videosUpdateManyWithoutProjectNestedInput
   }
 
   export type projectsUncheckedUpdateInput = {
@@ -10966,8 +10975,7 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-    images?: imagesUncheckedUpdateManyWithoutProjectsNestedInput
-    videos?: videosUncheckedUpdateManyWithoutProjectsNestedInput
+    videos?: videosUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type projectsCreateManyInput = {
@@ -11095,6 +11103,129 @@ export namespace Prisma {
     credit_size?: NullableIntFieldUpdateOperationsInput | number | null
     credit_color?: NullableStringFieldUpdateOperationsInput | string | null
     credit_style?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type templatesCreateInput = {
+    name: string
+    background_image?: string | null
+    logo_image: string
+    intro?: boolean | null
+    outro?: boolean | null
+    font?: string | null
+    position?: string | null
+    hasAuthor?: number | null
+    hasTitle?: number | null
+    size?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    is_deleted?: number | null
+  }
+
+  export type templatesUncheckedCreateInput = {
+    id?: number
+    name: string
+    background_image?: string | null
+    logo_image: string
+    intro?: boolean | null
+    outro?: boolean | null
+    font?: string | null
+    position?: string | null
+    hasAuthor?: number | null
+    hasTitle?: number | null
+    size?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    is_deleted?: number | null
+  }
+
+  export type templatesUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    background_image?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_image?: StringFieldUpdateOperationsInput | string
+    intro?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    outro?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    font?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    hasAuthor?: NullableIntFieldUpdateOperationsInput | number | null
+    hasTitle?: NullableIntFieldUpdateOperationsInput | number | null
+    size?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type templatesUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    background_image?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_image?: StringFieldUpdateOperationsInput | string
+    intro?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    outro?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    font?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    hasAuthor?: NullableIntFieldUpdateOperationsInput | number | null
+    hasTitle?: NullableIntFieldUpdateOperationsInput | number | null
+    size?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type templatesCreateManyInput = {
+    id?: number
+    name: string
+    background_image?: string | null
+    logo_image: string
+    intro?: boolean | null
+    outro?: boolean | null
+    font?: string | null
+    position?: string | null
+    hasAuthor?: number | null
+    hasTitle?: number | null
+    size?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    is_deleted?: number | null
+  }
+
+  export type templatesUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    background_image?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_image?: StringFieldUpdateOperationsInput | string
+    intro?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    outro?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    font?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    hasAuthor?: NullableIntFieldUpdateOperationsInput | number | null
+    hasTitle?: NullableIntFieldUpdateOperationsInput | number | null
+    size?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type templatesUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    background_image?: NullableStringFieldUpdateOperationsInput | string | null
+    logo_image?: StringFieldUpdateOperationsInput | string
+    intro?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    outro?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    font?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    hasAuthor?: NullableIntFieldUpdateOperationsInput | number | null
+    hasTitle?: NullableIntFieldUpdateOperationsInput | number | null
+    size?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type verse_secCreateInput = {
@@ -11307,7 +11438,7 @@ export namespace Prisma {
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     is_deleted?: number | null
-    projects: projectsCreateNestedOneWithoutVideosInput
+    project: projectsCreateNestedOneWithoutVideosInput
   }
 
   export type videosUncheckedCreateInput = {
@@ -11326,7 +11457,7 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-    projects?: projectsUpdateOneRequiredWithoutVideosNestedInput
+    project?: projectsUpdateOneRequiredWithoutVideosNestedInput
   }
 
   export type videosUncheckedUpdateInput = {
@@ -11365,147 +11496,6 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type templatesCreateInput = {
-    name: string
-    background_image?: string | null
-    font?: string | null
-    position?: string | null
-    hasAuthor?: number | null
-    hasTitle?: number | null
-    size?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    is_deleted?: number | null
-  }
-
-  export type templatesUncheckedCreateInput = {
-    id?: number
-    name: string
-    background_image?: string | null
-    font?: string | null
-    position?: string | null
-    hasAuthor?: number | null
-    hasTitle?: number | null
-    size?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    is_deleted?: number | null
-  }
-
-  export type templatesUpdateInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    background_image?: NullableStringFieldUpdateOperationsInput | string | null
-    font?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    hasAuthor?: NullableIntFieldUpdateOperationsInput | number | null
-    hasTitle?: NullableIntFieldUpdateOperationsInput | number | null
-    size?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type templatesUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    background_image?: NullableStringFieldUpdateOperationsInput | string | null
-    font?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    hasAuthor?: NullableIntFieldUpdateOperationsInput | number | null
-    hasTitle?: NullableIntFieldUpdateOperationsInput | number | null
-    size?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type templatesCreateManyInput = {
-    id?: number
-    name: string
-    background_image?: string | null
-    font?: string | null
-    position?: string | null
-    hasAuthor?: number | null
-    hasTitle?: number | null
-    size?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    is_deleted?: number | null
-  }
-
-  export type templatesUpdateManyMutationInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    background_image?: NullableStringFieldUpdateOperationsInput | string | null
-    font?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    hasAuthor?: NullableIntFieldUpdateOperationsInput | number | null
-    hasTitle?: NullableIntFieldUpdateOperationsInput | number | null
-    size?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type templatesUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    background_image?: NullableStringFieldUpdateOperationsInput | string | null
-    font?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    hasAuthor?: NullableIntFieldUpdateOperationsInput | number | null
-    hasTitle?: NullableIntFieldUpdateOperationsInput | number | null
-    size?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type fontsCreateInput = {
-    name?: string | null
-    file_name?: string | null
-  }
-
-  export type fontsUncheckedCreateInput = {
-    id?: number
-    name?: string | null
-    file_name?: string | null
-  }
-
-  export type fontsUpdateInput = {
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    file_name?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type fontsUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    file_name?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type fontsCreateManyInput = {
-    id?: number
-    name?: string | null
-    file_name?: string | null
-  }
-
-  export type fontsUpdateManyMutationInput = {
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    file_name?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type fontsUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    file_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -11597,6 +11587,68 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type fontsCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    file_name?: SortOrder
+  }
+
+  export type fontsAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type fontsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    file_name?: SortOrder
+  }
+
+  export type fontsMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    file_name?: SortOrder
+  }
+
+  export type fontsSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
@@ -11617,16 +11669,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type ProjectsRelationFilter = {
-    is?: projectsWhereInput
-    isNot?: projectsWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type imagesCountOrderByAggregateInput = {
@@ -11701,34 +11743,10 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type ImagesListRelationFilter = {
-    every?: imagesWhereInput
-    some?: imagesWhereInput
-    none?: imagesWhereInput
-  }
-
   export type VideosListRelationFilter = {
     every?: videosWhereInput
     some?: videosWhereInput
     none?: videosWhereInput
-  }
-
-  export type imagesOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type videosOrderByRelationAggregateInput = {
@@ -11776,23 +11794,6 @@ export namespace Prisma {
   export type projectsSumOrderByAggregateInput = {
     id?: SortOrder
     is_deleted?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type settingsCountOrderByAggregateInput = {
@@ -11849,6 +11850,87 @@ export namespace Prisma {
     title_size?: SortOrder
     content_size?: SortOrder
     credit_size?: SortOrder
+  }
+
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type templatesCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    background_image?: SortOrder
+    logo_image?: SortOrder
+    intro?: SortOrder
+    outro?: SortOrder
+    font?: SortOrder
+    position?: SortOrder
+    hasAuthor?: SortOrder
+    hasTitle?: SortOrder
+    size?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    deleted_at?: SortOrder
+    is_deleted?: SortOrder
+  }
+
+  export type templatesAvgOrderByAggregateInput = {
+    id?: SortOrder
+    hasAuthor?: SortOrder
+    hasTitle?: SortOrder
+    is_deleted?: SortOrder
+  }
+
+  export type templatesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    background_image?: SortOrder
+    logo_image?: SortOrder
+    intro?: SortOrder
+    outro?: SortOrder
+    font?: SortOrder
+    position?: SortOrder
+    hasAuthor?: SortOrder
+    hasTitle?: SortOrder
+    size?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    deleted_at?: SortOrder
+    is_deleted?: SortOrder
+  }
+
+  export type templatesMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    background_image?: SortOrder
+    logo_image?: SortOrder
+    intro?: SortOrder
+    outro?: SortOrder
+    font?: SortOrder
+    position?: SortOrder
+    hasAuthor?: SortOrder
+    hasTitle?: SortOrder
+    size?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    deleted_at?: SortOrder
+    is_deleted?: SortOrder
+  }
+
+  export type templatesSumOrderByAggregateInput = {
+    id?: SortOrder
+    hasAuthor?: SortOrder
+    hasTitle?: SortOrder
+    is_deleted?: SortOrder
+  }
+
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type verse_secCountOrderByAggregateInput = {
@@ -11983,6 +12065,11 @@ export namespace Prisma {
     alignment?: SortOrder
   }
 
+  export type ProjectsRelationFilter = {
+    is?: projectsWhereInput
+    isNot?: projectsWhereInput
+  }
+
   export type videosCountOrderByAggregateInput = {
     id?: SortOrder
     title_id?: SortOrder
@@ -12025,91 +12112,6 @@ export namespace Prisma {
     is_deleted?: SortOrder
   }
 
-  export type templatesCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    background_image?: SortOrder
-    font?: SortOrder
-    position?: SortOrder
-    hasAuthor?: SortOrder
-    hasTitle?: SortOrder
-    size?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    deleted_at?: SortOrder
-    is_deleted?: SortOrder
-  }
-
-  export type templatesAvgOrderByAggregateInput = {
-    id?: SortOrder
-    hasAuthor?: SortOrder
-    hasTitle?: SortOrder
-    is_deleted?: SortOrder
-  }
-
-  export type templatesMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    background_image?: SortOrder
-    font?: SortOrder
-    position?: SortOrder
-    hasAuthor?: SortOrder
-    hasTitle?: SortOrder
-    size?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    deleted_at?: SortOrder
-    is_deleted?: SortOrder
-  }
-
-  export type templatesMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    background_image?: SortOrder
-    font?: SortOrder
-    position?: SortOrder
-    hasAuthor?: SortOrder
-    hasTitle?: SortOrder
-    size?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    deleted_at?: SortOrder
-    is_deleted?: SortOrder
-  }
-
-  export type templatesSumOrderByAggregateInput = {
-    id?: SortOrder
-    hasAuthor?: SortOrder
-    hasTitle?: SortOrder
-    is_deleted?: SortOrder
-  }
-
-  export type fontsCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    file_name?: SortOrder
-  }
-
-  export type fontsAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type fontsMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    file_name?: SortOrder
-  }
-
-  export type fontsMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    file_name?: SortOrder
-  }
-
-  export type fontsSumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -12122,10 +12124,8 @@ export namespace Prisma {
     set?: string
   }
 
-  export type projectsCreateNestedOneWithoutImagesInput = {
-    create?: XOR<projectsCreateWithoutImagesInput, projectsUncheckedCreateWithoutImagesInput>
-    connectOrCreate?: projectsCreateOrConnectWithoutImagesInput
-    connect?: projectsWhereUniqueInput
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -12140,100 +12140,50 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type projectsUpdateOneRequiredWithoutImagesNestedInput = {
-    create?: XOR<projectsCreateWithoutImagesInput, projectsUncheckedCreateWithoutImagesInput>
-    connectOrCreate?: projectsCreateOrConnectWithoutImagesInput
-    upsert?: projectsUpsertWithoutImagesInput
-    connect?: projectsWhereUniqueInput
-    update?: XOR<XOR<projectsUpdateToOneWithWhereWithoutImagesInput, projectsUpdateWithoutImagesInput>, projectsUncheckedUpdateWithoutImagesInput>
-  }
-
-  export type imagesCreateNestedManyWithoutProjectsInput = {
-    create?: XOR<imagesCreateWithoutProjectsInput, imagesUncheckedCreateWithoutProjectsInput> | imagesCreateWithoutProjectsInput[] | imagesUncheckedCreateWithoutProjectsInput[]
-    connectOrCreate?: imagesCreateOrConnectWithoutProjectsInput | imagesCreateOrConnectWithoutProjectsInput[]
-    createMany?: imagesCreateManyProjectsInputEnvelope
-    connect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-  }
-
-  export type videosCreateNestedManyWithoutProjectsInput = {
-    create?: XOR<videosCreateWithoutProjectsInput, videosUncheckedCreateWithoutProjectsInput> | videosCreateWithoutProjectsInput[] | videosUncheckedCreateWithoutProjectsInput[]
-    connectOrCreate?: videosCreateOrConnectWithoutProjectsInput | videosCreateOrConnectWithoutProjectsInput[]
-    createMany?: videosCreateManyProjectsInputEnvelope
+  export type videosCreateNestedManyWithoutProjectInput = {
+    create?: XOR<videosCreateWithoutProjectInput, videosUncheckedCreateWithoutProjectInput> | videosCreateWithoutProjectInput[] | videosUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: videosCreateOrConnectWithoutProjectInput | videosCreateOrConnectWithoutProjectInput[]
+    createMany?: videosCreateManyProjectInputEnvelope
     connect?: videosWhereUniqueInput | videosWhereUniqueInput[]
   }
 
-  export type imagesUncheckedCreateNestedManyWithoutProjectsInput = {
-    create?: XOR<imagesCreateWithoutProjectsInput, imagesUncheckedCreateWithoutProjectsInput> | imagesCreateWithoutProjectsInput[] | imagesUncheckedCreateWithoutProjectsInput[]
-    connectOrCreate?: imagesCreateOrConnectWithoutProjectsInput | imagesCreateOrConnectWithoutProjectsInput[]
-    createMany?: imagesCreateManyProjectsInputEnvelope
-    connect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-  }
-
-  export type videosUncheckedCreateNestedManyWithoutProjectsInput = {
-    create?: XOR<videosCreateWithoutProjectsInput, videosUncheckedCreateWithoutProjectsInput> | videosCreateWithoutProjectsInput[] | videosUncheckedCreateWithoutProjectsInput[]
-    connectOrCreate?: videosCreateOrConnectWithoutProjectsInput | videosCreateOrConnectWithoutProjectsInput[]
-    createMany?: videosCreateManyProjectsInputEnvelope
+  export type videosUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<videosCreateWithoutProjectInput, videosUncheckedCreateWithoutProjectInput> | videosCreateWithoutProjectInput[] | videosUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: videosCreateOrConnectWithoutProjectInput | videosCreateOrConnectWithoutProjectInput[]
+    createMany?: videosCreateManyProjectInputEnvelope
     connect?: videosWhereUniqueInput | videosWhereUniqueInput[]
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
-  export type imagesUpdateManyWithoutProjectsNestedInput = {
-    create?: XOR<imagesCreateWithoutProjectsInput, imagesUncheckedCreateWithoutProjectsInput> | imagesCreateWithoutProjectsInput[] | imagesUncheckedCreateWithoutProjectsInput[]
-    connectOrCreate?: imagesCreateOrConnectWithoutProjectsInput | imagesCreateOrConnectWithoutProjectsInput[]
-    upsert?: imagesUpsertWithWhereUniqueWithoutProjectsInput | imagesUpsertWithWhereUniqueWithoutProjectsInput[]
-    createMany?: imagesCreateManyProjectsInputEnvelope
-    set?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    disconnect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    delete?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    connect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    update?: imagesUpdateWithWhereUniqueWithoutProjectsInput | imagesUpdateWithWhereUniqueWithoutProjectsInput[]
-    updateMany?: imagesUpdateManyWithWhereWithoutProjectsInput | imagesUpdateManyWithWhereWithoutProjectsInput[]
-    deleteMany?: imagesScalarWhereInput | imagesScalarWhereInput[]
-  }
-
-  export type videosUpdateManyWithoutProjectsNestedInput = {
-    create?: XOR<videosCreateWithoutProjectsInput, videosUncheckedCreateWithoutProjectsInput> | videosCreateWithoutProjectsInput[] | videosUncheckedCreateWithoutProjectsInput[]
-    connectOrCreate?: videosCreateOrConnectWithoutProjectsInput | videosCreateOrConnectWithoutProjectsInput[]
-    upsert?: videosUpsertWithWhereUniqueWithoutProjectsInput | videosUpsertWithWhereUniqueWithoutProjectsInput[]
-    createMany?: videosCreateManyProjectsInputEnvelope
+  export type videosUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<videosCreateWithoutProjectInput, videosUncheckedCreateWithoutProjectInput> | videosCreateWithoutProjectInput[] | videosUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: videosCreateOrConnectWithoutProjectInput | videosCreateOrConnectWithoutProjectInput[]
+    upsert?: videosUpsertWithWhereUniqueWithoutProjectInput | videosUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: videosCreateManyProjectInputEnvelope
     set?: videosWhereUniqueInput | videosWhereUniqueInput[]
     disconnect?: videosWhereUniqueInput | videosWhereUniqueInput[]
     delete?: videosWhereUniqueInput | videosWhereUniqueInput[]
     connect?: videosWhereUniqueInput | videosWhereUniqueInput[]
-    update?: videosUpdateWithWhereUniqueWithoutProjectsInput | videosUpdateWithWhereUniqueWithoutProjectsInput[]
-    updateMany?: videosUpdateManyWithWhereWithoutProjectsInput | videosUpdateManyWithWhereWithoutProjectsInput[]
+    update?: videosUpdateWithWhereUniqueWithoutProjectInput | videosUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: videosUpdateManyWithWhereWithoutProjectInput | videosUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: videosScalarWhereInput | videosScalarWhereInput[]
   }
 
-  export type imagesUncheckedUpdateManyWithoutProjectsNestedInput = {
-    create?: XOR<imagesCreateWithoutProjectsInput, imagesUncheckedCreateWithoutProjectsInput> | imagesCreateWithoutProjectsInput[] | imagesUncheckedCreateWithoutProjectsInput[]
-    connectOrCreate?: imagesCreateOrConnectWithoutProjectsInput | imagesCreateOrConnectWithoutProjectsInput[]
-    upsert?: imagesUpsertWithWhereUniqueWithoutProjectsInput | imagesUpsertWithWhereUniqueWithoutProjectsInput[]
-    createMany?: imagesCreateManyProjectsInputEnvelope
-    set?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    disconnect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    delete?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    connect?: imagesWhereUniqueInput | imagesWhereUniqueInput[]
-    update?: imagesUpdateWithWhereUniqueWithoutProjectsInput | imagesUpdateWithWhereUniqueWithoutProjectsInput[]
-    updateMany?: imagesUpdateManyWithWhereWithoutProjectsInput | imagesUpdateManyWithWhereWithoutProjectsInput[]
-    deleteMany?: imagesScalarWhereInput | imagesScalarWhereInput[]
-  }
-
-  export type videosUncheckedUpdateManyWithoutProjectsNestedInput = {
-    create?: XOR<videosCreateWithoutProjectsInput, videosUncheckedCreateWithoutProjectsInput> | videosCreateWithoutProjectsInput[] | videosUncheckedCreateWithoutProjectsInput[]
-    connectOrCreate?: videosCreateOrConnectWithoutProjectsInput | videosCreateOrConnectWithoutProjectsInput[]
-    upsert?: videosUpsertWithWhereUniqueWithoutProjectsInput | videosUpsertWithWhereUniqueWithoutProjectsInput[]
-    createMany?: videosCreateManyProjectsInputEnvelope
+  export type videosUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<videosCreateWithoutProjectInput, videosUncheckedCreateWithoutProjectInput> | videosCreateWithoutProjectInput[] | videosUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: videosCreateOrConnectWithoutProjectInput | videosCreateOrConnectWithoutProjectInput[]
+    upsert?: videosUpsertWithWhereUniqueWithoutProjectInput | videosUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: videosCreateManyProjectInputEnvelope
     set?: videosWhereUniqueInput | videosWhereUniqueInput[]
     disconnect?: videosWhereUniqueInput | videosWhereUniqueInput[]
     delete?: videosWhereUniqueInput | videosWhereUniqueInput[]
     connect?: videosWhereUniqueInput | videosWhereUniqueInput[]
-    update?: videosUpdateWithWhereUniqueWithoutProjectsInput | videosUpdateWithWhereUniqueWithoutProjectsInput[]
-    updateMany?: videosUpdateManyWithWhereWithoutProjectsInput | videosUpdateManyWithWhereWithoutProjectsInput[]
+    update?: videosUpdateWithWhereUniqueWithoutProjectInput | videosUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: videosUpdateManyWithWhereWithoutProjectInput | videosUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: videosScalarWhereInput | videosScalarWhereInput[]
+  }
+
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
   }
 
   export type projectsCreateNestedOneWithoutVideosInput = {
@@ -12319,15 +12269,35 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableFilter<$PrismaModel = never> = {
@@ -12339,6 +12309,17 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -12382,100 +12363,20 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
     _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
-  export type projectsCreateWithoutImagesInput = {
-    name: string
-    title?: string | null
-    author?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    is_deleted?: number | null
-    videos?: videosCreateNestedManyWithoutProjectsInput
-  }
-
-  export type projectsUncheckedCreateWithoutImagesInput = {
-    id?: number
-    name: string
-    title?: string | null
-    author?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    is_deleted?: number | null
-    videos?: videosUncheckedCreateNestedManyWithoutProjectsInput
-  }
-
-  export type projectsCreateOrConnectWithoutImagesInput = {
-    where: projectsWhereUniqueInput
-    create: XOR<projectsCreateWithoutImagesInput, projectsUncheckedCreateWithoutImagesInput>
-  }
-
-  export type projectsUpsertWithoutImagesInput = {
-    update: XOR<projectsUpdateWithoutImagesInput, projectsUncheckedUpdateWithoutImagesInput>
-    create: XOR<projectsCreateWithoutImagesInput, projectsUncheckedCreateWithoutImagesInput>
-    where?: projectsWhereInput
-  }
-
-  export type projectsUpdateToOneWithWhereWithoutImagesInput = {
-    where?: projectsWhereInput
-    data: XOR<projectsUpdateWithoutImagesInput, projectsUncheckedUpdateWithoutImagesInput>
-  }
-
-  export type projectsUpdateWithoutImagesInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    author?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-    videos?: videosUpdateManyWithoutProjectsNestedInput
-  }
-
-  export type projectsUncheckedUpdateWithoutImagesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    author?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-    videos?: videosUncheckedUpdateManyWithoutProjectsNestedInput
-  }
-
-  export type imagesCreateWithoutProjectsInput = {
+  export type videosCreateWithoutProjectInput = {
     name: string
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -12483,7 +12384,7 @@ export namespace Prisma {
     is_deleted?: number | null
   }
 
-  export type imagesUncheckedCreateWithoutProjectsInput = {
+  export type videosUncheckedCreateWithoutProjectInput = {
     id?: number
     name: string
     created_at?: Date | string | null
@@ -12492,86 +12393,30 @@ export namespace Prisma {
     is_deleted?: number | null
   }
 
-  export type imagesCreateOrConnectWithoutProjectsInput = {
-    where: imagesWhereUniqueInput
-    create: XOR<imagesCreateWithoutProjectsInput, imagesUncheckedCreateWithoutProjectsInput>
+  export type videosCreateOrConnectWithoutProjectInput = {
+    where: videosWhereUniqueInput
+    create: XOR<videosCreateWithoutProjectInput, videosUncheckedCreateWithoutProjectInput>
   }
 
-  export type imagesCreateManyProjectsInputEnvelope = {
-    data: imagesCreateManyProjectsInput | imagesCreateManyProjectsInput[]
+  export type videosCreateManyProjectInputEnvelope = {
+    data: videosCreateManyProjectInput | videosCreateManyProjectInput[]
     skipDuplicates?: boolean
   }
 
-  export type videosCreateWithoutProjectsInput = {
-    name: string
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    is_deleted?: number | null
-  }
-
-  export type videosUncheckedCreateWithoutProjectsInput = {
-    id?: number
-    name: string
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    is_deleted?: number | null
-  }
-
-  export type videosCreateOrConnectWithoutProjectsInput = {
+  export type videosUpsertWithWhereUniqueWithoutProjectInput = {
     where: videosWhereUniqueInput
-    create: XOR<videosCreateWithoutProjectsInput, videosUncheckedCreateWithoutProjectsInput>
+    update: XOR<videosUpdateWithoutProjectInput, videosUncheckedUpdateWithoutProjectInput>
+    create: XOR<videosCreateWithoutProjectInput, videosUncheckedCreateWithoutProjectInput>
   }
 
-  export type videosCreateManyProjectsInputEnvelope = {
-    data: videosCreateManyProjectsInput | videosCreateManyProjectsInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type imagesUpsertWithWhereUniqueWithoutProjectsInput = {
-    where: imagesWhereUniqueInput
-    update: XOR<imagesUpdateWithoutProjectsInput, imagesUncheckedUpdateWithoutProjectsInput>
-    create: XOR<imagesCreateWithoutProjectsInput, imagesUncheckedCreateWithoutProjectsInput>
-  }
-
-  export type imagesUpdateWithWhereUniqueWithoutProjectsInput = {
-    where: imagesWhereUniqueInput
-    data: XOR<imagesUpdateWithoutProjectsInput, imagesUncheckedUpdateWithoutProjectsInput>
-  }
-
-  export type imagesUpdateManyWithWhereWithoutProjectsInput = {
-    where: imagesScalarWhereInput
-    data: XOR<imagesUpdateManyMutationInput, imagesUncheckedUpdateManyWithoutProjectsInput>
-  }
-
-  export type imagesScalarWhereInput = {
-    AND?: imagesScalarWhereInput | imagesScalarWhereInput[]
-    OR?: imagesScalarWhereInput[]
-    NOT?: imagesScalarWhereInput | imagesScalarWhereInput[]
-    id?: IntFilter<"images"> | number
-    title_id?: IntFilter<"images"> | number
-    name?: StringFilter<"images"> | string
-    created_at?: DateTimeNullableFilter<"images"> | Date | string | null
-    updated_at?: DateTimeNullableFilter<"images"> | Date | string | null
-    deleted_at?: DateTimeNullableFilter<"images"> | Date | string | null
-    is_deleted?: IntNullableFilter<"images"> | number | null
-  }
-
-  export type videosUpsertWithWhereUniqueWithoutProjectsInput = {
+  export type videosUpdateWithWhereUniqueWithoutProjectInput = {
     where: videosWhereUniqueInput
-    update: XOR<videosUpdateWithoutProjectsInput, videosUncheckedUpdateWithoutProjectsInput>
-    create: XOR<videosCreateWithoutProjectsInput, videosUncheckedCreateWithoutProjectsInput>
+    data: XOR<videosUpdateWithoutProjectInput, videosUncheckedUpdateWithoutProjectInput>
   }
 
-  export type videosUpdateWithWhereUniqueWithoutProjectsInput = {
-    where: videosWhereUniqueInput
-    data: XOR<videosUpdateWithoutProjectsInput, videosUncheckedUpdateWithoutProjectsInput>
-  }
-
-  export type videosUpdateManyWithWhereWithoutProjectsInput = {
+  export type videosUpdateManyWithWhereWithoutProjectInput = {
     where: videosScalarWhereInput
-    data: XOR<videosUpdateManyMutationInput, videosUncheckedUpdateManyWithoutProjectsInput>
+    data: XOR<videosUpdateManyMutationInput, videosUncheckedUpdateManyWithoutProjectInput>
   }
 
   export type videosScalarWhereInput = {
@@ -12595,7 +12440,6 @@ export namespace Prisma {
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     is_deleted?: number | null
-    images?: imagesCreateNestedManyWithoutProjectsInput
   }
 
   export type projectsUncheckedCreateWithoutVideosInput = {
@@ -12607,7 +12451,6 @@ export namespace Prisma {
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     is_deleted?: number | null
-    images?: imagesUncheckedCreateNestedManyWithoutProjectsInput
   }
 
   export type projectsCreateOrConnectWithoutVideosInput = {
@@ -12634,7 +12477,6 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-    images?: imagesUpdateManyWithoutProjectsNestedInput
   }
 
   export type projectsUncheckedUpdateWithoutVideosInput = {
@@ -12646,10 +12488,9 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-    images?: imagesUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
-  export type imagesCreateManyProjectsInput = {
+  export type videosCreateManyProjectInput = {
     id?: number
     name: string
     created_at?: Date | string | null
@@ -12658,16 +12499,7 @@ export namespace Prisma {
     is_deleted?: number | null
   }
 
-  export type videosCreateManyProjectsInput = {
-    id?: number
-    name: string
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    is_deleted?: number | null
-  }
-
-  export type imagesUpdateWithoutProjectsInput = {
+  export type videosUpdateWithoutProjectInput = {
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12675,7 +12507,7 @@ export namespace Prisma {
     is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
-  export type imagesUncheckedUpdateWithoutProjectsInput = {
+  export type videosUncheckedUpdateWithoutProjectInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12684,33 +12516,7 @@ export namespace Prisma {
     is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
-  export type imagesUncheckedUpdateManyWithoutProjectsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type videosUpdateWithoutProjectsInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type videosUncheckedUpdateWithoutProjectsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_deleted?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type videosUncheckedUpdateManyWithoutProjectsInput = {
+  export type videosUncheckedUpdateManyWithoutProjectInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12733,6 +12539,10 @@ export namespace Prisma {
      */
     export type book_secArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = book_secDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use fontsDefaultArgs instead
+     */
+    export type fontsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = fontsDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use imagesDefaultArgs instead
      */
     export type imagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = imagesDefaultArgs<ExtArgs>
@@ -12745,6 +12555,10 @@ export namespace Prisma {
      */
     export type settingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = settingsDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use templatesDefaultArgs instead
+     */
+    export type templatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = templatesDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use verse_secDefaultArgs instead
      */
     export type verse_secArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = verse_secDefaultArgs<ExtArgs>
@@ -12756,14 +12570,6 @@ export namespace Prisma {
      * @deprecated Use videosDefaultArgs instead
      */
     export type videosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = videosDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use templatesDefaultArgs instead
-     */
-    export type templatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = templatesDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use fontsDefaultArgs instead
-     */
-    export type fontsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = fontsDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

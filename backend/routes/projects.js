@@ -122,7 +122,7 @@ router.delete("/deleteVideo", async (req, res) => {
       console.log(id, path.join(process.cwd(), "public", "videos", id.toString()));
       fs.rmSync(path.join(process.cwd(), "public", "videos", id.toString()), {
         recursive: true,
-        force: true, 
+        force: true,
       });
     });
 

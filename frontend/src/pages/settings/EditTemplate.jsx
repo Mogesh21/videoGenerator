@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Input, message, Radio, Segmented, Select, Slider, Upload } from 'antd';
+import { Breadcrumb, Button, Input, message, Radio, Segmented, Select, Slider, Switch, Upload } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { Draggable } from 'gsap/Draggable';
@@ -20,7 +20,7 @@ const EditTemplate = () => {
     title: 'Title',
     content:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis exercitationem deserunt incidunt placeat inventore, porro cum            mollitia quas, tempore accusamus esse voluptatum suscipit ea animi laborum harum quia! Doloribus, ipsum.',
-    author: ' Author'
+    author: ' SubTitle-1-1'
   });
   const [fonts, setFonts] = useState([]);
   const [templates, setTemplates] = useState([]);
@@ -41,6 +41,9 @@ const EditTemplate = () => {
       height: 1080
     },
     bg: '',
+    logo_image: '',
+    intro: false,
+    outro: false,
     font: {
       font_style: '',
       title_size: 50,
@@ -80,6 +83,7 @@ const EditTemplate = () => {
     }
   });
   const [image, setImage] = useState(null);
+  const [logo, setLogo] = useState([]);
 
   const [position, setPosition] = useState({
     title: {
@@ -170,11 +174,20 @@ const EditTemplate = () => {
     reader.readAsDataURL(file);
   };
 
+  const handleImage = async (event) => {
+    const file = event.file;
+    if (file.status === 'removed') setLogo([]);
+    else setLogo([file]);
+  };
+
   const fetchTemplates = async () => {
     try {
       const response = await axios.get(`${SERVER_ADDRESS}/templates`);
       console.log(response.data);
-      if (response.data.length > 0) setTemplates(response.data);
+      if (response.data.length > 0) {
+        setTemplates(response.data);
+        setLogo(response.data.logo_image);
+      }
     } catch (err) {
       console.log(err);
       message.error({ content: 'Please refresh the page' });
@@ -207,8 +220,6 @@ const EditTemplate = () => {
       const left = data.position.content.x;
       const top = data.position.content.y;
 
-      console.log(1);
-
       contentRef.current.style.left = `${left}px`;
       contentRef.current.style.top = `${top}px`;
     }
@@ -237,7 +248,6 @@ const EditTemplate = () => {
         ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height);
       };
       img.src = `${SERVER_ADDRESS}/public/backgroundImages/${current.background_image}`;
-      console.log(`${SERVER_ADDRESS}/public/backgroundImages/${current.background_image}`);
       const newData = {
         ...current,
         position: {
@@ -268,6 +278,15 @@ const EditTemplate = () => {
         authorRef.current.style.top = current.position.credit.y;
       }
       setData(newData);
+      console.log(newData);
+      setLogo([
+        {
+          uid: 1,
+          name: 'logo.png',
+          status: 'done',
+          url: `${SERVER_ADDRESS}/public/backgroundImages/${current.logo_image}`
+        }
+      ]);
     }
   }, [templates]);
 
@@ -344,6 +363,15 @@ const EditTemplate = () => {
     onChange: handleBg
   };
 
+  const imageprops = {
+    listType: 'picture',
+    beforeUpload: () => false,
+    maxCount: 1,
+    accept: '.png,.jpg,.jpeg',
+    fileList: logo,
+    onChange: handleImage
+  };
+
   const handleRatio = (val) => {
     const size = { type: val };
 
@@ -365,7 +393,6 @@ const EditTemplate = () => {
   };
 
   const handleEditTemplate = async () => {
-    console.log(data.position.title.x, position.title.x);
     const updatedPosition = {
       title: {
         x: data.position.title.x + position.title.x,
@@ -390,6 +417,13 @@ const EditTemplate = () => {
 
       formData.append('data', JSON.stringify(data));
       if (image) formData.append('backgroundImage', image);
+      if (!logo[0]?.status) {
+        formData.append('logo_image', logo[0]);
+      }
+      if (logo.length === 0) {
+        message.error({ content: 'Please upload the logo image' });
+        return;
+      }
       const response = await axios.put(`${SERVER_ADDRESS}/templates/edit`, formData);
       if (response.status === 200) {
         message.success({ content: 'Template modified Successfully' });
@@ -435,8 +469,6 @@ const EditTemplate = () => {
                   border: '1px solid black',
                   color: data.font.title_color,
                   textAlign: data.font.title_align
-                  // left: 105,
-                  // top: 10
                 }}
               >
                 {texts.title}
@@ -517,9 +549,24 @@ const EditTemplate = () => {
             </Radio.Group>
           </div>
           <div className="w-full border-b border-gray-400"></div>
+          <div className="grid grid-cols-2">
+            <div>
+              <p className="text-md font-bold">Intro:</p>
+              <Switch value={data.intro} className="w-fit" onChange={(val) => setData((prev) => ({ ...prev, intro: val }))} />
+            </div>
+            <div>
+              <p className="text-md font-bold">Outro:</p>
+              <Switch value={data.outro} className="w-fit" onChange={(val) => setData((prev) => ({ ...prev, outro: val }))} />
+            </div>
+          </div>
+          <div className="w-full border-b border-gray-400"></div>
           <p className="text-md font-bold">Background Image:</p>
           <Upload {...bgprops}>
-            <Button type="primary">Upload Image</Button>
+            <Button type="primary">Upload Bg Image</Button>
+          </Upload>
+          <p className="text-md font-bold">Logo Image:</p>
+          <Upload {...imageprops}>
+            <Button type="primary">Upload Logo Image</Button>
           </Upload>
           <div className="w-full border-b border-gray-400"></div>
           <div className="selection-container flex flex-col gap-3">
@@ -713,7 +760,7 @@ const EditTemplate = () => {
           <div className="w-full border-b border-gray-400"></div>
           <div className="selection-container flex flex-col gap-3 ">
             <div>
-              <p className="text-md font-bold">Author:</p>
+              <p className="text-md font-bold">Sub Title:</p>
               <Radio.Group
                 value={data.hasAuthor}
                 onChange={(e) => setData({ ...data, hasAuthor: e.target.value })}

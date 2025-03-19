@@ -8,7 +8,9 @@ const VideoGenerator = async (
   Values,
   start_time = "",
   projectId,
-  project_name
+  project_name,
+  intro,
+  outro
 ) => {
   try {
     const videoName = `${project_name}.mp4`;
@@ -30,12 +32,21 @@ const VideoGenerator = async (
       if (start_time) command.input(audioUrl).inputOptions(["-ss", start_time]);
       else command.input(audioUrl);
 
-      const filterComplex =
-        Images.map(
-          (_, index) => `[${index}:v]trim=0:${Values[index] || 2},setpts=PTS-STARTPTS[v${index}];`
-        ).join("") +
-        Images.map((_, index) => `[v${index}]`).join("") +
-        `concat=n=${Images.length}:v=1:a=0[outv];[${Images.length}:a]anull[aout]`;
+      const videoParts = Images.map(
+        (_, index) => `[${index}:v]trim=0:${Values[index] || 2},setpts=PTS-STARTPTS[v${index}];`
+      ).join("");
+
+      const concatInputs = Images.map((_, index) => `[v${index}]`).join("");
+
+      const concatFilter = `concat=n=${Images.length}:v=1:a=0[outv];`;
+
+      const audioPlayDuration = Values.slice(0, -1).reduce((sum, val) => sum + (val || 2), 0);
+
+      const audioFilter = outro
+        ? `[${Images.length}:a]atrim=0:${audioPlayDuration},asetpts=PTS-STARTPTS[aout]`
+        : `[${Images.length}:a]anull[aout]`;
+
+      const filterComplex = videoParts + concatInputs + concatFilter + audioFilter;
 
       command
         .complexFilter([filterComplex])
@@ -48,7 +59,7 @@ const VideoGenerator = async (
           "libx264",
           "-pix_fmt",
           "yuv420p",
-          "-shortest",
+          // "-shortest",
           "-loglevel",
           "verbose",
         ])

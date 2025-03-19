@@ -129,6 +129,12 @@ exports.Prisma.Book_secScalarFieldEnum = {
   chapter_count: 'chapter_count'
 };
 
+exports.Prisma.FontsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  file_name: 'file_name'
+};
+
 exports.Prisma.ImagesScalarFieldEnum = {
   id: 'id',
   title_id: 'title_id',
@@ -162,6 +168,24 @@ exports.Prisma.SettingsScalarFieldEnum = {
   credit_size: 'credit_size',
   credit_color: 'credit_color',
   credit_style: 'credit_style'
+};
+
+exports.Prisma.TemplatesScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  background_image: 'background_image',
+  logo_image: 'logo_image',
+  intro: 'intro',
+  outro: 'outro',
+  font: 'font',
+  position: 'position',
+  hasAuthor: 'hasAuthor',
+  hasTitle: 'hasTitle',
+  size: 'size',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at',
+  is_deleted: 'is_deleted'
 };
 
 exports.Prisma.Verse_secScalarFieldEnum = {
@@ -204,27 +228,6 @@ exports.Prisma.VideosScalarFieldEnum = {
   is_deleted: 'is_deleted'
 };
 
-exports.Prisma.TemplatesScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  background_image: 'background_image',
-  font: 'font',
-  position: 'position',
-  hasAuthor: 'hasAuthor',
-  hasTitle: 'hasTitle',
-  size: 'size',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  deleted_at: 'deleted_at',
-  is_deleted: 'is_deleted'
-};
-
-exports.Prisma.FontsScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  file_name: 'file_name'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -238,14 +241,14 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   book_sec: 'book_sec',
+  fonts: 'fonts',
   images: 'images',
   projects: 'projects',
   settings: 'settings',
+  templates: 'templates',
   verse_sec: 'verse_sec',
   versions: 'versions',
-  videos: 'videos',
-  templates: 'templates',
-  fonts: 'fonts'
+  videos: 'videos'
 };
 
 /**

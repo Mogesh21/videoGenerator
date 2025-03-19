@@ -75,7 +75,6 @@ async function generateImages(
   size
 ) {
   try {
-    console.log(titleText, contentText, creditText);
     const name = Date.now();
     const { width, height } = size;
     const createdImage = [];

@@ -6,6 +6,7 @@ import { PrismaClient as PrismaClient1 } from "../prisma/generated/client1/index
 import { PrismaClient as PrismaClient2 } from "../prisma/generated/client2/index.js";
 import generateImages from "../functions/generateImage.js";
 import generateVideo from "../functions/generateVideo.js";
+import { generateOutroImage } from "../functions/generateOutroImage.js";
 
 const router = express.Router();
 const db1 = new PrismaClient1();
@@ -91,7 +92,9 @@ const createVideo = async (
   size,
   projectId,
   project_name,
-  no
+  no,
+  intro,
+  outro
 ) => {
   let verses, book, audioPath, images;
   try {
@@ -159,13 +162,21 @@ const createVideo = async (
     const Image = images.map((image) => path.join(process.cwd(), "public", "images", "0", image));
     for (const img of Image) {
       const videoName = `${project_name} - ${no}`;
+      const images = [img];
+      const newValues = [values + 1];
+      if (outro) {
+        images.push(path.join(process.cwd(), "public", "images", "0", "outro.png"));
+        newValues.push(3);
+      }
       const video = await generateVideo(
         audioPath,
-        [img],
-        [values + 1],
+        images,
+        newValues,
         secondsToHMS(start_time),
         projectId,
-        videoName
+        videoName,
+        intro,
+        outro
       );
       videos.push(video);
     }
@@ -195,8 +206,11 @@ router.post("/add", async (req, res) => {
       hasTitle,
       position,
       background_image,
+      logo_image,
       font,
       project_name,
+      intro,
+      outro,
     } = data;
 
     const videos = [];
@@ -215,6 +229,23 @@ router.post("/add", async (req, res) => {
     if (type === true) {
       try {
         let i = 1;
+
+        if (outro) {
+          const book = await db2.versions.findFirst({
+            select: {
+              id: true,
+              version_name: true,
+            },
+            where: {
+              id: parseInt(fileData[0][1]),
+            },
+          });
+
+          const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
+          const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
+          await generateOutroImage(bgPath, logoPath, book.version_name, font, size);
+        }
+
         for (const file of fileData) {
           const vid = await createVideo(
             file[0], //audioUrl
@@ -232,7 +263,9 @@ router.post("/add", async (req, res) => {
             size,
             projectId,
             project_name,
-            i
+            i,
+            intro,
+            outro
           );
           i++;
           videos.push(...vid);
@@ -295,6 +328,24 @@ router.post("/add", async (req, res) => {
           images.push(img);
           progressData[id] = Math.floor((images.length / fileData.length) * 60);
         }
+        //outro
+        if (outro) {
+          const book_id = (fileData[0][2] - 1).toString();
+          const book = await db2.versions.findFirst({
+            select: {
+              id: true,
+              version_name: true,
+            },
+            where: {
+              id: parseInt(fileData[0][1]),
+            },
+          });
+
+          const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
+          const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
+          await generateOutroImage(bgPath, logoPath, book.version_name, font, size);
+          images.push(path.join(process.cwd(), "public", "images", "0", "outro.png"));
+        }
       } catch (err) {
         console.log(err);
         throw new Error("Image Error");
@@ -317,9 +368,23 @@ router.post("/add", async (req, res) => {
 
       const Values = fileData.map((file) => file[6]);
 
+      //outro
+      if (outro) {
+        Values.push(3);
+      }
+
       let video;
       try {
-        video = await generateVideo(audioPath, images, Values, "", projectId, project_name);
+        video = await generateVideo(
+          audioPath,
+          images,
+          Values,
+          "",
+          projectId,
+          project_name,
+          intro,
+          outro
+        );
       } catch (err) {
         console.log(err);
         throw new Error("Video Error");
