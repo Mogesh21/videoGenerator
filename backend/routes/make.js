@@ -6,6 +6,7 @@ import { PrismaClient as PrismaClient1 } from "../prisma/generated/client1/index
 import { PrismaClient as PrismaClient2 } from "../prisma/generated/client2/index.js";
 import generateImages from "../functions/generateImage.js";
 import generateVideo from "../functions/generateVideo.js";
+import { generateIntroImage } from "../functions/generateIntroImage.js";
 import { generateOutroImage } from "../functions/generateOutroImage.js";
 
 const router = express.Router();
@@ -98,8 +99,8 @@ const createVideo = async (
 ) => {
   let verses, book, audioPath, images;
   try {
+    //Data
     const verseTable = "record" + version_id;
-
     book = await db2.books.findFirst({
       select: {
         id: true,
@@ -129,6 +130,7 @@ const createVideo = async (
     throw new Error("Excel Error");
   }
 
+  //Images
   try {
     const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_imge);
     const data = {
@@ -142,6 +144,8 @@ const createVideo = async (
     console.log(error);
     throw new Error("Image Error");
   }
+
+  //Audio
   try {
     const response = await axios.get(audioUrl, { responseType: "arraybuffer" });
 
@@ -157,13 +161,20 @@ const createVideo = async (
     throw new Error("Audio Error");
   }
 
+  //Video
   const videos = [];
   try {
     const Image = images.map((image) => path.join(process.cwd(), "public", "images", "0", image));
     for (const img of Image) {
       const videoName = `${project_name} - ${no}`;
-      const images = [img];
-      const newValues = [values + 1];
+      const images = [];
+      const newValues = [];
+      if (intro) {
+        images.push(path.join(process.cwd(), "public", "images", "0", "intro.png"));
+        newValues.push(3);
+      }
+      images.push(img);
+      newValues.push(values + 1);
       if (outro) {
         images.push(path.join(process.cwd(), "public", "images", "0", "outro.png"));
         newValues.push(3);
@@ -230,7 +241,7 @@ router.post("/add", async (req, res) => {
       try {
         let i = 1;
 
-        if (outro) {
+        if (intro || outro) {
           const book = await db2.versions.findFirst({
             select: {
               id: true,
@@ -240,10 +251,16 @@ router.post("/add", async (req, res) => {
               id: parseInt(fileData[0][1]),
             },
           });
-
-          const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
-          const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
-          await generateOutroImage(bgPath, logoPath, book.version_name, font, size);
+          if (intro) {
+            const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
+            const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
+            await generateIntroImage(bgPath, logoPath, book.version_name, font, size);
+          }
+          if (outro) {
+            const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
+            const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
+            await generateOutroImage(bgPath, logoPath, book.version_name, font, size);
+          }
         }
 
         for (const file of fileData) {
@@ -311,6 +328,25 @@ router.post("/add", async (req, res) => {
     } else {
       const images = [];
       try {
+        const book = await db2.versions.findFirst({
+          select: {
+            id: true,
+            version_name: true,
+          },
+          where: {
+            id: parseInt(fileData[0][1]),
+          },
+        });
+
+        //Intro
+        if (intro) {
+          const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
+          const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
+          await generateIntroImage(bgPath, logoPath, book.version_name, font, size);
+          images.push(path.join(process.cwd(), "public", "images", "0", "intro.png"));
+        }
+
+        //Images
         for (const file of fileData) {
           const img = await createImage(
             file[1], //version_id
@@ -328,19 +364,9 @@ router.post("/add", async (req, res) => {
           images.push(img);
           progressData[id] = Math.floor((images.length / fileData.length) * 60);
         }
-        //outro
-        if (outro) {
-          const book_id = (fileData[0][2] - 1).toString();
-          const book = await db2.versions.findFirst({
-            select: {
-              id: true,
-              version_name: true,
-            },
-            where: {
-              id: parseInt(fileData[0][1]),
-            },
-          });
 
+        //Outro
+        if (outro) {
           const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
           const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
           await generateOutroImage(bgPath, logoPath, book.version_name, font, size);
@@ -366,7 +392,15 @@ router.post("/add", async (req, res) => {
         throw new Error("Audio Error");
       }
 
-      const Values = fileData.map((file) => file[6]);
+      const Values = [];
+
+      //intro
+      if (intro) {
+        Values.push(3);
+      }
+
+      //Image durations
+      fileData.forEach((file) => Values.push(file[6]));
 
       //outro
       if (outro) {

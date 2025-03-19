@@ -32,20 +32,65 @@ const VideoGenerator = async (
       if (start_time) command.input(audioUrl).inputOptions(["-ss", start_time]);
       else command.input(audioUrl);
 
+      // Build video filters
       const videoParts = Images.map(
         (_, index) => `[${index}:v]trim=0:${Values[index] || 2},setpts=PTS-STARTPTS[v${index}];`
       ).join("");
 
       const concatInputs = Images.map((_, index) => `[v${index}]`).join("");
-
       const concatFilter = `concat=n=${Images.length}:v=1:a=0[outv];`;
 
-      const audioPlayDuration = Values.slice(0, -1).reduce((sum, val) => sum + (val || 2), 0);
+      // Durations
+      const introDuration = intro ? Values[0] || 2 : 0;
+      const outroDuration = outro ? Values[Values.length - 1] || 2 : 0;
+      const totalVideoDuration = Values.reduce((sum, val) => sum + (val || 2), 0);
 
-      const audioFilter = outro
-        ? `[${Images.length}:a]atrim=0:${audioPlayDuration},asetpts=PTS-STARTPTS[aout]`
-        : `[${Images.length}:a]anull[aout]`;
+      // Middle audio duration (excluding intro and outro)
+      const audioPlayDuration = totalVideoDuration - introDuration - outroDuration;
 
+      // Audio input index (after images)
+      const audioInputIndex = Images.length;
+
+      // Build audio filters
+      let audioFilter = "";
+      const audioParts = [];
+
+      if (intro) {
+        audioParts.push(
+          `[${audioInputIndex}:a]atrim=0:${introDuration},asetpts=PTS-STARTPTS,volume=0[aIntro]`
+        );
+      }
+
+      if (audioPlayDuration > 0) {
+        audioParts.push(
+          `[${audioInputIndex}:a]atrim=${introDuration}:${
+            introDuration + audioPlayDuration
+          },asetpts=PTS-STARTPTS[aMid]`
+        );
+      }
+
+      if (outro) {
+        audioParts.push(
+          `[${audioInputIndex}:a]atrim=${
+            introDuration + audioPlayDuration
+          }:${totalVideoDuration},asetpts=PTS-STARTPTS,volume=0[aOutro]`
+        );
+      }
+
+      // Concatenate audio parts
+      const concatLabels = [];
+      if (intro) concatLabels.push("[aIntro]");
+      if (audioPlayDuration > 0) concatLabels.push("[aMid]");
+      if (outro) concatLabels.push("[aOutro]");
+
+      if (concatLabels.length > 0) {
+        audioParts.push(`${concatLabels.join("")}concat=n=${concatLabels.length}:v=0:a=1[aout]`);
+        audioFilter = audioParts.join(";");
+      } else {
+        audioFilter = `[${audioInputIndex}:a]anull[aout]`;
+      }
+
+      // Final filter_complex string
       const filterComplex = videoParts + concatInputs + concatFilter + audioFilter;
 
       command

@@ -115,7 +115,7 @@ const CreateVideo = () => {
         } else {
           setProgress(null);
           message.success({ content: 'Videos Generated Successfully', duration: 2 });
-          // navigate(`/projects/videos/${response.data.id}`, { state: { id: response.data.id } });
+          navigate(`/projects/videos/${response.data.id}`, { state: { id: response.data.id } });
         }
       } else {
         message.error({ content: 'Internal Server Error', duration: 2 });
