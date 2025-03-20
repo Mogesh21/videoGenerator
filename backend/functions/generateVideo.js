@@ -41,8 +41,8 @@ const VideoGenerator = async (
       const concatFilter = `concat=n=${Images.length}:v=1:a=0[outv];`;
 
       // Durations
-      const introDuration = intro ? Values[0] || 2 : 0;
-      const outroDuration = outro ? Values[Values.length - 1] || 2 : 0;
+      const introDuration = intro ? Values[0] || 3 : 0;
+      const outroDuration = outro ? Values[Values.length - 1] || 3 : 0;
       const totalVideoDuration = Values.reduce((sum, val) => sum + (val || 2), 0);
 
       // Middle audio duration (excluding intro and outro)
@@ -63,7 +63,7 @@ const VideoGenerator = async (
 
       if (audioPlayDuration > 0) {
         audioParts.push(
-          `[${audioInputIndex}:a]atrim=${introDuration}:${
+          `[${audioInputIndex}:a]atrim=${introDuration - 2 || 0}:${
             introDuration + audioPlayDuration
           },asetpts=PTS-STARTPTS[aMid]`
         );
@@ -111,6 +111,9 @@ const VideoGenerator = async (
         .output(videoPath)
         .on("start", (cmd) => {
           console.log(cmd);
+        })
+        .on("progress", (val) => {
+          console.log(val);
         })
         .on("end", () => {
           // console.log("Video created successfully:", videoPath);
