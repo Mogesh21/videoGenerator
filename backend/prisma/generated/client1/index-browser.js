@@ -175,6 +175,7 @@ exports.Prisma.TemplatesScalarFieldEnum = {
   name: 'name',
   background_image: 'background_image',
   logo_image: 'logo_image',
+  audio: 'audio',
   intro: 'intro',
   outro: 'outro',
   font: 'font',

@@ -64,6 +64,7 @@ model templates {
   name             String    @db.VarChar(45)
   background_image String?   @db.VarChar(45)
   logo_image       String    @db.VarChar(45)
+  audio            String?   @db.VarChar(45)
   intro            Boolean?  @default(false)
   outro            Boolean?  @default(false)
   font             String?   @db.Text

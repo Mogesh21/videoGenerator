@@ -40,6 +40,7 @@ const CreateTemplate = () => {
     },
     bg: '',
     logo_image: '',
+    audio: '',
     intro: false,
     outro: false,
     font: {
@@ -105,6 +106,11 @@ const CreateTemplate = () => {
   const handleImage = async (event) => {
     const file = event.file;
     setData((data) => ({ ...data, logo_image: file }));
+  };
+
+  const handleAudio = async (event) => {
+    const file = event.file;
+    setData((data) => ({ ...data, audio: file }));
   };
 
   const textTimeline = [
@@ -395,6 +401,14 @@ const CreateTemplate = () => {
     onChange: handleImage
   };
 
+  const audioprops = {
+    listType: 'picture',
+    beforeUpload: () => false,
+    maxCount: 1,
+    accept: '.mp3',
+    onChange: handleAudio
+  };
+
   const videoBgprops = {
     listType: 'picture',
     beforeUpload: () => false,
@@ -438,6 +452,7 @@ const CreateTemplate = () => {
         formData.append('data', JSON.stringify(data));
         formData.append('backgroundImage', data.bg);
         formData.append('logo_image', data.logo_image);
+        formData.append('audio', data.audio);
         const response = await axios.post(`${SERVER_ADDRESS}/templates/create`, formData);
         if (response.status === 200) {
           message.success({ content: 'Template Created Successfully' });
@@ -606,6 +621,10 @@ const CreateTemplate = () => {
               <p className="text-md font-bold">Logo Image:</p>
               <Upload {...imageprops}>
                 <Button type="primary">Upload Logo Image</Button>
+              </Upload>
+              <p className="text-md font-bold">Intro and Outro Audio:</p>
+              <Upload {...audioprops}>
+                <Button type="primary">Upload Audio</Button>
               </Upload>
             </>
           )}

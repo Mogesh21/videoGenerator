@@ -25,7 +25,7 @@ function wrapText(ctx, text, x, y, maxWidth) {
     }
     wrappedLines.push(line);
   });
-  
+
   console.log(x);
 
   const xVal = x;

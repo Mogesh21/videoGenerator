@@ -95,7 +95,8 @@ const createVideo = async (
   project_name,
   no,
   intro,
-  outro
+  outro,
+  audio
 ) => {
   let verses, book, audioPath, images;
   try {
@@ -187,7 +188,8 @@ const createVideo = async (
         projectId,
         videoName,
         intro,
-        outro
+        outro,
+        audio
       );
       videos.push(video);
     }
@@ -222,6 +224,7 @@ router.post("/add", async (req, res) => {
       project_name,
       intro,
       outro,
+      audio,
     } = data;
 
     const videos = [];
@@ -271,7 +274,8 @@ router.post("/add", async (req, res) => {
             project_name,
             i,
             intro,
-            outro
+            outro,
+            audio
           );
           i++;
           videos.push(...vid);
@@ -397,7 +401,8 @@ router.post("/add", async (req, res) => {
           projectId,
           project_name,
           intro,
-          outro
+          outro,
+          audio
         );
       } catch (err) {
         console.log(err);

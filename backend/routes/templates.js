@@ -16,7 +16,7 @@ const imageStorage = multer.diskStorage({
     cb(null, dir);
   },
   filename: (req, file, cb) => {
-    cb(null, "bg" + Date.now() + path.extname(file.originalname));
+    cb(null, "bg" + Date.now() + Math.floor(Math.random() * 9) + path.extname(file.originalname));
   },
 });
 
@@ -31,6 +31,7 @@ router.get("/", async (req, res) => {
       select: {
         id: true,
         name: true,
+        audio: true,
         intro: true,
         outro: true,
         position: true,
@@ -62,6 +63,7 @@ router.post(
   images.fields([
     { name: "backgroundImage", maxCount: 1 },
     { name: "logo_image", maxCount: 1 },
+    { name: "audio", maxCount: 1 },
   ]),
   async (req, res) => {
     try {
@@ -69,11 +71,14 @@ router.post(
       const bg_name = req?.files["backgroundImage"][0].filename || "";
       const logo = req?.files["logo_image"];
       const logo_image = logo ? logo[0].filename : "";
+      const audio = req?.files["audio"];
+      const audio_name = audio ? audio[0].filename : "";
       await prisma.templates.create({
         data: {
           name: data.name,
           background_image: bg_name,
           logo_image: logo_image,
+          audio: audio_name,
           position: JSON.stringify(data.position),
           font: JSON.stringify(data.font),
           hasAuthor: parseInt(data.hasAuthor),
@@ -96,6 +101,7 @@ router.put(
   images.fields([
     { name: "backgroundImage", maxCount: 1 },
     { name: "logo_image", maxCount: 1 },
+    { name: "audio", maxCount: 1 },
   ]),
   async (req, res) => {
     try {
@@ -109,10 +115,19 @@ router.put(
 
       const logo = req?.files["logo_image"];
       const logo_image = logo ? logo[0].filename : data.logo_image;
-      if (logo) {
+      if (logo && data.logo_image) {
         const stats = fs.statSync(`./public/backgroundImages/${data.logo_image}`);
         if (stats.isFile()) {
           fs.rmSync(`./public/backgroundImages/${data.logo_image}`);
+        }
+      }
+
+      const audio = req?.files["audio"];
+      const audio_name = audio ? audio[0].filename : data.audio;
+      if (audio && data.audio) {
+        const stats = fs.statSync(`./public/backgroundImages/${data.audio}`);
+        if (stats.isFile()) {
+          fs.rmSync(`./public/backgroundImages/${data.audio}`);
         }
       }
 
@@ -121,6 +136,7 @@ router.put(
           name: data.name,
           background_image: bg_name,
           logo_image: logo_image,
+          audio: audio_name,
           position: JSON.stringify(data.position),
           font: JSON.stringify(data.font),
           hasAuthor: parseInt(data.hasAuthor),

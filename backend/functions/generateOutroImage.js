@@ -18,30 +18,36 @@ export async function generateOutroImage(backgroundPath, logoPath, title, fontSe
 
     const positions = {
       post: {
+        logo: 320,
         fontSize: 70,
+        text: 60,
         playstore: 3,
-        playstoreY: 170,
+        playstoreY: 140,
         playstoreHeight: 120,
-        social: 5.5,
-        socialY: 340,
-        socialHeight: 90,
+        social: 6,
+        socialY: 310,
+        socialHeight: 80,
       },
       reel: {
-        fontSize: 80,
+        logo: 350,
+        fontSize: 85,
         playstore: 3,
+        text: 90,
         social: 4.5,
-        playstoreY: 210,
+        playstoreY: 180,
         playstoreHeight: 120,
-        socialY: 400,
+        socialY: 370,
         socialHeight: 100,
       },
       video: {
-        fontSize: 80,
+        logo: 350,
+        fontSize: 85,
+        text: 80,
         playstore: 5,
         playstoreY: 170,
         playstoreHeight: 120,
         social: 10,
-        socialY: 320,
+        socialY: 340,
         socialHeight: 80,
       },
     };
@@ -58,10 +64,16 @@ export async function generateOutroImage(backgroundPath, logoPath, title, fontSe
 
     //book logo
     const bookIcon = await loadImage(logoPath);
-    ctx.drawImage(bookIcon, width / 2 - 350 / 2, height / 2 - 380, 350, 350);
+    ctx.drawImage(
+      bookIcon,
+      width / 2 - 350 / 2,
+      height / 2 - 410,
+      positions[type].logo,
+      positions[type].logo
+    );
 
     //title text
-    ctx.fillText(title, width / 2, height / 2 + 100);
+    ctx.fillText(title, width / 2, height / 2 + positions[type].text);
 
     //playstore logo
     const appLogoPath = path.join(process.cwd(), "public", "applogo.png");

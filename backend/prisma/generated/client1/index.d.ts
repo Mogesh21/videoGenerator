@@ -6071,6 +6071,7 @@ export namespace Prisma {
     name: string | null
     background_image: string | null
     logo_image: string | null
+    audio: string | null
     intro: boolean | null
     outro: boolean | null
     font: string | null
@@ -6089,6 +6090,7 @@ export namespace Prisma {
     name: string | null
     background_image: string | null
     logo_image: string | null
+    audio: string | null
     intro: boolean | null
     outro: boolean | null
     font: string | null
@@ -6107,6 +6109,7 @@ export namespace Prisma {
     name: number
     background_image: number
     logo_image: number
+    audio: number
     intro: number
     outro: number
     font: number
@@ -6141,6 +6144,7 @@ export namespace Prisma {
     name?: true
     background_image?: true
     logo_image?: true
+    audio?: true
     intro?: true
     outro?: true
     font?: true
@@ -6159,6 +6163,7 @@ export namespace Prisma {
     name?: true
     background_image?: true
     logo_image?: true
+    audio?: true
     intro?: true
     outro?: true
     font?: true
@@ -6177,6 +6182,7 @@ export namespace Prisma {
     name?: true
     background_image?: true
     logo_image?: true
+    audio?: true
     intro?: true
     outro?: true
     font?: true
@@ -6282,6 +6288,7 @@ export namespace Prisma {
     name: string
     background_image: string | null
     logo_image: string
+    audio: string | null
     intro: boolean | null
     outro: boolean | null
     font: string | null
@@ -6319,6 +6326,7 @@ export namespace Prisma {
     name?: boolean
     background_image?: boolean
     logo_image?: boolean
+    audio?: boolean
     intro?: boolean
     outro?: boolean
     font?: boolean
@@ -6338,6 +6346,7 @@ export namespace Prisma {
     name?: boolean
     background_image?: boolean
     logo_image?: boolean
+    audio?: boolean
     intro?: boolean
     outro?: boolean
     font?: boolean
@@ -6360,6 +6369,7 @@ export namespace Prisma {
       name: string
       background_image: string | null
       logo_image: string
+      audio: string | null
       intro: boolean | null
       outro: boolean | null
       font: string | null
@@ -6744,6 +6754,7 @@ export namespace Prisma {
     readonly name: FieldRef<"templates", 'String'>
     readonly background_image: FieldRef<"templates", 'String'>
     readonly logo_image: FieldRef<"templates", 'String'>
+    readonly audio: FieldRef<"templates", 'String'>
     readonly intro: FieldRef<"templates", 'Boolean'>
     readonly outro: FieldRef<"templates", 'Boolean'>
     readonly font: FieldRef<"templates", 'String'>
@@ -9991,6 +10002,7 @@ export namespace Prisma {
     name: 'name',
     background_image: 'background_image',
     logo_image: 'logo_image',
+    audio: 'audio',
     intro: 'intro',
     outro: 'outro',
     font: 'font',
@@ -10436,6 +10448,7 @@ export namespace Prisma {
     name?: StringFilter<"templates"> | string
     background_image?: StringNullableFilter<"templates"> | string | null
     logo_image?: StringFilter<"templates"> | string
+    audio?: StringNullableFilter<"templates"> | string | null
     intro?: BoolNullableFilter<"templates"> | boolean | null
     outro?: BoolNullableFilter<"templates"> | boolean | null
     font?: StringNullableFilter<"templates"> | string | null
@@ -10454,6 +10467,7 @@ export namespace Prisma {
     name?: SortOrder
     background_image?: SortOrderInput | SortOrder
     logo_image?: SortOrder
+    audio?: SortOrderInput | SortOrder
     intro?: SortOrderInput | SortOrder
     outro?: SortOrderInput | SortOrder
     font?: SortOrderInput | SortOrder
@@ -10475,6 +10489,7 @@ export namespace Prisma {
     name?: StringFilter<"templates"> | string
     background_image?: StringNullableFilter<"templates"> | string | null
     logo_image?: StringFilter<"templates"> | string
+    audio?: StringNullableFilter<"templates"> | string | null
     intro?: BoolNullableFilter<"templates"> | boolean | null
     outro?: BoolNullableFilter<"templates"> | boolean | null
     font?: StringNullableFilter<"templates"> | string | null
@@ -10493,6 +10508,7 @@ export namespace Prisma {
     name?: SortOrder
     background_image?: SortOrderInput | SortOrder
     logo_image?: SortOrder
+    audio?: SortOrderInput | SortOrder
     intro?: SortOrderInput | SortOrder
     outro?: SortOrderInput | SortOrder
     font?: SortOrderInput | SortOrder
@@ -10519,6 +10535,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"templates"> | string
     background_image?: StringNullableWithAggregatesFilter<"templates"> | string | null
     logo_image?: StringWithAggregatesFilter<"templates"> | string
+    audio?: StringNullableWithAggregatesFilter<"templates"> | string | null
     intro?: BoolNullableWithAggregatesFilter<"templates"> | boolean | null
     outro?: BoolNullableWithAggregatesFilter<"templates"> | boolean | null
     font?: StringNullableWithAggregatesFilter<"templates"> | string | null
@@ -11109,6 +11126,7 @@ export namespace Prisma {
     name: string
     background_image?: string | null
     logo_image: string
+    audio?: string | null
     intro?: boolean | null
     outro?: boolean | null
     font?: string | null
@@ -11127,6 +11145,7 @@ export namespace Prisma {
     name: string
     background_image?: string | null
     logo_image: string
+    audio?: string | null
     intro?: boolean | null
     outro?: boolean | null
     font?: string | null
@@ -11144,6 +11163,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     background_image?: NullableStringFieldUpdateOperationsInput | string | null
     logo_image?: StringFieldUpdateOperationsInput | string
+    audio?: NullableStringFieldUpdateOperationsInput | string | null
     intro?: NullableBoolFieldUpdateOperationsInput | boolean | null
     outro?: NullableBoolFieldUpdateOperationsInput | boolean | null
     font?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11162,6 +11182,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     background_image?: NullableStringFieldUpdateOperationsInput | string | null
     logo_image?: StringFieldUpdateOperationsInput | string
+    audio?: NullableStringFieldUpdateOperationsInput | string | null
     intro?: NullableBoolFieldUpdateOperationsInput | boolean | null
     outro?: NullableBoolFieldUpdateOperationsInput | boolean | null
     font?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11180,6 +11201,7 @@ export namespace Prisma {
     name: string
     background_image?: string | null
     logo_image: string
+    audio?: string | null
     intro?: boolean | null
     outro?: boolean | null
     font?: string | null
@@ -11197,6 +11219,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     background_image?: NullableStringFieldUpdateOperationsInput | string | null
     logo_image?: StringFieldUpdateOperationsInput | string
+    audio?: NullableStringFieldUpdateOperationsInput | string | null
     intro?: NullableBoolFieldUpdateOperationsInput | boolean | null
     outro?: NullableBoolFieldUpdateOperationsInput | boolean | null
     font?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11215,6 +11238,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     background_image?: NullableStringFieldUpdateOperationsInput | string | null
     logo_image?: StringFieldUpdateOperationsInput | string
+    audio?: NullableStringFieldUpdateOperationsInput | string | null
     intro?: NullableBoolFieldUpdateOperationsInput | boolean | null
     outro?: NullableBoolFieldUpdateOperationsInput | boolean | null
     font?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11862,6 +11886,7 @@ export namespace Prisma {
     name?: SortOrder
     background_image?: SortOrder
     logo_image?: SortOrder
+    audio?: SortOrder
     intro?: SortOrder
     outro?: SortOrder
     font?: SortOrder
@@ -11887,6 +11912,7 @@ export namespace Prisma {
     name?: SortOrder
     background_image?: SortOrder
     logo_image?: SortOrder
+    audio?: SortOrder
     intro?: SortOrder
     outro?: SortOrder
     font?: SortOrder
@@ -11905,6 +11931,7 @@ export namespace Prisma {
     name?: SortOrder
     background_image?: SortOrder
     logo_image?: SortOrder
+    audio?: SortOrder
     intro?: SortOrder
     outro?: SortOrder
     font?: SortOrder

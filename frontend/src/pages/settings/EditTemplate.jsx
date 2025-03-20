@@ -42,6 +42,7 @@ const EditTemplate = () => {
     },
     bg: '',
     logo_image: '',
+    audio: '',
     intro: false,
     outro: false,
     font: {
@@ -85,6 +86,7 @@ const EditTemplate = () => {
   });
   const [image, setImage] = useState(null);
   const [logo, setLogo] = useState([]);
+  const [audio, setAudio] = useState([]);
 
   const [position, setPosition] = useState({
     title: {
@@ -179,6 +181,12 @@ const EditTemplate = () => {
     const file = event.file;
     if (file.status === 'removed') setLogo([]);
     else setLogo([file]);
+  };
+
+  const handleAudio = async (event) => {
+    const file = event.file;
+    if (file.status === 'removed') setAudio([]);
+    else setAudio([file]);
   };
 
   const fetchTemplates = async () => {
@@ -279,7 +287,6 @@ const EditTemplate = () => {
         authorRef.current.style.top = current.position.credit.y;
       }
       setData(newData);
-      console.log(newData);
       if (current.logo_image)
         setLogo([
           {
@@ -289,6 +296,16 @@ const EditTemplate = () => {
             url: `${SERVER_ADDRESS}/public/backgroundImages/${current.logo_image}`
           }
         ]);
+      if (current.audio) {
+        setAudio([
+          {
+            uid: 1,
+            name: 'audio.mp3',
+            status: 'done',
+            url: `${SERVER_ADDRESS}/public/backgroundImages/${current.audio}`
+          }
+        ]);
+      }
     }
   }, [templates]);
 
@@ -374,6 +391,15 @@ const EditTemplate = () => {
     onChange: handleImage
   };
 
+  const audioprops = {
+    listType: 'picture',
+    beforeUpload: () => false,
+    maxCount: 1,
+    accept: '.mp3',
+    fileList: audio,
+    onChange: handleAudio
+  };
+
   const handleRatio = (val) => {
     const size = { type: val };
 
@@ -421,6 +447,9 @@ const EditTemplate = () => {
       if (image) formData.append('backgroundImage', image);
       if (!logo[0]?.status) {
         formData.append('logo_image', logo[0]);
+      }
+      if (!audio[0]?.status) {
+        formData.append('audio', audio[0]);
       }
       if (logo.length === 0) {
         message.error({ content: 'Please upload the logo image' });
@@ -583,6 +612,10 @@ const EditTemplate = () => {
               <p className="text-md font-bold">Logo Image:</p>
               <Upload {...imageprops}>
                 <Button type="primary">Upload Logo Image</Button>
+              </Upload>
+              <p className="text-md font-bold">Intro and Outro Audio:</p>
+              <Upload {...audioprops}>
+                <Button type="primary">Upload Audio</Button>
               </Upload>
             </>
           )}

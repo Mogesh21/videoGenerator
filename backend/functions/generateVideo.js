@@ -10,7 +10,8 @@ const VideoGenerator = async (
   projectId,
   project_name,
   intro,
-  outro
+  outro,
+  audio
 ) => {
   try {
     const videoName = `${project_name}.mp4`;
@@ -29,8 +30,8 @@ const VideoGenerator = async (
         command.input(image).inputOptions(["-loop 1", `-t ${duration}`]);
       });
 
-      if (start_time) command.input(audioUrl).inputOptions(["-ss", start_time]);
-      else command.input(audioUrl);
+      // if (start_time) command.input(audioUrl).inputOptions(["-ss", start_time]);
+      // else command.input(audioUrl);
 
       // Build video filters
       const videoParts = Images.map(
@@ -48,49 +49,100 @@ const VideoGenerator = async (
       // Middle audio duration (excluding intro and outro)
       const audioPlayDuration = totalVideoDuration - introDuration - outroDuration;
 
-      // Audio input index (after images)
-      const audioInputIndex = Images.length;
+      // // Audio input index (after images)
+      // const audioInputIndex = Images.length;
 
-      // Build audio filters
+      // // Build audio filters
+      // let audioFilter = "";
+      // const audioParts = [];
+
+      // if (intro) {
+      //   audioParts.push(
+      //     `[${audioInputIndex}:a]atrim=0:${introDuration},asetpts=PTS-STARTPTS,volume=0[aIntro]`
+      //   );
+      // }
+
+      // if (audioPlayDuration > 0) {
+      //   audioParts.push(
+      //     `[${audioInputIndex}:a]atrim=${introDuration - 2 || 0}:${
+      //       introDuration + audioPlayDuration
+      //     },asetpts=PTS-STARTPTS[aMid]`
+      //   );
+      // }
+
+      // if (outro) {
+      //   audioParts.push(
+      //     `[${audioInputIndex}:a]atrim=${
+      //       introDuration + audioPlayDuration
+      //     }:${totalVideoDuration},asetpts=PTS-STARTPTS,volume=0[aOutro]`
+      //   );
+      // }
+
+      // // Concatenate audio parts
+      // const concatLabels = [];
+      // if (intro) concatLabels.push("[aIntro]");
+      // if (audioPlayDuration > 0) concatLabels.push("[aMid]");
+      // if (outro) concatLabels.push("[aOutro]");
+
+      // if (concatLabels.length > 0) {
+      //   audioParts.push(`${concatLabels.join("")}concat=n=${concatLabels.length}:v=0:a=1[aout]`);
+      //   audioFilter = audioParts.join(";");
+      // } else {
+      //   audioFilter = `[${audioInputIndex}:a]anull[aout]`;
+      // }
+
+      // // Final filter_complex string
+      // const filterComplex = videoParts + concatInputs + concatFilter + audioFilter;
+
+      const audioName = audio || "introAudio.mp3";
+      const introAudioUrl = path.join(process.cwd(), "public", "backgroundImages", audioName);
+      const outroAudioUrl = path.join(process.cwd(), "public", "backgroundImages", audioName);
+      let audioInputIndex = Images.length;
       let audioFilter = "";
+
+      if (introAudioUrl) {
+        command.input(introAudioUrl);
+        audioInputIndex++; // intro audio at Images.length
+      }
+      if (start_time) command.input(audioUrl).inputOptions(["-ss", start_time]);
+      else command.input(audioUrl);
+      audioInputIndex++; // main audio index = Images.length + 1 or +2
+      if (outroAudioUrl) {
+        command.input(outroAudioUrl);
+        audioInputIndex++; // outro audio
+      }
+
+      const baseIndex = Images.length;
+      const introIndex = introAudioUrl ? baseIndex : null;
+      const mainIndex = introAudioUrl ? baseIndex + 1 : baseIndex;
+      const outroIndex = outroAudioUrl ? (introAudioUrl ? baseIndex + 2 : baseIndex + 1) : null;
+
       const audioParts = [];
 
-      if (intro) {
-        audioParts.push(
-          `[${audioInputIndex}:a]atrim=0:${introDuration},asetpts=PTS-STARTPTS,volume=0[aIntro]`
-        );
+      if (intro && introAudioUrl) {
+        audioParts.push(`[${introIndex}:a]atrim=0:${introDuration},asetpts=PTS-STARTPTS[aIntro]`);
       }
 
       if (audioPlayDuration > 0) {
-        audioParts.push(
-          `[${audioInputIndex}:a]atrim=${introDuration - 2 || 0}:${
-            introDuration + audioPlayDuration
-          },asetpts=PTS-STARTPTS[aMid]`
-        );
+        audioParts.push(`[${mainIndex}:a]atrim=0:${audioPlayDuration},asetpts=PTS-STARTPTS[aMid]`);
       }
 
-      if (outro) {
-        audioParts.push(
-          `[${audioInputIndex}:a]atrim=${
-            introDuration + audioPlayDuration
-          }:${totalVideoDuration},asetpts=PTS-STARTPTS,volume=0[aOutro]`
-        );
+      if (outro && outroAudioUrl) {
+        audioParts.push(`[${outroIndex}:a]atrim=0:${outroDuration},asetpts=PTS-STARTPTS[aOutro]`);
       }
 
-      // Concatenate audio parts
       const concatLabels = [];
-      if (intro) concatLabels.push("[aIntro]");
+      if (intro && introAudioUrl) concatLabels.push("[aIntro]");
       if (audioPlayDuration > 0) concatLabels.push("[aMid]");
-      if (outro) concatLabels.push("[aOutro]");
+      if (outro && outroAudioUrl) concatLabels.push("[aOutro]");
 
       if (concatLabels.length > 0) {
         audioParts.push(`${concatLabels.join("")}concat=n=${concatLabels.length}:v=0:a=1[aout]`);
         audioFilter = audioParts.join(";");
       } else {
-        audioFilter = `[${audioInputIndex}:a]anull[aout]`;
+        audioFilter = `[${mainIndex}:a]anull[aout]`;
       }
 
-      // Final filter_complex string
       const filterComplex = videoParts + concatInputs + concatFilter + audioFilter;
 
       command
@@ -112,9 +164,9 @@ const VideoGenerator = async (
         .on("start", (cmd) => {
           console.log(cmd);
         })
-        .on("progress", (val) => {
-          console.log(val);
-        })
+        // .on("progress", (val) => {
+        //   console.log(val);
+        // })
         .on("end", () => {
           // console.log("Video created successfully:", videoPath);
           resolve(videoName);
