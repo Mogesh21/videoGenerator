@@ -81,7 +81,7 @@ export async function generateOutroImage(backgroundPath, logoPath, title, fontSe
     const textY = height / 2 + positions[type].text; // Position for text
 
     ctx.fillStyle = fontSettings.content_color;
-    ctx.textAlign = fontSettings.content_align;
+    ctx.textAlign = "center";8
 
     const y = wrapText(ctx, font, title, textX, textY, maxWidth, fontSize);
 

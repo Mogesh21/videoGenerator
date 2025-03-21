@@ -175,7 +175,7 @@ const createVideo = async (
         newValues.push(4);
       }
       images.push(img);
-      newValues.push(values + 1);
+      newValues.push(values);
       if (outro) {
         images.push(path.join(process.cwd(), "public", "images", "0", "outro.png"));
         newValues.push(3);

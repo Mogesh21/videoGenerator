@@ -46,7 +46,7 @@ export async function generateIntroImage(backgroundPath, logoPath, title, fontSe
     const textX = width / 12;
 
     ctx.fillStyle = fontSettings.content_color;
-    ctx.textAlign = fontSettings.content_align;
+    ctx.textAlign = "center";
 
     wrapText(ctx, font, title, textX, textY, maxWidth, fontSize);
 
