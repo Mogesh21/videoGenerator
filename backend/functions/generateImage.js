@@ -1,35 +1,28 @@
 import canvas from "canvas";
 import fs from "fs";
 import path from "path";
+import opentype from "opentype.js";
 
-const { loadImage, createCanvas, registerFont } = canvas;
+const { loadImage, createCanvas } = canvas;
 
-// function wrapText(ctx, text, x, y, maxWidth, lineHeight, totalHeight = 0) {
-//   const align = ctx.textAlign;
-//   const xVal = align === "center" ? x + maxWidth / 2 : align === "right" ? x + maxWidth : x;
-//   const paragraphs = text.split("\\n");
-//   paragraphs.forEach((paragraph) => {
-//     const words = paragraph.split(" ");
-//     let line = "";
-//     for (const word of words) {
-//       const testLine = line + word + " ";
-//       const metrics = ctx.measureText(testLine);
-//       if (metrics.width > maxWidth && line !== "") {
-//         ctx.fillText(line, xVal, y);
-//         line = word + " ";
-//         y += lineHeight;
-//       } else {
-//         line = testLine;
-//       }
-//     }
-//     console.log(line);
-//     ctx.fillText(line, xVal, y);
-//     y += lineHeight;
-//   });
-//   return y;
-// }
+// Default font fallback
+const DEFAULT_FONT = "Arial";
 
-function wrapText(ctx, text, x, y, maxWidth, lineHeight, totalHeight = 0) {
+export async function loadFont(fontPath, defaultFont = DEFAULT_FONT) {
+  try {
+    if (fs.existsSync(fontPath)) {
+      return await opentype.load(fontPath);
+    } else {
+      console.warn(`Font file not found: ${fontPath}. Falling back to ${defaultFont}.`);
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error loading font: ${fontPath}`, error);
+    return null;
+  }
+}
+
+export function wrapText(ctx, font, text, x, y, maxWidth, lineHeight, totalHeight = 0) {
   const paragraphs = text.split("\\n");
   let wrappedLines = [];
 
@@ -39,9 +32,9 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight, totalHeight = 0) {
 
     for (const word of words) {
       const testLine = line + word + " ";
-      const metrics = ctx.measureText(testLine);
+      const testWidth = font.getAdvanceWidth(testLine, lineHeight);
 
-      if (metrics.width > maxWidth && line !== "") {
+      if (testWidth > maxWidth && line !== "") {
         wrappedLines.push(line);
         line = word + " ";
       } else {
@@ -50,16 +43,23 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight, totalHeight = 0) {
     }
     wrappedLines.push(line);
   });
-
-  const align = ctx.textAlign;
-  const xVal = align === "center" ? x + maxWidth / 2 : align === "right" ? x + maxWidth : x;
-
   const totalTextHeight = wrappedLines.length * lineHeight;
   if (totalHeight) y = totalHeight / 2 - totalTextHeight / 2;
-
+  
   wrappedLines.forEach((line) => {
-    ctx.fillText(line, xVal, y);
-    y += lineHeight;
+    const align = ctx.textAlign;
+    const testWidth = font.getAdvanceWidth(line, lineHeight);
+    const xVal =
+      align === "center"
+        ? x + maxWidth / 2 - testWidth / 2
+        : align === "right"
+        ? x + maxWidth - testWidth
+        : x;
+
+    const textPath = font.getPath(line, xVal, y, lineHeight);
+    textPath.fill = ctx.fillStyle;
+    textPath.draw(ctx);
+    y += lineHeight + 10;
   });
 
   return y;
@@ -80,37 +80,14 @@ async function generateImages(
     const createdImage = [];
     let content_end = 0;
 
-    const fontPath = path.join(process.cwd(), "font", `${fontSettings.title_font}.ttf`);
-    const fontPath2 = path.join(process.cwd(), "font", `${fontSettings.content_font}.ttf`);
-    const fontPath3 = path.join(process.cwd(), "font", `${fontSettings.credit_font}.ttf`);
+    // Load fonts using opentype.js with fallback to default font
+    const titleFontPath = path.join(process.cwd(), "font", `${fontSettings.title_font}.ttf`);
+    const contentFontPath = path.join(process.cwd(), "font", `${fontSettings.content_font}.ttf`);
+    const creditFontPath = path.join(process.cwd(), "font", `${fontSettings.credit_font}.ttf`);
 
-    // tempFontPath = path.join(process.cwd(), "public", "temp", `${fontSettings.title_font}.ttf`);
-    // tempFontPath2 = path.join(process.cwd(), "public", "temp", `${fontSettings.content_font}.ttf`);
-    // tempFontPath3 = path.join(process.cwd(), "public", "temp", `${fontSettings.credit_font}.ttf`);
-
-    // if (!fs.existsSync(path.dirname(tempFontPath))) {
-    //   fs.mkdirSync(path.dirname(tempFontPath), { recursive: true });
-    // }
-    // if (!fs.existsSync(path.dirname(tempFontPath2))) {
-    //   fs.mkdirSync(path.dirname(tempFontPath2), { recursive: true });
-    // }
-    // if (!fs.existsSync(path.dirname(tempFontPath3))) {
-    //   fs.mkdirSync(path.dirname(tempFontPath3), { recursive: true });
-    // }
-
-    // fs.copyFileSync(fontPath, tempFontPath);
-    // fs.copyFileSync(fontPath2, tempFontPath2);
-    // fs.copyFileSync(fontPath3, tempFontPath3);
-
-    if (hasTitle && fontSettings.title_font && fontSettings.title_font !== "Sans Serif") {
-      registerFont(fontPath, { family: fontSettings.title_font });
-    }
-    if (fontSettings.content_font && fontSettings.content_font !== "Sans Serif") {
-      registerFont(fontPath2, { family: fontSettings.content_font });
-    }
-    if (hasAuthor && fontSettings.credit_font && fontSettings.credit_font !== "Sans Serif") {
-      registerFont(fontPath3, { family: fontSettings.credit_font });
-    }
+    const titleFont = await loadFont(titleFontPath);
+    const contentFont = await loadFont(contentFontPath);
+    const creditFont = await loadFont(creditFontPath);
 
     const dir = `./public/images/0`;
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -118,66 +95,125 @@ async function generateImages(
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext("2d");
 
+    // Draw background
     const background = await loadImage(backgroundPath);
     ctx.drawImage(background, 0, 0, width, height);
 
+    // Render Title
     if (hasTitle) {
-      let italic = "normal";
-      let bold = 100;
-      if (fontSettings.title_style.includes("italic")) italic = "italic";
-      if (fontSettings.title_style.includes("bold")) bold = 600;
-      ctx.font = `${italic} ${bold} ${fontSettings.title_size}px ${fontSettings.title_font}`;
+      let italic = false;
+      let bold = false;
+      if (fontSettings.title_style.includes("italic")) italic = true;
+      if (fontSettings.title_style.includes("bold")) bold = true;
+
       ctx.fillStyle = fontSettings.title_color;
       ctx.textAlign = fontSettings.title_align;
-      wrapText(
-        ctx,
-        titleText,
-        positions.title.x * 3,
-        positions.title.y * 3 + fontSettings.title_size,
-        fontSettings.title_width,
-        fontSettings.line_height
-      );
+
+      if (titleFont) {
+        wrapText(
+          ctx,
+          titleFont,
+          titleText,
+          positions.title.x * 3,
+          positions.title.y * 3 + fontSettings.title_size,
+          fontSettings.title_width,
+          fontSettings.title_size
+        );
+      } else {
+        // Fallback to default font
+        ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
+          fontSettings.title_size
+        }px ${DEFAULT_FONT}`;
+        wrapText(
+          ctx,
+          null, // No font object, use default
+          titleText,
+          positions.title.x * 3,
+          positions.title.y * 3 + fontSettings.title_size,
+          fontSettings.title_width,
+          fontSettings.title_size,
+          fontSettings.line_height
+        );
+      }
     }
 
     // Render Content
     if (contentText) {
-      let italic = "normal";
-      let bold = 100;
-      if (fontSettings.content_style.includes("italic")) italic = "italic";
-      if (fontSettings.content_style.includes("bold")) bold = 600;
-      ctx.font = `${italic} ${bold} ${fontSettings.content_size}px ${fontSettings.content_font}`;
+      let italic = false;
+      let bold = false;
+      if (fontSettings.content_style.includes("italic")) italic = true;
+      if (fontSettings.content_style.includes("bold")) bold = true;
+
       ctx.fillStyle = fontSettings.content_color;
       ctx.textAlign = fontSettings.content_align;
-      content_end = wrapText(
-        ctx,
-        contentText,
-        positions.content.x * 3,
-        positions.content.y * 3 + fontSettings.content_size,
-        fontSettings.content_width,
-        fontSettings.line_height,
-        height
-      );
+
+      if (contentFont) {
+        content_end = wrapText(
+          ctx,
+          contentFont,
+          contentText,
+          positions.content.x * 3,
+          positions.content.y * 3 + fontSettings.content_size,
+          fontSettings.content_width,
+          fontSettings.content_size,
+          height
+        );
+      } else {
+        // Fallback to default font
+        ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
+          fontSettings.content_size
+        }px ${DEFAULT_FONT}`;
+        content_end = wrapText(
+          ctx,
+          null, // No font object, use default
+          contentText,
+          positions.content.x * 3,
+          positions.content.y * 3 + fontSettings.content_size,
+          fontSettings.content_width,
+          fontSettings.content_size,
+          height
+        );
+      }
     }
 
     // Render Credit (Author)
     if (hasAuthor) {
-      let italic = "normal";
-      let bold = 100;
-      if (fontSettings.credit_style.includes("italic")) italic = "italic";
-      if (fontSettings.credit_style.includes("bold")) bold = 600;
-      ctx.font = `${italic} ${bold} ${fontSettings.credit_size}px ${fontSettings.credit_font}`;
+      let italic = false;
+      let bold = false;
+      if (fontSettings.credit_style.includes("italic")) italic = true;
+      if (fontSettings.credit_style.includes("bold")) bold = true;
+
       ctx.fillStyle = fontSettings.credit_color;
       ctx.textAlign = fontSettings.credit_align;
-      wrapText(
-        ctx,
-        creditText,
-        positions.credit.x * 3,
-        content_end + fontSettings.credit_size,
-        fontSettings.credit_width,
-        fontSettings.line_height
-      );
+
+      if (creditFont) {
+        wrapText(
+          ctx,
+          creditFont,
+          creditText,
+          positions.credit.x * 3,
+          content_end + fontSettings.credit_size,
+          fontSettings.credit_width,
+          fontSettings.credit_size
+        );
+      } else {
+        ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
+          fontSettings.credit_size
+        }px ${DEFAULT_FONT}`;
+        wrapText(
+          ctx,
+          null,
+          creditText,
+          positions.credit.x * 3,
+          content_end + fontSettings.credit_size,
+          fontSettings.credit_width,
+          fontSettings.credit_size,
+          fontSettings.line_height
+        );
+      }
     }
 
+    // Save the canvas to a file
     const outputPath = path.join(dir, `${name}.png`);
     const buffer = canvas.toBuffer("image/png");
     fs.writeFileSync(outputPath, buffer);

@@ -1,18 +1,20 @@
 import canvas from "canvas";
 import fs from "fs";
 import path from "path";
+import opentype from "opentype.js";
+import { wrapText } from "./generateImage.js";
 
-const { loadImage, createCanvas, registerFont } = canvas;
+const { loadImage, createCanvas } = canvas;
 
 export async function generateOutroImage(backgroundPath, logoPath, title, fontSettings, size) {
   try {
     const { width, height, type } = size;
     console.log(type);
 
+    // Load the font using opentype.js
     const fontPath = path.join(process.cwd(), "font", `${fontSettings.content_font}.ttf`);
-    if (fontSettings.content_font && fontSettings.content_font !== "Sans Serif") {
-      registerFont(fontPath, { family: fontSettings.content_font });
-    }
+    const font = await opentype.load(fontPath);
+
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext("2d");
 
@@ -22,10 +24,10 @@ export async function generateOutroImage(backgroundPath, logoPath, title, fontSe
         fontSize: 70,
         text: 60,
         playstore: 3,
-        playstoreY: 140,
+        playstoreY: 20,
         playstoreHeight: 120,
         social: 6,
-        socialY: 310,
+        socialY: 160,
         socialHeight: 80,
       },
       reel: {
@@ -34,9 +36,9 @@ export async function generateOutroImage(backgroundPath, logoPath, title, fontSe
         playstore: 3,
         text: 90,
         social: 4.5,
-        playstoreY: 180,
+        playstoreY: 30,
         playstoreHeight: 120,
-        socialY: 370,
+        socialY: 180,
         socialHeight: 100,
       },
       video: {
@@ -44,25 +46,25 @@ export async function generateOutroImage(backgroundPath, logoPath, title, fontSe
         fontSize: 85,
         text: 80,
         playstore: 5,
-        playstoreY: 170,
+        playstoreY: 20,
         playstoreHeight: 120,
         social: 10,
-        socialY: 340,
+        socialY: 160,
         socialHeight: 80,
       },
     };
 
+    // Draw background
     const background = await loadImage(backgroundPath);
     ctx.drawImage(background, 0, 0, width, height);
-    let italic = "normal";
-    let bold = 100;
-    if (fontSettings.content_style.includes("italic")) italic = "italic";
-    if (fontSettings.content_style.includes("bold")) bold = 600;
-    ctx.font = `${positions[type].fontSize}px ${fontSettings.content_font}`;
-    ctx.fillStyle = fontSettings.content_color;
-    ctx.textAlign = fontSettings.content_align;
 
-    //book logo
+    // Set font style
+    let italic = false;
+    let bold = false;
+    if (fontSettings.content_style.includes("italic")) italic = true;
+    if (fontSettings.content_style.includes("bold")) bold = true;
+
+    // Draw book logo
     const bookIcon = await loadImage(logoPath);
     ctx.drawImage(
       bookIcon,
@@ -72,32 +74,43 @@ export async function generateOutroImage(backgroundPath, logoPath, title, fontSe
       positions[type].logo
     );
 
-    //title text
-    ctx.fillText(title, width / 2, height / 2 + positions[type].text);
+    // Render text with opentype.js
+    const fontSize = positions[type].fontSize;
+    const maxWidth = width - width / 6; // Maximum width for text wrapping
+    const textX = width / 12;
+    const textY = height / 2 + positions[type].text; // Position for text
 
-    //playstore logo
+    ctx.fillStyle = fontSettings.content_color;
+    ctx.textAlign = fontSettings.content_align;
+
+    const y = wrapText(ctx, font, title, textX, textY, maxWidth, fontSize);
+
+    // Draw playstore logo
     const appLogoPath = path.join(process.cwd(), "public", "applogo.png");
     const applogo = await loadImage(appLogoPath);
     ctx.drawImage(
       applogo,
       width / 2 - width / positions[type].playstore,
-      height / 2 + positions[type].playstoreY,
+      y + positions[type].playstoreY,
       (width * 2) / positions[type].playstore,
       positions[type].playstoreHeight
     );
 
-    //social Logo
+    // Draw social logo
     const socialLogoPath = path.join(process.cwd(), "public", "social.png");
     const sociallogo = await loadImage(socialLogoPath);
+
     ctx.drawImage(
       sociallogo,
       width / 2 - width / positions[type].social,
-      height / 2 + positions[type].socialY,
+      y + positions[type].socialY,
       (width * 2) / positions[type].social,
       positions[type].socialHeight
     );
 
+    // Save the canvas to a file
     const dir = `./public/images/0`;
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     const outputPath = path.join(dir, `outro.png`);
     const buffer = canvas.toBuffer("image/png");
     fs.writeFileSync(outputPath, buffer);
