@@ -35,31 +35,41 @@ async function downloadAudio(audioUrl) {
 }
 
 const animationEffects = {
-  fade: (duration) => `alpha='if(lt(t,${duration}),t/${duration},1)'`,
+  fade: (duration, content, x, y, size, totalDuration = 10) =>
+    `alpha='if(lt(t,${duration}),t/${duration},if(lt(t,${
+      totalDuration - duration
+    }),1,((${totalDuration}-t)/${duration})))'`,
 
-  slideLeft: (duration) => `x='if(lt(t,${duration}),-text_w+(t/${duration})*(50+text_w),50)'`,
+  slideLeft: (duration, content, x, y, size) =>
+    `x='if(lt(t,${duration}),-text_w+(t/${duration})*(${x}+text_w),${x})'`,
 
-  slideRight: (duration) => `x='if(lt(t,${duration}),main_w-(t/${duration})*(main_w-50),50)'`,
+  slideRight: (duration, content, x, y, size) =>
+    `x='if(lt(t,${duration}),main_w-(t/${duration})*(main_w-${x}),${x})'`,
 
-  slideUp: (duration) => `y='if(lt(t,${duration}),main_h+(t/${duration})*(-main_h+120),120)'`,
+  slideUp: (duration, content, x, y, size) =>
+    `y='if(lt(t,${duration}),main_h+(t/${duration})*(-main_h+${y}),${y})'`,
 
-  slideDown: (duration) => `y='if(lt(t,${duration}),-text_h+(t/${duration})*(120+text_h),120)'`,
+  slideDown: (duration, content, x, y, size) =>
+    `y='if(lt(t,${duration}),-text_h+(t/${duration})*(${y}+text_h),${y})'`,
 
-  scale: (duration) => `fontsize='if(lt(t,${duration}),20+(t/${duration})*(48-20),48)'`,
+  scale: (duration, content, x, y, size) =>
+    `fontsize='if(lt(t,${duration}),0+(t/${duration})*(${size}-0),${size})'`,
 
-  rotate: (duration) => `rotate='if(lt(t,${duration}),(t/${duration})*3.1416/4,3.1416/4)'`,
+  shake: (duration, content, x, y, size) => `x='${x}+5*cos(15*t)':y='${y}+5*sin(20*t)'`,
 
-  shake: () => `x='50+10*sin(5*t)':y='120+10*sin(7*t)'`,
+  horizontalShake: (duration, content, x, y, size) => `x='${x}+5*cos(20*t)':y='${y}+5*sin(0*t)'`,
+
+  verticalShake: (duration, content, x, y, size) => `x='${x}+5*cos(0*t)':y='${y}+5*sin(20*t)'`,
 
   blink: () => `alpha='if(lt(mod(t,2),1),1,0)'`,
 
-  bounce: (duration) => `y='120-10*sin(t*(${Math.PI}/${duration}))'`,
-
-  // typewriter: (duration, content) => `text='${content}':enable='lt(n,(${duration}*25))'`,
+  bounce: (duration, content, x, y, size) => `y='${y}-10*sin(t*(${Math.PI}/${duration / 4}))'`,
 };
 
-function getAnimationFilter(effect, duration, contentText) {
-  return animationEffects[effect] ? animationEffects[effect](duration, contentText) : "";
+function getAnimationFilter(effect, duration, contentText, x, y, size) {
+  return animationEffects[effect]
+    ? animationEffects[effect](duration, contentText, x, y, size)
+    : "";
 }
 
 // Main video creation function
@@ -86,6 +96,17 @@ async function createVideoWithAnimations({
   const audio = formatPath(audioFile);
   const output = formatPath(outputVideo);
   const font = fontPath.replace(/:/g, "\\:");
+  const title = {
+    x: 100,
+    size: 100,
+    y: 50,
+  };
+
+  const content = {
+    x: 80,
+    size: 50,
+    y: 150,
+  };
 
   // Ensure files exist
   verifyFileExists(bgVideo, "Background video");
@@ -93,15 +114,29 @@ async function createVideoWithAnimations({
   verifyFileExists(audio, "Audio file");
   verifyFileExists(fontPath, "Font file");
 
-  const titleAnimation = getAnimationFilter("shake", animationDuration, titleText);
-  const contentAnimation = getAnimationFilter("rotate", animationDuration, contentText);
+  const titleAnimation = getAnimationFilter(
+    "fade",
+    animationDuration,
+    titleText,
+    title.x,
+    title.y,
+    title.size
+  );
+  const contentAnimation = getAnimationFilter(
+    "bounce",
+    animationDuration,
+    contentText,
+    content.x,
+    content.y,
+    content.size
+  );
 
   const filterComplex = `
 [0:v]scale=1280:720,trim=duration=${duration}[bg];
 [1:v]scale=300:300[fg];
 [bg][fg]overlay=main_w-overlay_w-20:main_h-overlay_h-20:enable='between(t,0,${duration})'[video];
-[video]drawtext=text='${titleText}':fontfile='${font}':fontsize=48:x=50:y=50:fontcolor=white:${titleAnimation}[video1];
-[video1]drawtext=text='${contentText}':fontfile='${font}':fontsize=30:x=50:y=120:fontcolor=white:${contentAnimation}[out]
+[video]drawtext=text='${titleText}':fontfile='${font}':fontsize=${title.size}:x=${title.x}:y=${title.y}:fontcolor=white:${titleAnimation}[video1];
+[video1]drawtext=text='${contentText}':fontfile='${font}':fontsize=${content.size}:x=${content.y}:y=${content.y}:fontcolor=white:${contentAnimation}[out]
   `;
 
   // Construct filter complex
