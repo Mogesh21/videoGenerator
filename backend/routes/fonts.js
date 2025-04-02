@@ -1,11 +1,10 @@
 import express from "express";
 import fs from "fs";
-import { PrismaClient } from "../prisma/generated/client1/index.js";
 import path from "path";
 import multer from "multer";
+import db from "../config/db.js";
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -30,12 +29,8 @@ router.post("/add", fontStore.single("font"), async (req, res) => {
   try {
     const { name } = JSON.parse(req.body.data);
     const filename = req.file?.originalname;
-    await prisma.fonts.create({
-      data: {
-        name: name,
-        file_name: filename,
-      },
-    });
+    const query = `INSERT INTO fonts (name, file_name) VALUES (? , ?)`;
+    const data = await db.query(query, [name, filename]);
     res.status(201).json({ message: "Font added successfully" });
   } catch (error) {
     console.log(error);
@@ -45,7 +40,8 @@ router.post("/add", fontStore.single("font"), async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const data = await prisma.fonts.findMany();
+    const query = "SELECT * FROM fonts";
+    const [data] = await db.query(query, []);
     res.status(200).json({ data: data });
   } catch (err) {
     console.log(err);
@@ -57,14 +53,8 @@ router.put("/edit", fontStore.single("font"), async (req, res) => {
   try {
     const { id } = JSON.parse(req.body.data);
     const filename = req.file?.originalname;
-    await prisma.fonts.update({
-      data: {
-        file_name: filename,
-      },
-      where: {
-        id: id,
-      },
-    });
+    const query = `UPDATE fonts SET file_name = ? WHERE id = ?`;
+    const data = await db.query(query, [filename, id]);
     res.status(200).json({ message: "Font updated successfully" });
   } catch (err) {
     console.log(err);
@@ -75,11 +65,8 @@ router.put("/edit", fontStore.single("font"), async (req, res) => {
 router.delete("/delete", async (req, res) => {
   try {
     const { id, name } = req.query;
-    await prisma.fonts.delete({
-      where: {
-        id: parseInt(id),
-      },
-    });
+    const query = `DELETE FROM fonts WHERE id = ?`;
+    await db.query(query, [id]);
     fs.rmSync(path.join(process.cwd(), "font", `${name}.ttf`));
     res.status(200).json({ message: "Font deleted successfully" });
   } catch (err) {
