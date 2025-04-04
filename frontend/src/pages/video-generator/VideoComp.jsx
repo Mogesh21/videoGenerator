@@ -182,7 +182,6 @@ const VideoComp = () => {
           {audio && fileList.length > 0 && (
             <Button onClick={handleGenerate} loading={generate} color="primary" className="w-30 h-12 rounded-xl px-4 mb-4 shadow-md">
               Generate
-              
             </Button>
           )}
           {video && (

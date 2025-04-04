@@ -1,112 +1,228 @@
-import ffmpeg from "fluent-ffmpeg";
+import canvas from "canvas";
 import fs from "fs";
-import axios from "axios";
+import path from "path";
 import opentype from "opentype.js";
 
-async function downloadAudio(url, outputPath) {
-  const response = await axios({
-    url,
-    method: "GET",
-    responseType: "stream",
-  });
-  return new Promise((resolve, reject) => {
-    const writer = fs.createWriteStream(outputPath);
-    response.data.pipe(writer);
-    writer.on("finish", resolve);
-    writer.on("error", reject);
-  });
+const { loadImage, createCanvas } = canvas;
+
+// Default font fallback
+const DEFAULT_FONT = "Arial";
+
+export async function loadFont(fontPath, defaultFont = DEFAULT_FONT) {
+  try {
+    if (fs.existsSync(fontPath)) {
+      return await opentype.load(fontPath);
+    } else {
+      console.warn(`Font file not found: ${fontPath}. Falling back to ${defaultFont}.`);
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error loading font: ${fontPath}`, error);
+    return null;
+  }
 }
 
-async function loadFont(fontPath) {
-  return new Promise((resolve, reject) => {
-    opentype.load(fontPath, (err, font) => {
-      if (err) reject(err);
-      else resolve(font);
-    });
+export function wrapText(ctx, font, text, x, y, maxWidth, lineHeight, totalHeight = 0) {
+  const paragraphs = text.split("\\n");
+  let wrappedLines = [];
+
+  paragraphs.forEach((paragraph) => {
+    const words = paragraph.split(" ");
+    let line = "";
+
+    for (const word of words) {
+      const testLine = line + word + " ";
+      const testWidth = font.getAdvanceWidth(testLine, lineHeight);
+
+      if (testWidth > maxWidth && line !== "") {
+        wrappedLines.push(line);
+        line = word + " ";
+      } else {
+        line = testLine;
+      }
+    }
+    wrappedLines.push(line);
   });
+  const totalTextHeight = wrappedLines.length * lineHeight;
+  if (totalHeight) y = totalHeight / 2 - totalTextHeight / 2;
+  
+  wrappedLines.forEach((line) => {
+    const align = ctx.textAlign;
+    const testWidth = font.getAdvanceWidth(line, lineHeight);
+    const xVal =
+      align === "center"
+        ? x + maxWidth / 2 - testWidth / 2
+        : align === "right"
+        ? x + maxWidth - testWidth
+        : x;
+
+    const textPath = font.getPath(line, xVal, y, lineHeight);
+    textPath.fill = ctx.fillStyle;
+    textPath.draw(ctx);
+    y += lineHeight + 10;
+  });
+
+  return y;
 }
 
-async function createVideo({
-  backgroundVideo,
-  audioFile,
-  foregroundImage,
-  titleText,
-  contentText,
-  outputVideo,
-  fontPath,
-}) {
-  const font = await loadFont(fontPath);
-  return new Promise((resolve, reject) => {
-    ffmpeg()
-      .input(backgroundVideo)
-      .input(audioFile)
-      .input(foregroundImage)
-      .complexFilter([
-        "[0:v]scale=1280:720[bg];",
-        "[1:v]scale=300:300[fg];",
-        "[bg][fg]overlay=W-w-20:H-h-20[video];",
-        {
-          filter: "drawtext",
-          options: {
-            text: titleText,
-            // font: font,
-            fontfile: fontPath,
-            fontsize: 48,
-            x: 50,
-            y: 50,
-            fontcolor: "white",
-          },
-        },
-        {
-          filter: "drawtext",
-          options: {
-            text: contentText,
-            fontfile: fontPath,
-            fontsize: 30,
-            x: 50,
-            y: 120,
-            fontcolor: "white",
-          },
-        },
-      ])
-      .outputOptions("-c:v libx264", "-c:a aac", "-strict experimental")
-      .save(outputVideo)
-      .on("end", () => resolve(outputVideo))
-      .on("error", reject);
-  });
+async function generateImages(
+  backgroundPath,
+  { titleText, contentText, creditText },
+  positions,
+  fontSettings,
+  hasTitle,
+  hasAuthor,
+  size
+) {
+  try {
+    const name = Date.now();
+    const { width, height } = size;
+    const createdImage = [];
+    let content_end = 0;
+
+    // Load fonts using opentype.js with fallback to default font
+    const titleFontPath = path.join(process.cwd(), "font", `${fontSettings.title_font}.ttf`);
+    const contentFontPath = path.join(process.cwd(), "font", `${fontSettings.content_font}.ttf`);
+    const creditFontPath = path.join(process.cwd(), "font", `${fontSettings.credit_font}.ttf`);
+
+    const titleFont = await loadFont(titleFontPath);
+    const contentFont = await loadFont(contentFontPath);
+    const creditFont = await loadFont(creditFontPath);
+
+    const dir = `./public/images/0`;
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+    const canvas = createCanvas(width, height);
+    const ctx = canvas.getContext("2d");
+
+    // Draw background
+    const background = await loadImage(backgroundPath);
+    ctx.drawImage(background, 0, 0, width, height);
+
+    // Render Title
+    if (hasTitle) {
+      let italic = false;
+      let bold = false;
+      if (fontSettings.title_style.includes("italic")) italic = true;
+      if (fontSettings.title_style.includes("bold")) bold = true;
+
+      ctx.fillStyle = fontSettings.title_color;
+      ctx.textAlign = fontSettings.title_align;
+
+      if (titleFont) {
+        wrapText(
+          ctx,
+          titleFont,
+          titleText,
+          positions.title.x * 3,
+          positions.title.y * 3 + fontSettings.title_size,
+          fontSettings.title_width,
+          fontSettings.title_size
+        );
+      } else {
+        // Fallback to default font
+        ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
+          fontSettings.title_size
+        }px ${DEFAULT_FONT}`;
+        wrapText(
+          ctx,
+          null, // No font object, use default
+          titleText,
+          positions.title.x * 3,
+          positions.title.y * 3 + fontSettings.title_size,
+          fontSettings.title_width,
+          fontSettings.title_size,
+          fontSettings.line_height
+        );
+      }
+    }
+
+    // Render Content
+    if (contentText) {
+      let italic = false;
+      let bold = false;
+      if (fontSettings.content_style.includes("italic")) italic = true;
+      if (fontSettings.content_style.includes("bold")) bold = true;
+
+      ctx.fillStyle = fontSettings.content_color;
+      ctx.textAlign = fontSettings.content_align;
+
+      if (contentFont) {
+        content_end = wrapText(
+          ctx,
+          contentFont,
+          contentText,
+          positions.content.x * 3,
+          positions.content.y * 3 + fontSettings.content_size,
+          fontSettings.content_width,
+          fontSettings.content_size,
+          height
+        );
+      } else {
+        // Fallback to default font
+        ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
+          fontSettings.content_size
+        }px ${DEFAULT_FONT}`;
+        content_end = wrapText(
+          ctx,
+          null, // No font object, use default
+          contentText,
+          positions.content.x * 3,
+          positions.content.y * 3 + fontSettings.content_size,
+          fontSettings.content_width,
+          fontSettings.content_size,
+          height
+        );
+      }
+    }
+
+    // Render Credit (Author)
+    if (hasAuthor) {
+      let italic = false;
+      let bold = false;
+      if (fontSettings.credit_style.includes("italic")) italic = true;
+      if (fontSettings.credit_style.includes("bold")) bold = true;
+
+      ctx.fillStyle = fontSettings.credit_color;
+      ctx.textAlign = fontSettings.credit_align;
+
+      if (creditFont) {
+        wrapText(
+          ctx,
+          creditFont,
+          creditText,
+          positions.credit.x * 3,
+          content_end + fontSettings.credit_size,
+          fontSettings.credit_width,
+          fontSettings.credit_size
+        );
+      } else {
+        ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
+          fontSettings.credit_size
+        }px ${DEFAULT_FONT}`;
+        wrapText(
+          ctx,
+          null,
+          creditText,
+          positions.credit.x * 3,
+          content_end + fontSettings.credit_size,
+          fontSettings.credit_width,
+          fontSettings.credit_size,
+          fontSettings.line_height
+        );
+      }
+    }
+
+    // Save the canvas to a file
+    const outputPath = path.join(dir, `${name}.png`);
+    const buffer = canvas.toBuffer("image/png");
+    fs.writeFileSync(outputPath, buffer);
+    createdImage.push(`${name}.png`);
+
+    return createdImage;
+  } catch (err) {
+    throw err;
+  }
 }
 
-async function generateVideo({
-  videoPath,
-  audioUrl,
-  imagePath,
-  title,
-  content,
-  outputPath,
-  fontPath,
-}) {
-  const audioPath = "temp_audio.mp3";
-  await downloadAudio(audioUrl, audioPath);
-  await createVideo({
-    backgroundVideo: videoPath,
-    audioFile: audioPath,
-    foregroundImage: imagePath,
-    titleText: title,
-    contentText: content,
-    outputVideo: outputPath,
-    fontPath: fontPath,
-  });
-  fs.unlinkSync(audioPath);
-  console.log("Video created:", outputPath);
-}
-
-// Example usage
-generateVideo({
-  videoPath: "background.mp4",
-  audioUrl: "https://android.jaqer.com/bible/nkjv/06001.mp3",
-  imagePath: "overlay.png",
-  title: "Sample Title",
-  content: "Sample Content",
-  outputPath: "output.mp4",
-  fontPath: "/backend/font/Super Shiny.ttf",
-}).catch(console.error);
+export default generateImages;

@@ -455,4 +455,253 @@ router.post("/add", async (req, res) => {
   }
 });
 
+router.post("/add", async (req, res) => {
+  let projectId;
+  try {
+    const data = req.body;
+    const {
+      fileData,
+      size,
+      id,
+      type,
+      hasAuthor,
+      hasTitle,
+      position,
+      background_image,
+      logo_image,
+      font,
+      project_name,
+      intro,
+      outro,
+      audio,
+    } = data;
+
+    const videos = [];
+    let audioPath;
+
+    progressData[id] = 0;
+
+    const addProject = await db1.projects.create({
+      data: {
+        name: project_name,
+      },
+    });
+
+    projectId = addProject.id;
+
+    if (type === true) {
+      try {
+        let i = 1;
+
+        if (intro) {
+          const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
+          const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
+          await generateIntroImage(bgPath, logoPath, font.bookName || "", font, size);
+        }
+        if (outro) {
+          const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
+          const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
+          await generateOutroImage(bgPath, logoPath, font.bookName || "", font, size);
+        }
+
+        for (const file of fileData) {
+          const vid = await createVideo(
+            file[0], //audioUrl
+            file[1], //version_id
+            (file[2] - 1).toString(), //book_id,
+            (file[3] - 1).toString(), //chapter_num
+            (file[4] - 1).toString(), //verse_num
+            file[5], //start_time
+            file[6], //values
+            hasTitle,
+            hasAuthor,
+            position,
+            background_image,
+            font,
+            size,
+            projectId,
+            project_name,
+            i,
+            intro,
+            outro,
+            audio
+          );
+          i++;
+          videos.push(...vid);
+          progressData[id] = Math.floor((videos.length / fileData.length) * 100);
+
+          await db1.videos.create({
+            data: {
+              title_id: projectId,
+              name: vid[0],
+            },
+          });
+        }
+      } catch (err) {
+        console.log(err.name, err);
+        try {
+          if (projectId)
+            await db1.projects.delete({
+              where: {
+                id: projectId,
+              },
+            });
+        } catch (error) {
+          console.log(error);
+        }
+        let message;
+        if (err.message === "Excel Error") message = "Invalid Excel Data";
+        else if (err.message === "Font Error") message = "Error Downloadind font";
+        else if (err.message === "Image Error") message = "Error Generating Image";
+        else if (err.message === "Video Error") message = "Error Generating Video";
+        else if (err.message === "Audio Error") message = "Error Dowloading Audio";
+        else message = "Internal Server Error";
+        return res.status(500).json({ message: message });
+      }
+
+      fs.rmSync(path.join(process.cwd(), "public", "images", "0"), {
+        recursive: true,
+        force: true,
+      });
+
+      fs.rmSync(path.join(process.cwd(), "public", "temp"), { recursive: true, force: true });
+
+      res.status(200).json({ videos: videos, id: projectId });
+    } else {
+      const images = [];
+      try {
+        console.log(font.bookName);
+        //Intro
+        if (intro) {
+          const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
+          const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
+          await generateIntroImage(bgPath, logoPath, font.bookName || "", font, size);
+          images.push(path.join(process.cwd(), "public", "images", "0", "intro.png"));
+        }
+
+        //Images
+        for (const file of fileData) {
+          const img = await createImage(
+            file[1], //version_id
+            (file[2] - 1).toString(), //book_id,
+            (file[3] - 1).toString(), //chapter_num
+            (file[4] - 1).toString(), //verse_num
+            hasTitle,
+            hasAuthor,
+            position,
+            background_image,
+            font,
+            size
+          );
+
+          images.push(img);
+          progressData[id] = Math.floor((images.length / fileData.length) * 30);
+        }
+
+        //Outro
+        if (outro) {
+          const bgPath = path.join(process.cwd(), "public", "backgroundImages", background_image);
+          const logoPath = path.join(process.cwd(), "public", "backgroundImages", logo_image);
+          await generateOutroImage(bgPath, logoPath, font.bookName || "", font, size);
+          images.push(path.join(process.cwd(), "public", "images", "0", "outro.png"));
+        }
+      } catch (err) {
+        console.log(err);
+        throw new Error("Image Error");
+      }
+
+      try {
+        const audioUrl = fileData[0][0];
+        const response = await axios.get(audioUrl, { responseType: "arraybuffer" });
+
+        const dirPath = path.join(process.cwd(), "public/temp");
+        if (!fs.existsSync(dirPath)) {
+          fs.mkdirSync(dirPath, { recursive: true });
+        }
+        audioPath = path.join(dirPath, "sample.mp3");
+        fs.writeFileSync(audioPath, response.data);
+      } catch (error) {
+        console.log(error);
+        throw new Error("Audio Error");
+      }
+
+      const Values = [];
+
+      //intro
+      if (intro) {
+        Values.push(3);
+      }
+
+      //Image durations
+      fileData.forEach((file) => Values.push(file[6]));
+
+      //outro
+      if (outro) {
+        Values.push(3);
+      }
+
+      let video;
+      try {
+        video = await generateVideo(
+          audioPath,
+          images,
+          Values,
+          "",
+          projectId,
+          project_name,
+          intro,
+          outro,
+          audio
+        );
+      } catch (err) {
+        console.log(err);
+        throw new Error("Video Error");
+      }
+
+      await db1.videos.create({
+        data: {
+          title_id: projectId,
+          name: video,
+        },
+      });
+
+      fs.rmSync(path.join(process.cwd(), "public", "images", "0"), {
+        recursive: true,
+        force: true,
+      });
+
+      fs.rmSync(path.join(process.cwd(), "public", "temp"), { recursive: true, force: true });
+
+      res.status(200).json({ videos: video, id: projectId });
+    }
+  } catch (err) {
+    console.log(err);
+    try {
+      if (projectId)
+        await db1.projects.delete({
+          where: {
+            id: projectId,
+          },
+        });
+    } catch (error) {
+      console.log(error);
+    }
+    let message;
+    if (err.message === "Excel Error") message = "Invalid Excel Data";
+    else if (err.message === "Font Error") message = "Error Downloading font";
+    else if (err.message === "Image Error") message = "Error Generating Image";
+    else if (err.message === "Video Error") message = "Error Generating Video";
+    else if (err.message === "Audio Error") message = "Error Dowloading Audio";
+    else message = "Internal Server Error";
+    return res.status(500).json({ message: message });
+  } finally {
+    // fs.rmSync(path.join(process.cwd(), "public", "images", "0"), {
+    //   recursive: true,
+    //   force: true,
+    // });
+
+    fs.rmSync(path.join(process.cwd(), "public", "temp"), { recursive: true, force: true });
+  }
+});
+
 export default router;

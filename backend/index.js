@@ -4,6 +4,7 @@ import { configDotenv } from "dotenv";
 import path from "path";
 import cors from "cors";
 import Projects from "./routes/projects.js";
+import Videos from "./routes/videos.js";
 // import Make from "./routes/make.js";
 // import Templates from "./routes/templates.js";
 import Fonts from "./routes/fonts.js";
@@ -22,6 +23,8 @@ app.use("/projects", Projects);
 // app.use("/make", Make);
 // app.use("/templates", Templates);
 app.use("/fonts", Fonts);
+
+app.use("/videos", Videos);
 
 app.get("/req", (req, res) => {
   res.sendFile(path.join(process.cwd(), "sample.html"));
