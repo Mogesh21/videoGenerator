@@ -8,7 +8,7 @@ const { loadImage, createCanvas } = canvas;
 
 const DEFAULT_FONT = "Arial";
 
-function roundedRect(ctx, x, y, width, height, radius) {
+function roundedRect(ctx, x, y, width, height, radius, bgColor) {
   ctx.moveTo(x - 10 + radius, y);
   ctx.lineTo(x - 10 + width + 20 - radius, y);
   ctx.quadraticCurveTo(x - 10 + width + 20, y, x - 10 + width + 20, y + radius);
@@ -19,6 +19,8 @@ function roundedRect(ctx, x, y, width, height, radius) {
   ctx.lineTo(x - 10, y + radius);
   ctx.quadraticCurveTo(x - 10, y, x - 10 + radius, y);
   ctx.closePath();
+  ctx.fillStyle = bgColor || "#ffffff";
+  ctx.fill();
 }
 
 export async function loadFont(fontPath, defaultFont = DEFAULT_FONT) {
@@ -67,10 +69,12 @@ export function wrapText(
   y,
   maxWidth,
   lineHeight,
-  radius = false
+  radius = false,
+  bgColor
 ) {
   const paragraphs = text.split("\n");
   let wrappedLines = [];
+  let optionPosition = [];
 
   paragraphs.forEach((paragraph) => {
     const words = paragraph.split(" ");
@@ -98,7 +102,8 @@ export function wrapText(
     y - lineHeight,
     maxWidth,
     wrappedLines.length * lineHeight + lineHeight / 2,
-    radius ? 20 : 0
+    radius ? 20 : 0,
+    bgColor
   );
   ctx.fill();
 
@@ -115,23 +120,25 @@ export function wrapText(
     const textPath = font.getPath(line, xVal, y, lineHeight);
     textPath.fill = color;
     textPath.draw(ctx);
+    optionPosition.push(y);
     y += lineHeight;
   });
-  return y;
+
+  return [y, wrappedLines, optionPosition];
 }
 
 async function createThumbnail({
-  backgroundPath,
+  backgroundImagePath,
   content: { text, images, options },
   positions,
   font,
   size,
 }) {
   try {
-    // const { width, height } = JSON.parse(size);
-    const width = 1080,
-      height = 1920;
-    const createdImage = [];
+    let newImages = [];
+    const wrappedQuestion = [];
+    const wrappedOptions = [];
+    const optionPosition = [];
 
     const fontPath = path.join(process.cwd(), "font", `${font.style}.ttf`);
     const fontStyle = await loadFont(fontPath);
@@ -139,11 +146,11 @@ async function createThumbnail({
     const dir = `./public/images/0`;
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-    const canvas = createCanvas(parseInt(width), parseInt(height));
+    const canvas = createCanvas(parseInt(size.width), parseInt(size.height));
     const ctx = canvas.getContext("2d");
 
-    const background = await loadImage(backgroundPath);
-    ctx.drawImage(background, 0, 0, parseInt(width), parseInt(height));
+    const background = await loadImage(backgroundImagePath);
+    ctx.drawImage(background, 0, 0, parseInt(size.width), parseInt(size.height));
 
     const question = text.map((val) => val.trim()).filter((val) => val);
 
@@ -151,18 +158,19 @@ async function createThumbnail({
 
     //content
     if (question.length > 0) {
-      let italic = false,
-        bold = false;
-      if (font.content.italic) italic = true;
-      if (font.content.bold) bold = true;
+      // let italic = false,
+      //   bold = false;
+      // if (font.content.italic) italic = true;
+      // if (font.content.bold) bold = true;
 
       ctx.fillStyle = font.content.color;
       ctx.textAlign = font.content.align;
 
       if (fontStyle) {
         question.forEach((line, index) => {
+          let wrappedLine = "";
           const radius = index === 0 ? true : question.length - 1 === index ? true : false;
-          currentY = wrapText(
+          [currentY, wrappedLine] = wrapText(
             ctx,
             { font: fontStyle, color: font.content.color, size: font.content.size },
             line,
@@ -170,37 +178,40 @@ async function createThumbnail({
             currentY + font.content.lineHeight / 2,
             font.content.width,
             font.content.size + font.content.lineHeight,
-            radius
+            radius,
+            font.content.bgColor
           );
-        });
-      } else {
-        question.forEach((line, index) => {
-          const radius = index === 0 ? true : question.length - 1 === index ? true : false;
-          ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
-            font.content_size
-          }px ${DEFAULT_FONT}`;
 
-          currentY = wrapText(
-            ctx,
-            { font: null, color: font.content.color, size: font.content.size },
-            line,
-            positions.content.x,
-            currentY,
-            font.content.width,
-            font.content.size + font.content.lineHeight,
-            radius
-          );
+          wrappedQuestion.push(wrappedLine);
         });
       }
+      // else {
+      //   question.forEach((line, index) => {
+      //     let wrappedLine = "";
+      //     const radius = index === 0 ? true : question.length - 1 === index ? true : false;
+      //     ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
+      //       font.content_size
+      //     }px ${DEFAULT_FONT}`;
+
+      //     [currentY, wrappedLine] = wrapText(
+      //       ctx,
+      //       { font: null, color: font.content.color, size: font.content.size },
+      //       line,
+      //       positions.content.x,
+      //       currentY,
+      //       font.content.width,
+      //       font.content.size + font.content.lineHeight,
+      //       radius
+      //     );
+      //     wrappedQuestion.push(wrappedLine);
+      //   });
+      // }
     }
 
     //images
     if (images.length > 0) {
-      const newImages = await downloadImages(images);
-      console.log(newImages);
-
+      newImages = await downloadImages(images);
       const imageElements = await Promise.all(newImages.map((img) => loadImage(img)));
-
       const xVal =
         font.content.align === "center"
           ? positions.content.x + font.content.width / 2 - font.image.width / 2
@@ -216,16 +227,18 @@ async function createThumbnail({
     let OptionY = positions.options[0].y;
     options.forEach((option, index) => {
       if (option) {
-        let italic = false,
-          bold = false;
-        if (font.options.italic) italic = true;
-        if (font.options.bold) bold = true;
+        let wrappedLine = "";
+        let optionPos = [];
+        // let italic = false,
+        //   bold = false;
+        // if (font.options.italic) italic = true;
+        // if (font.options.bold) bold = true;
 
         ctx.fillStyle = font.options.color;
         ctx.textAlign = font.options.align;
 
         if (fontStyle) {
-          OptionY = wrapText(
+          [OptionY, wrappedLine, optionPos] = wrapText(
             ctx,
             { font: fontStyle, color: font.options.color, size: font.options.size },
             option,
@@ -235,33 +248,36 @@ async function createThumbnail({
               : positions.options[index].y,
             font.options.width,
             font.options.size + font.options.lineHeight,
-            true
+            true,
+            font.options.bgColor
           );
-          if (positions.options[index + 1]?.y) console.log(OptionY, positions.options[index + 1].y);
-        } else {
-          ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
-            font.content_size
-          }px ${DEFAULT_FONT}`;
-          OptionY = wrapText(
-            ctx,
-            { font: null, color: font.options.color, size: font.options.size },
-            option,
-            positions.options[index].x,
-            positions.options[index].y,
-            font.options.width,
-            font.options.size + font.content.lineHeight,
-            true
-          );
+          wrappedOptions.push(wrappedLine);
+          optionPosition.push(optionPos);
         }
+        // else {
+        //   ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
+        //     font.content_size
+        //   }px ${DEFAULT_FONT}`;
+        //   [OptionY, wrappedLine] = wrapText(
+        //     ctx,
+        //     { font: null, color: font.options.color, size: font.options.size },
+        //     option,
+        //     positions.options[index].x,
+        //     positions.options[index].y,
+        //     font.options.width,
+        //     font.options.size + font.content.lineHeight,
+        //     true
+        //   );
+        //   wrappedOptions.push(wrappedLine);
+        // }
       }
     });
 
     const outputPath = path.join(dir, `thumbnail.png`);
     const buffer = canvas.toBuffer("image/png");
     fs.writeFileSync(outputPath, buffer);
-    createdImage.push(`thumbnail.png`);
 
-    return createdImage;
+    return [newImages, wrappedQuestion.flat(), wrappedOptions.flat(), optionPosition.flat()];
   } catch (err) {
     throw err;
   }

@@ -137,14 +137,14 @@ async function createVideoWithAnimations({
   imageOffsetY = 20,
   animationDuration = 2,
   duration = 10,
-  countDownPath,
+  introPath,
 }) {
   // Format paths
   const bgVideo = formatPath(backgroundVideo);
   const fgImage = formatPath(foregroundImage);
   const audio = formatPath(audioFile);
   const output = formatPath(outputVideo);
-  const countDown = formatPath(countDownPath);
+  const intro = formatPath(introPath);
   const font = fontPath.replace(/:/g, "\\:");
   const title = {
     x: 150,
@@ -169,6 +169,7 @@ async function createVideoWithAnimations({
   verifyFileExists(fgImage, "Foreground image");
   verifyFileExists(audio, "Audio file");
   verifyFileExists(fontPath, "Font file");
+  verifyFileExists(intro, "Intro file");
 
   const titleAnimation = getAnimationFilter(
     "bounce",
@@ -178,6 +179,7 @@ async function createVideoWithAnimations({
     title.y,
     title.size
   );
+
   const contentAnimation = getAnimationFilter(
     "blink",
     animationDuration,
@@ -208,23 +210,22 @@ async function createVideoWithAnimations({
   const filterComplex = `
   [0:v]scale=${videoWidth}:${videoHeight},trim=duration=${duration}[bg];
   [1:v]scale=${image.width}:${image.height}[fg];
-  [2:v]scale=${image.width}:${image.height}[fgCd];
 
   [bg][fg]overlay=${
-    imageAnimation ? imageAnimation : image.x + ":" + image.y
+    imageAnimation ? imageAnimation : `${image.x}:${image.y}`
   }:enable='between(t,0,${duration})'[video];
 
-   [video]drawtext=text='${titleText}':fontfile='${font}':fontsize=${title.size}:x=${title.x}:y=${
+  [video]drawtext=text='${titleText}':fontfile='${font}':fontsize=${title.size}:x=${title.x}:y=${
     title.y
-  }:fontcolor=red:enable='lt(t,${duration/2})'[video1];
+  }:fontcolor=red:enable='lt(t,${duration / 2})':${titleAnimation}[video1];
 
-  [video1]drawtext=text='${contentText}':fontfile='${font}':fontsize=${content.size}:x=${
+  [video1]drawtext=text='${titleText}':fontfile='${font}':fontsize=${title.size}:x=${title.x}:y=${
+    title.y
+  }:fontcolor=green:enable='gte(t,${duration / 2})':${titleAnimation}[video2];
+
+  [video2]drawtext=text='${contentText}':fontfile='${font}':fontsize=${content.size}:x=${
     content.x
-  }:y=${content.y}:fontcolor=${"yellow"}:${contentAnimation}[video2];
-
-  [video2]drawtext=text='${titleText}':fontfile='${font}':fontsize=${title.size}:x=${title.x}:y=${
-    title.y
-  }:fontcolor=green:enable='gte(${duration/2},${duration})'[out];
+  }:y=${content.y}:fontcolor=yellow:${contentAnimation}[out]
 `;
 
   return new Promise((resolve, reject) => {
@@ -263,19 +264,15 @@ async function generateAnimatedVideo({
   title,
   content,
   outputPath,
-  countDownPath,
+  introPath,
 }) {
   try {
-    // Download audio if necessary
     const audioPath = audioUrl.startsWith("http")
       ? await downloadAudio(audioUrl)
       : formatPath(audioUrl);
 
-    // Font file path
-    const fontPath =
-      "E:/Mogesh/Projects/interviewbix_videos/backend/functions/public/temp/SuperShiny.ttf";
+    const fontPath = "E:/Mogesh/Projects/interviewbix_videos/backend/font/SuperShiny.ttf";
 
-    // Create the video
     const result = await createVideoWithAnimations({
       backgroundVideo: backgroundVideoPath,
       audioFile: audioPath,
@@ -285,10 +282,9 @@ async function generateAnimatedVideo({
       outputVideo: outputPath,
       fontPath,
       duration: 10,
-      countDownPath,
+      introPath,
     });
 
-    console.log("Video successfully created at:", result);
     return result;
   } catch (error) {
     console.error("Error in video generation:", error);
@@ -302,8 +298,8 @@ async function generateAnimatedVideo({
     const backgroundPath =
       "E:/Mogesh/Projects/interviewbix_videos/backend/functions/public/temp/bg.mp4";
     const imagePath = "E:/Mogesh/Projects/interviewbix_videos/backend/functions/public/temp/bg.jpg";
-    const countDownPath =
-      "E:/Mogesh/Projects/interviewbix_videos/backend/functions/public/temp/countdown.gif";
+    const introPath =
+      "E:/Mogesh/Projects/interviewbix_videos/backend/functions/public/temp/intro.mp4";
     const audioPath =
       "E:/Mogesh/Projects/interviewbix_videos/backend/functions/public/temp/audio.mp3";
     const outputPath = "E:/Mogesh/Projects/interviewbix_videos/backend/functions/public/output.mp4";
@@ -315,7 +311,7 @@ async function generateAnimatedVideo({
       title: "Welcome to Our Video",
       content: "This is an example of animated text and images",
       outputPath: outputPath,
-      countDownPath: countDownPath,
+      introPath: introPath,
     });
 
     console.log("✅ Video creation process completed");
