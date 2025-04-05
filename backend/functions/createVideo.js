@@ -114,10 +114,19 @@ function escapedText(question) {
   );
 }
 
+function timeToSeconds(time) {
+  if (time) {
+    const [h, m, s] = time.split(":").map(parseFloat);
+    return h * 3600 + m * 60 + s;
+  }
+  return 0;
+}
+
 const createVideo = async ({
   content,
   thumbnailPath,
   introPath,
+  outroPath,
   backgroundVideoPath,
   audioUrl,
   outputPath,
@@ -125,7 +134,6 @@ const createVideo = async ({
   positions,
   size,
   duration,
-  timerDuration,
 }) => {
   const fontPath = formatPath(path.join(process.cwd(), "font", `${fontSettings.style}.ttf`));
   const bgVideo = formatPath(backgroundVideoPath);
@@ -133,6 +141,7 @@ const createVideo = async ({
   const thumbnail = formatPath(thumbnailPath);
   const output = formatPath(outputPath);
   const intro = formatPath(introPath);
+  const outro = formatPath(outroPath);
   const openFont = await loadFont(path.join(process.cwd(), "font", `${fontSettings.style}.ttf`));
 
   const fgImage = content.images.map((img) => formatPath(img));
@@ -146,8 +155,8 @@ const createVideo = async ({
   const command = ffmpeg();
 
   let filterComplex = `[0:v]scale=${videoWidth}:${videoHeight},format=rgba,trim=duration=1,setpts=PTS-STARTPTS[thumbnail];
-            [1:v]scale=${videoWidth}:${videoHeight},trim=duration=5,setpts=PTS-STARTPTS[intro];
-            [2:v]scale=${videoWidth}:${videoHeight},trim=duration=${duration},setpts=PTS-STARTPTS[bg];\n`;
+            [1:v]scale=${videoWidth}:${videoHeight},trim=duration=${duration.intro},setpts=PTS-STARTPTS[intro];
+            [2:v]scale=${videoWidth}:${videoHeight},trim=duration=${duration.total},setpts=PTS-STARTPTS[bg];\n`;
 
   command.input(thumbnail);
   command.input(intro);
@@ -156,7 +165,20 @@ const createVideo = async ({
   //question
   let lastLabel = "bg";
   let currentY = positions.content.y;
+
   if (question.length > 0) {
+    filterComplex += `[${lastLabel}]drawbox=x=${positions.content.x}:y=${
+      currentY - fontSettings.content.size
+    }:w=${fontSettings.content.width}:h=${
+      fontSettings.content.size * (question.length + 2)
+    }:color=black:t=10,drawbox=x=${positions.content.x}:y=${
+      currentY - fontSettings.content.size
+    }:w=${fontSettings.content.width}:h=${
+      fontSettings.content.size * (question.length + 2)
+    }:color=${fontSettings.content.bgColor}:t=fill[question_box];`;
+
+    lastLabel = "question_box";
+
     for (let i = 0; i < question.length; i++) {
       const testWidth = openFont.getAdvanceWidth(question[i], fontSettings.content.size);
       const xVal =
@@ -170,7 +192,7 @@ const createVideo = async ({
         xVal,
         currentY,
         fontSettings.content.size,
-        duration
+        duration.total
       );
       const inputLabel = i === 0 ? lastLabel : `text${i}`;
       const outputLabel = i === question.length - 1 ? "bgtext" : `text${i + 1}`;
@@ -183,32 +205,50 @@ const createVideo = async ({
   //option
   const optionY = content.optionPosition;
   let ans = 0;
+  let current = 0;
   if (options.length > 0) {
     for (let i = 0; i < options.length; i++) {
       const testWidth = openFont.getAdvanceWidth(options[i], fontSettings.options.size);
       const xVal =
         fontSettings.options.align === "center"
-          ? positions.options[0].x + fontSettings.options.width / 2 - testWidth / 2
+          ? positions.options.x + fontSettings.options.width / 2 - testWidth / 2
           : align === "right"
-          ? positions.options[0].x + fontSettings.options.width - testWidth
-          : positions.options[0].x;
+          ? positions.options.x + fontSettings.options.width - testWidth
+          : positions.options.x;
       const animation = getAnimationFilter(
         fontSettings.options.animation,
         xVal,
         optionY[i],
         fontSettings.options.size,
-        duration
+        duration.total
       );
-      const inputLabel = i === 0 ? lastLabel : `text${i + question.length + ans}`;
+
+      if (content.optionLength[current] - content.optionLength[0] === i) {
+        const height =
+          current > 0
+            ? fontSettings.options.size *
+              (content.optionLength[current] - content.optionLength[current - 1] + 1)
+            : fontSettings.options.size * (content.optionLength[current] + 1);
+        filterComplex += `[${lastLabel}]drawbox=x=${positions.options.x}:y=${
+          optionY[i] - fontSettings.options.size / 2
+        }:w=${fontSettings.options.width}:h=${height}:color=${
+          fontSettings.options.bgColor
+        }:t=fill[option_box${i}];`;
+
+        lastLabel = `option_box${i}`;
+        current += 1;
+      }
+
+      const inputLabel = lastLabel;
       const outputLabel = `text${i + 1 + question.length + ans}`;
 
       if (answer.includes(options[i].trim())) {
-        const outputLabel = `text${parseInt(i + 1 + question.length) + parseInt(ans) + 1}`;
-        filterComplex += `[${inputLabel}]drawtext=text='${options[i]}':fontfile='${font}':fontsize=${fontSettings.options.size}:x=${xVal}:y=${optionY[i]}:fontcolor=${fontSettings.options.color}:enable='lte(t,${timerDuration})':${animation}[${outputLabel}];\n`;
-
-        filterComplex += `[${outputLabel}]drawtext=text='${options[i]}':fontfile='${font}':fontsize=${fontSettings.options.size}:x=${xVal}:y=${optionY[i]}:fontcolor=${fontSettings.options.answerColor}:enable='gte(t,${timerDuration})':${animation}[${outputLabel}];\n`;
+        const outputLabel2 = `text${parseInt(i + 1 + question.length) + parseInt(ans) + 1}`;
+        filterComplex += `[${inputLabel}]drawtext=text='${options[i]}':fontfile='${font}':fontsize=${fontSettings.options.size}:x=${xVal}:y=${optionY[i]}:fontcolor=${fontSettings.options.color}:enable='lte(t,${duration.timer})':${animation}[${outputLabel}];\n`;
+        //ans highlight
+        filterComplex += `[${outputLabel}]drawtext=text='${options[i]}':fontfile='${font}':fontsize=${fontSettings.options.size}:x=${xVal}:y=${optionY[i]}:fontcolor=${fontSettings.options.answerColor}:enable='gte(t,${duration.timer})':${animation}[${outputLabel2}];\n`;
         ans += 1;
-        lastLabel = outputLabel;
+        lastLabel = outputLabel2;
       } else {
         filterComplex += `[${inputLabel}]drawtext=text='${options[i]}':fontfile='${font}':fontsize=${fontSettings.options.size}:x=${xVal}:y=${optionY[i]}:fontcolor=${fontSettings.options.color}:${animation}[${outputLabel}];\n`;
         lastLabel = outputLabel;
@@ -217,7 +257,6 @@ const createVideo = async ({
   }
 
   //images
-  let imgIndex = 0;
   if (fgImage.length > 0) {
     let overLayComplex = "";
     inputLength += fgImage.length;
@@ -240,7 +279,6 @@ const createVideo = async ({
       overLayComplex += `${inputLabel2}overlay=${xVal}:${
         currentY + fontSettings.content.lineHeight
       }[${outputLabel2}];`;
-      imgIndex = i + 1;
       currentY += fontSettings.image.height + fontSettings.content.lineHeight;
       lastLabel = outputLabel2;
       command.input(fgImage[i]);
@@ -248,12 +286,16 @@ const createVideo = async ({
     filterComplex += overLayComplex;
   }
 
-  filterComplex += `[thumbnail][intro][${lastLabel}]concat=n=3:v=1:a=0[out]`;
+  filterComplex += `[${inputLength + 1}:v]scale=${videoWidth}:${videoHeight},trim=duration=${
+    duration.outro
+  },setpts=PTS-STARTPTS[outro];`;
+  filterComplex += `[thumbnail][intro][${lastLabel}][outro]concat=n=4:v=1:a=0[outv]`;
 
   return new Promise((resolve, reject) => {
     command
       .input(audio)
-      .complexFilter(filterComplex, "out")
+      .input(outro)
+      .complexFilter(filterComplex, "outv")
       .outputOptions(`-map ${inputLength}:a`)
       .audioCodec("aac")
       .videoCodec("libx264")
@@ -262,8 +304,12 @@ const createVideo = async ({
       .outputOptions("-shortest")
       .save(output)
       .on("start", (commandLine) => console.log("FFmpeg command:", commandLine))
-      // .on("progress", (progress) => console.log("Processing:", progress, "%"))
-      // .on("stderr", (stderrLine) => console.log("🔍 FFmpeg Debug:", stderrLine))
+      .on("progress", (progress) => {
+        const processed = timeToSeconds(progress.timemark) || 0;
+        const percent = ((processed / (duration.total + 10)) * 100).toFixed(2);
+        console.log(`Processing: ${percent}%`);
+      })
+      .on("stderr", (stderrLine) => console.log("🔍 FFmpeg Debug:", stderrLine))
       .on("end", () => {
         console.log("Processing finished successfully");
         resolve(output);

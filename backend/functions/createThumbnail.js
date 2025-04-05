@@ -224,7 +224,7 @@ async function createThumbnail({
     }
 
     //options
-    let OptionY = positions.options[0].y;
+    let OptionY = positions.options.y;
     options.forEach((option, index) => {
       if (option) {
         let wrappedLine = "";
@@ -242,10 +242,10 @@ async function createThumbnail({
             ctx,
             { font: fontStyle, color: font.options.color, size: font.options.size },
             option,
-            positions.options[index].x,
-            OptionY + font.options.size > positions.options[index].y
+            positions.options.x,
+            OptionY + font.options.size > positions.options.y
               ? OptionY + font.options.size + font.options.lineHeight
-              : positions.options[index].y,
+              : positions.options.y,
             font.options.width,
             font.options.size + font.options.lineHeight,
             true,
@@ -277,7 +277,19 @@ async function createThumbnail({
     const buffer = canvas.toBuffer("image/png");
     fs.writeFileSync(outputPath, buffer);
 
-    return [newImages, wrappedQuestion.flat(), wrappedOptions.flat(), optionPosition.flat()];
+    const optionLength = wrappedOptions.reduce((acc, val, i) => {
+      const prev = acc[i - 1] || 0;
+      acc.push(prev + val.length);
+      return acc;
+    }, []);
+
+    return [
+      newImages,
+      wrappedQuestion.flat(),
+      wrappedOptions.flat(),
+      optionPosition.flat(),
+      optionLength,
+    ];
   } catch (err) {
     throw err;
   }

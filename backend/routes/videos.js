@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post("/create", async (req, res) => {
   try {
-    const { section_id, bgvideo, bgImage, font1, positions1, size1, duration } = req.body;
+    const { section_id, bgvideo, bgImage, font1, positions1, size1, duration1 } = req.body;
 
     const response = await axios.post(
       "https://interviewbix.com/api/question-list",
@@ -44,6 +44,8 @@ router.post("/create", async (req, res) => {
       "E:/Mogesh/Projects/interviewbix_videos/backend/functions/public/temp/bg.mp4";
     const introPath =
       "E:/Mogesh/Projects/interviewbix_videos/backend/functions/public/temp/intro.mp4";
+    const outroPath =
+      "E:/Mogesh/Projects/interviewbix_videos/backend/functions/public/temp/outro.mp4";
     const audioPath =
       "E:/Mogesh/Projects/interviewbix_videos/backend/functions/public/temp/audio.mp3";
     const outputPath = "E:/Mogesh/Projects/interviewbix_videos/backend/public/output.mp4";
@@ -92,62 +94,48 @@ router.post("/create", async (req, res) => {
         x: 140,
         y: 400,
       },
-      options: [
-        {
-          x: 100,
-          y: 1100,
-        },
-        {
-          x: 100,
-          y: 1200,
-        },
-        {
-          x: 100,
-          y: 1300,
-        },
-        {
-          x: 100,
-          y: 1400,
-        },
-      ],
+      options: {
+        x: 100,
+        y: 1100,
+      },
+    };
+
+    const duration = {
+      total: 10,
+      intro: 5,
+      outro: 5,
+      timer: 5,
     };
 
     const size = { width: 1080, height: 1920 };
 
-    const [newImages, wrappedQuestion, wrappedOptions, optionPosition] = await createThumbnail({
-      backgroundImagePath,
-      content,
-      positions,
-      font,
-      size,
-    });
+    const [newImages, wrappedQuestion, wrappedOptions, optionPosition, optionLength] =
+      await createThumbnail({
+        backgroundImagePath,
+        content,
+        positions,
+        font,
+        size,
+      });
 
     content.images = newImages;
     content.text = wrappedQuestion;
     content.options = wrappedOptions;
     content.optionPosition = optionPosition;
-
-    // const video = await createVideo({
-    //   text,
-    //   images,
-    //   bgvideo,
-    //   font,
-    //   positions,
-    //   size,
-    // });
+    content.optionLength = optionLength;
 
     await createVideo({
       content: content,
       thumbnailPath: thumbnail,
       introPath: introPath,
+      outroPath: outroPath,
       backgroundVideoPath: backgroundPath,
       audioUrl: audioPath,
       outputPath: outputPath,
       fontSettings: font,
       positions: positions,
       size: size,
-      duration: parseInt(duration),
-      timerDuration: 5,
+      duration: duration,
     });
 
     res.status(200).json({ text: [...text, ...text2], images, options, data: result.data });
