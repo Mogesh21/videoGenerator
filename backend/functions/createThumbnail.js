@@ -158,11 +158,6 @@ async function createThumbnail({
 
     //content
     if (question.length > 0) {
-      // let italic = false,
-      //   bold = false;
-      // if (font.content.italic) italic = true;
-      // if (font.content.bold) bold = true;
-
       ctx.fillStyle = font.content.color;
       ctx.textAlign = font.content.align;
 
@@ -229,10 +224,6 @@ async function createThumbnail({
       if (option) {
         let wrappedLine = "";
         let optionPos = [];
-        // let italic = false,
-        //   bold = false;
-        // if (font.options.italic) italic = true;
-        // if (font.options.bold) bold = true;
 
         ctx.fillStyle = font.options.color;
         ctx.textAlign = font.options.align;

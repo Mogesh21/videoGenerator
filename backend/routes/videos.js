@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post("/create", async (req, res) => {
   try {
-    const { section_id, bgvideo, bgImage, font1, positions1, size1, duration1 } = req.body;
+    const { section_id, id, bgvideo, bgImage, font1, positions1, size1, duration1 } = req.body;
 
     const response = await axios.post(
       "https://interviewbix.com/api/question-list",
@@ -23,20 +23,21 @@ router.post("/create", async (req, res) => {
     );
 
     const result = response.data;
-    const dom = new JSDOM(result.data[6].question);
+    const dom = new JSDOM(result.data[id].question);
     const document = dom.window.document;
     const text = [...document.querySelectorAll("p")].map((p) => p.textContent);
     const text2 = [...document.querySelectorAll("div")].map((div) => div.textContent);
     const images = [...document.querySelectorAll("img")].map((img) => img.src);
     const options = [
-      result.data[6].option_1,
-      result.data[6].option_2,
-      result.data[6].option_3,
-      result.data[6].option_4,
-      result.data[6].option_5,
-      result.data[6].option_6,
+      result.data[id].option_1,
+      result.data[id].option_2,
+      result.data[id].option_3,
+      result.data[id].option_4,
+      result.data[id].option_5,
+      result.data[id].option_6,
     ];
-    const answer = result.data[6].answer;
+
+    const answer = result.data[id].answer;
 
     const backgroundImagePath =
       "E:/Mogesh/Projects/interviewbix_videos/backend/public/templates/thumbimage.png";

@@ -6,7 +6,7 @@ import cors from "cors";
 import Projects from "./routes/projects.js";
 import Videos from "./routes/videos.js";
 // import Make from "./routes/make.js";
-// import Templates from "./routes/templates.js";
+import Templates from "./routes/templates.js";
 import Fonts from "./routes/fonts.js";
 
 ffmpeg.setFfmpegPath(`${process.cwd()}/ffmpeg/bin/ffmpeg.exe`);
@@ -21,7 +21,7 @@ app.use("/font", express.static("font"));
 
 app.use("/projects", Projects);
 // app.use("/make", Make);
-// app.use("/templates", Templates);
+app.use("/templates", Templates);
 app.use("/fonts", Fonts);
 
 app.use("/videos", Videos);

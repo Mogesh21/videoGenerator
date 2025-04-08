@@ -14,63 +14,6 @@ const verifyFileExists = (filePath, name) => {
   }
 };
 
-function generateFFmpegWrappedDrawTextFilters(
-  ctx,
-  font,
-  linesArray,
-  x,
-  y,
-  maxWidth,
-  lineHeight,
-  fontOptions,
-  startLabel = "bg",
-  finalLabel = "bgtext"
-) {
-  let lastLabel = startLabel;
-  const filters = [];
-  let globalLineIndex = 0;
-
-  for (let i = 0; i < linesArray.length; i++) {
-    const text = linesArray[i];
-    const words = text.split(" ");
-    let line = "";
-    let wrappedLines = [];
-
-    // Wrap the current line
-    for (const word of words) {
-      const testLine = line + word + " ";
-      const testWidth = font.getAdvanceWidth(testLine, lineHeight);
-      if (testWidth > maxWidth && line !== "") {
-        wrappedLines.push(line.trim());
-        line = word + " ";
-      } else {
-        line = testLine;
-      }
-    }
-    if (line.trim()) wrappedLines.push(line.trim());
-
-    // Add drawtext filters for wrapped lines
-    for (let j = 0; j < wrappedLines.length; j++) {
-      const currentLine = escapeFFmpegText(wrappedLines[j]);
-      const inputLabel = lastLabel;
-      const isLastLine = i === linesArray.length - 1 && j === wrappedLines.length - 1;
-      const outputLabel = isLastLine ? finalLabel : `text${globalLineIndex + 1}`;
-
-      filters.push(
-        `[${inputLabel}]drawtext=text='${currentLine}':fontfile='${fontOptions.path}':fontsize=${
-          fontOptions.size
-        }:x=${x}:y=${y + globalLineIndex * lineHeight}:fontcolor=${
-          fontOptions.color
-        }[${outputLabel}]`
-      );
-
-      lastLabel = outputLabel;
-      globalLineIndex++;
-    }
-  }
-
-  return filters;
-}
 
 const animationEffects = {
   fade: (x, y, size, totalDuration = 10) =>

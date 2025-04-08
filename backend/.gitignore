@@ -2,12 +2,8 @@ node_modules/
 
 .env
 
-public/backgroundImages
-public/images
-public/videos
+public/*
 
 font/
-
-
 
 ffmpeg/

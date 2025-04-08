@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Input, message, Radio, Segmented, Select, Slider, Switch, Upload } from 'antd';
+import { Breadcrumb, Button, Input, InputNumber, message, Radio, Segmented, Select, Slider, Switch, Upload } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { Draggable } from 'gsap/Draggable';
@@ -12,15 +12,12 @@ gsap.registerPlugin(Draggable);
 const CreateTemplate = () => {
   const navigate = useNavigate();
   const canvasRef = useRef();
-  const titleRef = useRef();
-  const contentRef = useRef();
-  const authorRef = useRef();
+  const questionRef = useRef();
+  const optionsRef = useRef();
   const [fonts, setFonts] = useState([]);
   const [texts, setTexts] = useState({
-    title: 'Title',
-    content:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis exercitationem deserunt incidunt placeat inventore, porro cum            mollitia quas, tempore accusamus esse voluptatum suscipit ea animi laborum harum quia! Doloribus, ipsum.',
-    author: ' Subtitle-1-1'
+    question: 'Question',
+    options: 'Options'
   });
   const [templates, setTemplates] = useState([]);
   const items = [
@@ -31,61 +28,67 @@ const CreateTemplate = () => {
   ];
   const [data, setData] = useState({
     name: '',
-    hasTitle: 0,
-    hasAuthor: 0,
-    size: {
-      type: 'post',
-      width: 1080,
-      height: 1080
-    },
-    bg: '',
-    logo_image: '',
+    bg_image: '',
+    bg_video: '',
+    intro_video: '',
+    outro_video: '',
     audio: '',
     intro: false,
     outro: false,
-    font: {
-      bookName: '',
-      font_style: '',
-      title_size: 70,
-      title_width: 180,
-      title_color: '#FFFFFF',
-      title_style: 'normal',
-      title_align: 'center',
-      title_font: 'Sans Serif',
-      content_size: 50,
-      content_color: '#FFFFFF',
-      content_style: 'normal',
-      content_width: 900,
-      content_height: 700,
-      content_font: 'Sans Serif',
-      line_height: 70,
-      content_align: 'left',
-      credit_size: 50,
-      credit_width: 300,
-      credit_color: '#FFFFFF',
-      credit_style: 'normal',
-      credit_align: 'center',
-      credit_font: 'Sans Serif'
+    size: {
+      type: 'reel',
+      width: 1080,
+      height: 1920
     },
-    position: {
-      title: {
-        x: 100,
-        y: 10
+    font: {
+      style: '',
+      question: {
+        size: 48,
+        animation: '',
+        color: '#000000',
+        bg: false,
+        bgColor: '#ffffff',
+        align: 'center',
+        width: 700,
+        lineHeight: 50
       },
-      content: {
-        x: 20,
-        y: 150
+      options: {
+        size: 40,
+        animation: 'fade',
+        color: '#000000',
+        answerColor: '#ff630f',
+        bg: false,
+        bgColor: '#ffffff',
+        align: 'center',
+        width: 880,
+        lineHeight: 50
       },
-      credit: {
-        x: 250,
-        y: 300
+      image: {
+        width: 400,
+        height: 400
       }
+    },
+    positions: {
+      question: {
+        x: 400,
+        y: 400
+      },
+      options: {
+        x: 100,
+        y: 1100
+      }
+    },
+    duration: {
+      total: 10,
+      intro: 5,
+      outro: 5,
+      timer: 5
     }
   });
 
-  const handleBg = async (event) => {
+  const handleBgImage = async (event) => {
     const file = event.file;
-    setData((data) => ({ ...data, bg: file }));
+    setData((data) => ({ ...data, bg_image: file }));
     const ctx = canvasRef.current.getContext('2d');
     const reader = new FileReader();
     reader.onload = function (e) {
@@ -103,9 +106,9 @@ const CreateTemplate = () => {
     reader.readAsDataURL(file);
   };
 
-  const handleImage = async (event) => {
+  const handleBgVideo = async (event, type) => {
     const file = event.file;
-    setData((data) => ({ ...data, logo_image: file }));
+    setData((data) => ({ ...data, [type]: file }));
   };
 
   const handleAudio = async (event) => {
@@ -113,124 +116,9 @@ const CreateTemplate = () => {
     setData((data) => ({ ...data, audio: file }));
   };
 
-  const textTimeline = [
-    { time: 0, text: 'Welcome to My Video', duration: 3 },
-    { time: 3, text: 'Canvas & Video Integration', duration: 3 },
-    { time: 6, text: 'Smooth Text Transitions', duration: 3 }
-  ];
-
-  const handleVideo = (files) => {
-    const file = files.file;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    const video = document.createElement('video');
-
-    video.src = URL.createObjectURL(file);
-    video.muted = true;
-    video.loop = true;
-
-    video.onloadedmetadata = () => {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const totalDuration = 6;
-      video.play();
-
-      let startTime = Date.now(); // Track start time
-      let currentText = '';
-      let opacity = 0;
-      let fadeDirection = 1;
-      let i = 0;
-
-      const drawFrame = () => {
-        const elapsedTime = (Date.now() - startTime) / 1000; // Convert to seconds
-
-        if (elapsedTime >= totalDuration) {
-          console.log('Processing complete. Stopping...');
-          return; // Stop rendering after total duration is reached
-        }
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        console.log(i);
-        i += 1;
-        console.log('elapsed', elapsedTime);
-
-        let newText = '';
-
-        // Find the text to display at the current time
-        for (let entry of textTimeline) {
-          if (elapsedTime >= entry.time && elapsedTime < entry.time + entry.duration) {
-            newText = entry.text;
-            break;
-          }
-        }
-
-        // Handle text transitions (fade in/out)
-        if (newText !== currentText) {
-          fadeDirection = -1; // Start fade-out if text is changing
-        } else if (opacity < 1 && fadeDirection === 1) {
-          opacity += 0.02; // Smooth fade-in
-        }
-        if (opacity <= 0) {
-          currentText = newText;
-          fadeDirection = 1; // Start fade-in
-        }
-
-        if (currentText) {
-          ctx.globalAlpha = opacity;
-          ctx.font = 'bold 40px Arial';
-          ctx.fillStyle = 'white';
-          ctx.textAlign = 'center';
-          ctx.fillText(currentText, canvas.width / 2, canvas.height - 100);
-          ctx.globalAlpha = 1; // Reset alpha
-        }
-
-        opacity = Math.max(0, Math.min(1, opacity + fadeDirection * 0.02)); // Apply fade
-
-        requestAnimationFrame(drawFrame);
-      };
-
-      drawFrame();
-    };
-  };
-
-  const handleVideo2 = (event) => {
-    const file = event.file; // Get the video file
-    // setData((data) => ({ ...data, bg: file }));
-
-    const ctx = canvasRef.current.getContext('2d');
-    const video = document.createElement('video');
-
-    video.src = URL.createObjectURL(file);
-    video.crossOrigin = 'anonymous';
-    video.muted = true;
-    video.loop = true;
-    video.play();
-
-    video.onloadeddata = () => {
-      canvasRef.current.width = video.videoWidth;
-      canvasRef.current.height = video.videoHeight;
-
-      const drawFrame = () => {
-        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-        ctx.drawImage(video, 0, 0, canvasRef.current.width, canvasRef.current.height);
-
-        if (data.hasTitle) {
-          drawTitle(ctx);
-        }
-
-        requestAnimationFrame(drawFrame);
-      };
-
-      drawFrame();
-    };
-  };
-
   const fetchTemplates = async () => {
     try {
       const response = await axios.get(`${SERVER_ADDRESS}/templates`);
-      console.log(response.data);
       if (response.data.length > 0) setTemplates(response.data);
     } catch (err) {
       console.log(err);
@@ -241,6 +129,7 @@ const CreateTemplate = () => {
   const fetchFonts = async () => {
     try {
       const response = await axios.get(`${SERVER_ADDRESS}/fonts`);
+      console.log(response);
       if (response.status === 200) {
         setFonts(response.data.data);
       } else {
@@ -258,39 +147,14 @@ const CreateTemplate = () => {
   }, []);
 
   useEffect(() => {
-    if (data.hasTitle) {
-      Draggable.create(titleRef.current, {
-        type: 'x,y',
-        bounds: canvasRef.current,
-        onDrag: function () {
-          const canvasBounds = canvasRef.current.getBoundingClientRect();
-          const titleBounds = titleRef.current.getBoundingClientRect();
-          const left = titleBounds.left - canvasBounds.left;
-          const top = titleBounds.top - canvasBounds.top;
-
-          const position = {
-            x: parseInt(left),
-            y: parseInt(top)
-          };
-
-          setData((prevData) => ({
-            ...prevData,
-            position: { ...prevData.position, title: position }
-          }));
-        }
-      });
-    }
-  }, [data.hasTitle, data.bg]);
-
-  useEffect(() => {
-    Draggable.create(contentRef.current, {
+    Draggable.create(questionRef.current, {
       type: 'x,y',
       bounds: canvasRef.current,
       onDrag: function () {
         const canvasBounds = canvasRef.current.getBoundingClientRect();
-        const contentBounds = contentRef.current.getBoundingClientRect();
-        const left = contentBounds.left - canvasBounds.left;
-        const top = contentBounds.top - canvasBounds.top;
+        const questionBounds = questionRef.current.getBoundingClientRect();
+        const left = questionBounds.left - canvasBounds.left;
+        const top = questionBounds.top - canvasBounds.top;
 
         const position = {
           x: parseInt(left),
@@ -299,47 +163,42 @@ const CreateTemplate = () => {
 
         setData((prevData) => ({
           ...prevData,
-          position: { ...prevData.position, content: position }
+          positions: { ...prevData.positions, content: position }
         }));
       }
     });
-  }, [data.bg]);
 
-  useEffect(() => {
-    if (data.hasAuthor) {
-      Draggable.create(authorRef.current, {
-        type: 'x,y',
-        bounds: canvasRef.current,
-        onDrag: function () {
-          const canvasBounds = canvasRef.current.getBoundingClientRect();
-          const creditBounds = authorRef.current.getBoundingClientRect();
-          const left = creditBounds.left - canvasBounds.left;
-          const top = creditBounds.top - canvasBounds.top;
+    Draggable.create(optionsRef.current, {
+      type: 'x,y',
+      bounds: canvasRef.current,
+      onDrag: function () {
+        const canvasBounds = canvasRef.current.getBoundingClientRect();
+        const optionsBounds = optionsRef.current.getBoundingClientRect();
+        const left = optionsBounds.left - canvasBounds.left;
+        const top = optionsBounds.top - canvasBounds.top;
 
-          console.log(left);
-          const position = {
-            x: parseInt(left),
-            y: parseInt(top)
-          };
+        const position = {
+          x: parseInt(left),
+          y: parseInt(top)
+        };
 
-          setData((prevData) => ({
-            ...prevData,
-            position: { ...prevData.position, credit: position }
-          }));
-        }
-      });
-    }
-  }, [data.hasAuthor, data.bg]);
+        setData((prevData) => ({
+          ...prevData,
+          positions: { ...prevData.positions, options: position }
+        }));
+      }
+    });
+  }, [data.bg_image]);
 
   useEffect(() => {
     const style = document.createElement('style');
     style.innerHTML = `
       @font-face {
-        font-family: '${data.font.title_font}';
-        src: url('${SERVER_ADDRESS}/font/${data.font.title_font}.ttf') format('truetype');
+        font-family: '${data.font.style}';
+        src: url('${SERVER_ADDRESS}/font/${data.font.style}.ttf') format('truetype');
       }
-      .title-font{
-        font-family: '${data.font.title_font}', sans-serif;
+      .font-style{
+        font-family: '${data.font.style}', sans-serif;
       }
     `;
     document.head.appendChild(style);
@@ -347,58 +206,14 @@ const CreateTemplate = () => {
     return () => {
       document.head.removeChild(style);
     };
-  }, [data.font.title_font]);
-
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @font-face {
-        font-family: '${data.font.content_font}';
-        src: url('${SERVER_ADDRESS}/font/${data.font.content_font}.ttf') format('truetype');
-      }
-      .content-font{
-        font-family: '${data.font.content_font}', sans-serif;
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, [data.font.content_font]);
-
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @font-face {
-        font-family: '${data.font.credit_font}';
-        src: url('${SERVER_ADDRESS}/font/${data.font.credit_font}.ttf') format('truetype');
-      }
-      .credit-font{
-        font-family: '${data.font.credit_font}', sans-serif;
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, [data.font.credit_font]);
-
-  const bgprops = {
-    listType: 'picture',
-    beforeUpload: () => false,
-    maxCount: 1,
-    accept: '.png,.jpg,.jpeg',
-    onChange: handleBg
-  };
+  }, [data.font.style]);
 
   const imageprops = {
     listType: 'picture',
     beforeUpload: () => false,
     maxCount: 1,
     accept: '.png,.jpg,.jpeg',
-    onChange: handleImage
+    onChange: handleBgImage
   };
 
   const audioprops = {
@@ -409,12 +224,11 @@ const CreateTemplate = () => {
     onChange: handleAudio
   };
 
-  const videoBgprops = {
+  const videoprops = {
     listType: 'picture',
     beforeUpload: () => false,
     maxCount: 1,
-    accept: '.mp4,.HEIC,.mov,.gif',
-    onChange: handleVideo
+    accept: '.mp4,.HEIC,.mov,.gif'
   };
 
   const handleRatio = (val) => {
@@ -439,20 +253,54 @@ const CreateTemplate = () => {
 
   const handleCreateTemplate = async () => {
     try {
+      const updatedPosition = {
+        question: {
+          x: data.positions.question.x * 3,
+          y: data.positions.question.y * 3
+        },
+        options: {
+          x: data.positions.options.x * 3,
+          y: data.positions.options.y * 3
+        }
+      };
+      data.positions = updatedPosition;
       const formData = new FormData();
+
       if (!data.name) {
         message.error({ content: 'Please enter the name' });
         return;
-      } else if (!data.bg) {
+      } else if (!data.bg_image) {
         message.error({ content: 'Please upload the bg image' });
         return;
+      } else if (!data.bg_video) {
+        message.error({ content: 'Please upload the bg video' });
+        return;
+      } else if (data.intro && !data.intro_video) {
+        message.error({ content: 'Please upload the intro video' });
+        return;
+      } else if (data.outro && !data.outro_video) {
+        message.error({ content: 'Please upload the outro video' });
+        return;
+      } else if (!data.font.style) {
+        message.error({ content: 'Please Select the font style' });
+        return;
       }
+
       const exists = templates.filter((temp) => temp.name.toLowerCase() === data.name.toLowerCase()).length > 0;
       if (!exists) {
         formData.append('data', JSON.stringify(data));
-        formData.append('backgroundImage', data.bg);
-        formData.append('logo_image', data.logo_image);
+        formData.append('backgroundImage', data.bg_image);
+        formData.append('backgroundVideo', data.bg_video);
         formData.append('audio', data.audio);
+
+        if (data.intro) {
+          formData.append('intro_video', data.intro_video);
+        }
+
+        if (data.outro) {
+          formData.append('outro_video', data.outro_video);
+        }
+
         const response = await axios.post(`${SERVER_ADDRESS}/templates/create`, formData);
         if (response.status === 200) {
           message.success({ content: 'Template Created Successfully' });
@@ -478,6 +326,7 @@ const CreateTemplate = () => {
           gridTemplateColumns: 'minmax(640px, 60%) minmax(340px, 40%)'
         }}
       >
+        {/* Canvas */}
         <div className="relative flex justify-center h-fit overflow-hidden">
           <canvas
             ref={canvasRef}
@@ -487,79 +336,80 @@ const CreateTemplate = () => {
               height: data.size.height / 3 + 'px'
             }}
           />
-          {data.font.title_font && data.hasTitle !== 0 && (
-            <p
-              className="title-font"
-              ref={titleRef}
-              style={{
-                position: 'absolute',
-                cursor: 'move',
-                fontSize: data.font.title_size / 3 + 'px',
-                width: data.font.title_width / 3 + 'px',
-                border: '1px solid black',
-                overflow: 'hidden',
-                fontStyle: data.font.title_style === 'italic' || data.font.title_style === 'bolditalic' ? 'italic' : 'normal',
-                fontWeight: data.font.title_style === 'bold' || data.font.title_style === 'bolditalic' ? 'bold' : 'normal',
-                color: data.font.title_color,
-                textAlign: data.font.title_align,
-                top: 10
-              }}
-            >
-              {texts.title}
-            </p>
-          )}
           <p
-            ref={contentRef}
-            className="content-font"
+            className="font-style"
+            ref={questionRef}
             style={{
               position: 'absolute',
               cursor: 'move',
-              fontSize: data.font.content_size / 3 + 'px',
-              width: data.font.content_width / 3 + 'px',
-              height: data.font.content_height / 3 + 'px',
-              overflow: 'hidden',
+              fontSize: data.font.question.size / 3 + 'px',
+              width: data.font.question.width / 3 + 'px',
               border: '1px solid black',
-              flexWrap: 'wrap',
-              lineHeight: `${data.font.line_height / 3}px`,
-              fontStyle: data.font.content_style === 'italic' || data.font.content_style === 'bolditalic' ? 'italic' : 'normal',
-              fontWeight: data.font.content_style === 'bold' || data.font.content_style === 'bolditalic' ? 'bold' : 'normal',
-              textAlign: data.font.content_align,
-              color: data.font.content_color,
-              top: '50px'
+              overflow: 'hidden',
+              color: data.font.question.color,
+              textAlign: data.font.question.align,
+              backgroundColor: data.font.question.bg ? data.font.question.bgColor : '',
+              lineHeight: `${data.font.question.lineHeight / 3}px`,
+              top: 100
             }}
           >
-            {texts.content}
+            {texts.question}
           </p>
-          {data.hasAuthor !== 0 && (
-            <p
-              className="credit-font"
-              ref={authorRef}
-              style={{
-                position: 'absolute',
-                cursor: 'move',
-                fontSize: data.font.credit_size / 3 + 'px',
-                width: data.font.credit_width / 3 + 'px',
-                overflow: 'hidden',
-                border: '1px solid black',
-                fontStyle: data.font.credit_style === 'italic' || data.font.credit_style === 'bolditalic' ? 'italic' : 'normal',
-                fontWeight: data.font.credit_style === 'bold' || data.font.credit_style === 'bolditalic' ? 'bold' : 'normal',
-                textAlign: data.font.credit_align,
-                color: data.font.credit_color,
-                bottom: 10,
-                right: 30
-              }}
-            >
-              {texts.author}
-            </p>
-          )}
+          <p
+            ref={optionsRef}
+            className="font-style"
+            style={{
+              position: 'absolute',
+              cursor: 'move',
+              fontSize: data.font.options.size / 3 + 'px',
+              width: data.font.options.width / 3 + 'px',
+              overflow: 'hidden',
+              flexWrap: 'wrap',
+              lineHeight: `${data.font.options.lineHeight / 3}px`,
+              textAlign: data.font.options.align,
+              color: data.font.options.color,
+              top: 400
+            }}
+          >
+            {texts.options && (
+              <div className="flex flex-col gap-4">
+                <p
+                  className="border border-black overflow-hidden"
+                  style={{ backgroundColor: data.font.options.bg ? data.font.options.bgColor : '' }}
+                >
+                  {texts.options}
+                </p>
+                <p
+                  className="border border-black overflow-hidden"
+                  style={{ backgroundColor: data.font.options.bg ? data.font.options.bgColor : '', color: data.font.options.answerColor }}
+                >
+                  {texts.options}
+                </p>
+                <p
+                  className="border border-black overflow-hidden"
+                  style={{ backgroundColor: data.font.options.bg ? data.font.options.bgColor : '' }}
+                >
+                  {texts.options}
+                </p>
+                <p
+                  className="border border-black overflow-hidden"
+                  style={{ backgroundColor: data.font.options.bg ? data.font.options.bgColor : '' }}
+                >
+                  {texts.options}
+                </p>
+              </div>
+            )}
+          </p>
         </div>
-        {/* </canvas> */}
-        <div className="container flex flex-col gap-4 mb-4 h-[75vh] min-w-fit bg-white rounded-md overflow-y-scroll px-4 py-3">
+
+        {/* Menu */}
+        <div className="container flex flex-col gap-4 mb-4 min-h-[75vh] max-h-[110vh] min-w-fit bg-white rounded-md overflow-y-scroll px-4 py-3">
           <div className="name-wrapper flex flex-col gap-3 w-[18rem]">
             <p className="text-md font-bold">Template Name:</p>
             <Input value={data.name} onChange={(e) => setData({ ...data, name: e.target.value })} />
           </div>
           <div className="w-full border-b border-gray-400"></div>
+          {/* Size */}
           <div className="size-container">
             <p className="text-md font-bold">Size:</p>
             <Radio.Group
@@ -589,6 +439,7 @@ const CreateTemplate = () => {
             </Radio.Group>
           </div>
           <div className="w-full border-b border-gray-400"></div>
+          {/* Intro & Outro */}
           <div className="grid grid-cols-2">
             <div>
               <p className="text-md font-bold">Intro:</p>
@@ -600,322 +451,315 @@ const CreateTemplate = () => {
             </div>
           </div>
           <div className="w-full border-b border-gray-400"></div>
-          {(data.intro || data.outro) && (
-            <>
-              <div className="name-wrapper flex flex-col gap-3 w-[18rem]">
-                <p className="text-md font-bold">Book Name</p>
-                <Input
-                  value={data.font.bookName || ''}
-                  onChange={(e) => setData({ ...data, font: { ...data.font, bookName: e.target.value } })}
-                />
-              </div>
-              <div className="w-full border-b border-gray-400"></div>
-            </>
-          )}
+          {/* Assets */}
           <p className="text-md font-bold">Background Image:</p>
-          <Upload {...bgprops}>
+          <Upload {...imageprops}>
             <Button type="primary">Upload Image</Button>
           </Upload>
-          {(data.intro || data.outro) && (
-            <>
-              <p className="text-md font-bold">Logo Image:</p>
-              <Upload {...imageprops}>
-                <Button type="primary">Upload Logo Image</Button>
-              </Upload>
-              <p className="text-md font-bold">Intro and Outro Audio:</p>
-              <Upload {...audioprops}>
-                <Button type="primary">Upload Audio</Button>
-              </Upload>
-            </>
-          )}
-
-          {/* <div className="w-full border-b border-gray-400"></div>
           <p className="text-md font-bold">Background Video:</p>
-          <Upload {...videoBgprops}>
+          <Upload {...videoprops} onChange={(event) => handleBgVideo(event, 'bg_video')}>
             <Button type="primary">Upload Video</Button>
-          </Upload> */}
+          </Upload>
+          <div className="grid grid-cols-2 ">
+            {data.intro && (
+              <div className="flex flex-col">
+                <p className="text-md font-bold">Intro Video:</p>
+                <Upload {...videoprops} onChange={(event) => handleBgVideo(event, 'intro_video')}>
+                  <Button type="primary">Upload Intro</Button>
+                </Upload>
+              </div>
+            )}
+            {data.outro && (
+              <div className="flex flex-col">
+                <p className="text-md font-bold">Outro Video:</p>
+                <Upload {...videoprops} onChange={(event) => handleBgVideo(event, 'outro_video')}>
+                  <Button type="primary">Upload Outro</Button>
+                </Upload>
+              </div>
+            )}
+          </div>
+          <p className="text-md font-bold">Background Audio:</p>
+          <Upload {...audioprops}>
+            <Button type="primary">Upload Audio</Button>
+          </Upload>
           <div className="w-full border-b border-gray-400"></div>
+          {/* Data */}
+          {/* Font Style */}
+          <div>
+            <p className="font-bold">Font Style</p>
+            <Select
+              style={{ width: '10rem', marginBottom: '10px' }}
+              value={data.font.style}
+              onChange={(val) => {
+                setData({ ...data, font: { ...data.font, style: val } });
+              }}
+            >
+              {fonts.map((font) => (
+                <Select.Option value={font.name}>{font.name}</Select.Option>
+              ))}
+            </Select>
+            <p className="font-bold">Duration:</p>
+            <div className="flex flex-col gap-2">
+              <div className="grid grid-cols-[40%_60%] items-center">
+                <p>Total Duration:</p>
+                <InputNumber
+                  style={{ width: '10rem' }}
+                  value={data.duration.total}
+                  onChange={(val) => {
+                    setData({ ...data, duration: { ...data.duration, total: val } });
+                  }}
+                />
+              </div>
+              {data.intro && (
+                <div className="grid grid-cols-[40%_60%] items-center">
+                  <p>Intro Duration:</p>
+                  <InputNumber
+                    style={{ width: '10rem' }}
+                    value={data.duration.intro}
+                    onChange={(val) => {
+                      setData({ ...data, duration: { ...data.duration, intro: val } });
+                    }}
+                  />
+                </div>
+              )}
+              {data.outro && (
+                <div className="grid grid-cols-[40%_60%] items-center">
+                  <p>Outro Duration:</p>
+                  <InputNumber
+                    style={{ width: '10rem' }}
+                    value={data.duration.outro}
+                    onChange={(val) => {
+                      setData({ ...data, duration: { ...data.duration, outro: val } });
+                    }}
+                  />
+                </div>
+              )}
+              <div className="grid grid-cols-[40%_60%] items-center">
+                <p>Timer Duration:</p>
+                <InputNumber
+                  style={{ width: '10rem' }}
+                  value={data.duration.timer}
+                  onChange={(val) => {
+                    setData({ ...data, duration: { ...data.duration, timer: val } });
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="w-full border-b border-gray-400"></div>
+          {/* Question */}
           <div className="selection-container flex flex-col gap-3">
-            <div>
-              <p className="text-md font-bold">Title:</p>
-              <Radio.Group
-                value={data.hasTitle}
-                onChange={(e) => setData({ ...data, hasTitle: e.target.value })}
-                options={[
-                  { value: 1, label: 'Yes' },
-                  { value: 0, label: 'No' }
-                ]}
-              />
-            </div>
-            {data.hasTitle !== 0 && (
-              <div className="flex flex-col gap-2">
+            <p className="text-md font-bold">Question:</p>
+            <div className="flex flex-col gap-2">
+              <div>
+                <p>Size</p>
+                <Slider
+                  className="w-[18rem]"
+                  value={data.font.question.size}
+                  onChange={(value) => setData({ ...data, font: { ...data.font, question: { ...data.font.question, size: value } } })}
+                />
+              </div>
+              <div>
+                <p>Width</p>
+                <Slider
+                  className="w-[18rem]"
+                  max={data.size.width}
+                  value={data.font.question.width}
+                  onChange={(value) => setData({ ...data, font: { ...data.font, question: { ...data.font.question, width: value } } })}
+                />
+              </div>
+              <div>
+                <p>Line Height</p>
+                <Slider
+                  className="w-[18rem]"
+                  max={100}
+                  value={data.font.question.lineHeight}
+                  onChange={(value) => setData({ ...data, font: { ...data.font, question: { ...data.font.question, lineHeight: value } } })}
+                />
+              </div>
+              <div>
+                <p>Alignment</p>
+                <Segmented
+                  style={{ width: 'fit-content' }}
+                  defaultValue={data.font.question.align}
+                  options={['left', 'center', 'right']}
+                  onChange={(value) => setData({ ...data, font: { ...data.font, question: { ...data.font.question, align: value } } })}
+                />
+              </div>
+              <div>
+                <p>Preview Text</p>
+                <textarea
+                  className="w-full border"
+                  value={texts.question}
+                  onChange={(e) => setTexts((prev) => ({ ...prev, question: e.target.value }))}
+                />
+              </div>
+              <div className="grid grid-cols-2">
                 <div>
-                  <p>Size</p>
-                  <Slider
-                    className="w-[18rem]"
-                    value={data.font.title_size}
-                    onChange={(value) => setData({ ...data, font: { ...data.font, title_size: value } })}
-                  />
-                </div>
-                <div>
-                  <p>Width</p>
-                  <Slider
-                    className="w-[18rem]"
-                    max={data.size.width}
-                    value={data.font.title_width}
-                    onChange={(value) => setData({ ...data, font: { ...data.font, title_width: value } })}
-                  />
-                </div>
-                <div>
-                  <p>Alignment</p>
-                  <Segmented
-                    style={{ width: 'fit-content' }}
-                    defaultValue={data.font.title_align}
-                    options={['left', 'center', 'right']}
-                    onChange={(value) => setData({ ...data, font: { ...data.font, title_align: value } })}
-                  />
-                </div>
-                <div>
-                  <p>Preview Text</p>
-                  <textarea
-                    className="w-full border"
-                    value={texts.title}
-                    onChange={(e) => setTexts((prev) => ({ ...prev, title: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <p>Font</p>
-                  <Select
-                    style={{ width: '10rem' }}
-                    value={data.font.title_font}
-                    onChange={(val) => {
-                      setData({ ...data, font: { ...data.font, title_font: val } });
-                    }}
-                  >
-                    <Select.Option value="Sans Serif">Sans Serif</Select.Option>
-                    {fonts.map((font) => (
-                      <Select.Option value={font.name}>{font.name}</Select.Option>
-                    ))}
-                  </Select>
-                </div>
-                <div>
-                  <p>Style</p>
-                  <Select
-                    style={{ width: '10rem' }}
-                    value={data.font.title_style}
-                    onChange={(val) => {
-                      setData({ ...data, font: { ...data.font, title_style: val } });
-                    }}
-                  >
-                    <Select.Option value="normal">normal</Select.Option>
-                    <Select.Option value="bold">Bold</Select.Option>
-                    <Select.Option value="bolditalic">Bold + Italic</Select.Option>
-                    <Select.Option value="italic">Italic</Select.Option>
-                  </Select>
-                </div>
-                <div>
-                  <p>Color</p>
+                  <p>Text Color</p>
                   <input
                     type="color"
-                    value={data.font.title_color}
-                    onChange={(e) => {
-                      setData({ ...data, font: { ...data.font, title_color: e.target.value } });
-                    }}
+                    value={data.font.question.color}
+                    onChange={(e) =>
+                      setData({ ...data, font: { ...data.font, question: { ...data.font.question, color: e.target.value } } })
+                    }
                   />
                 </div>
+                <div>
+                  <p className="text-md">BG Color:</p>
+                  <div className="flex gap-2 items-center h-[23px]">
+                    <Switch
+                      className="w-fit"
+                      onChange={(val) =>
+                        setData((prev) => ({ ...prev, font: { ...prev.font, question: { ...prev.font.question, bg: val } } }))
+                      }
+                    />
+                    {data.font.question.bg && (
+                      <input
+                        type="color"
+                        value={data.font.question.bgColor}
+                        onChange={(e) =>
+                          setData({ ...data, font: { ...data.font, question: { ...data.font.question, bgColor: e.target.value } } })
+                        }
+                      />
+                    )}
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-          <div className="w-full border-b border-gray-400"></div>
-          <div className="flex flex-col gap-2">
-            <p className="text-md font-bold">Content:</p>
-            <div>
-              <p>Size</p>
-              <Slider
-                className="w-[18rem]"
-                value={data.font.content_size}
-                onChange={(value) => setData({ ...data, font: { ...data.font, content_size: value } })}
-              />
-            </div>
-            <div>
-              <p>Width</p>
-              <Slider
-                className="w-[18rem]"
-                max={data.size.width}
-                value={data.font.content_width}
-                onChange={(value) => setData({ ...data, font: { ...data.font, content_width: value } })}
-              />
-            </div>
-            <div>
-              <p>Height</p>
-              <Slider
-                className="w-[18rem]"
-                max={data.size.height}
-                value={data.font.content_height}
-                onChange={(value) => setData({ ...data, font: { ...data.font, content_height: value } })}
-              />
-            </div>
-            <div>
-              <p>Line Height</p>
-              <Slider
-                className="w-[18rem]"
-                max={400}
-                value={data.font.line_height}
-                onChange={(value) => setData({ ...data, font: { ...data.font, line_height: value } })}
-              />
-            </div>
-            <div>
-              <p>Alignment</p>
-              <Segmented
-                style={{ width: 'fit-content' }}
-                defaultValue={data.font.content_align}
-                options={['left', 'center', 'right', 'justify']}
-                onChange={(value) => setData({ ...data, font: { ...data.font, content_align: value } })}
-              />
-            </div>
-            <div>
-              <p>Preview Text</p>
-              <textarea
-                className="w-full border "
-                value={texts.content}
-                rows={4}
-                onChange={(e) => setTexts((prev) => ({ ...prev, content: e.target.value }))}
-              />
-            </div>
-            <div>
-              <p>Font</p>
-              <Select
-                style={{ width: '10rem' }}
-                value={data.font.content_font}
-                onChange={(val) => {
-                  setData({ ...data, font: { ...data.font, content_font: val } });
-                }}
-              >
-                <Select.Option value="Sans Serif">Sans Serif</Select.Option>
-                {fonts.map((font) => (
-                  <Select.Option value={font.name}>{font.name}</Select.Option>
-                ))}
-              </Select>
-            </div>
-            <div>
-              <p>Style</p>
-              <Select
-                style={{ width: '10rem' }}
-                value={data.font.content_style}
-                onChange={(val) => {
-                  setData({ ...data, font: { ...data.font, content_style: val } });
-                }}
-              >
-                <Select.Option value="normal">normal</Select.Option>
-                <Select.Option value="bold">Bold</Select.Option>
-                <Select.Option value="bolditalic">Bold + Italic</Select.Option>
-                <Select.Option value="italic">Italic</Select.Option>
-              </Select>
-            </div>
-            <div>
-              <p>Color</p>
-              <input
-                type="color"
-                value={data.font.content_color}
-                onChange={(e) => {
-                  setData({ ...data, font: { ...data.font, content_color: e.target.value } });
-                }}
-              />
+              <div>
+                <p className="font-bold">Animation</p>
+                <Select
+                  style={{ width: '10rem' }}
+                  value={data.font.question.animation}
+                  onChange={(value) => setData({ ...data, font: { ...data.font, question: { ...data.font.question, animation: value } } })}
+                >
+                  <Select.Option value="fade">Fade</Select.Option>
+                  <Select.Option value="bounce">Bounce</Select.Option>
+                  <Select.Option value="slideup">Slide Up</Select.Option>
+                  <Select.Option value="slidedown">Slide Down</Select.Option>
+                  <Select.Option value="slideleft">Slide Left</Select.Option>
+                  <Select.Option value="slideright">Slide Right</Select.Option>
+                  <Select.Option value="scale">Scale</Select.Option>
+                  <Select.Option value="blink">Blink</Select.Option>
+                  <Select.Option value="shake">Shake</Select.Option>
+                  <Select.Option value="horizontalShake">Horizontal Shake</Select.Option>
+                  <Select.Option value="verticalShake">Vertical Shake</Select.Option>
+                </Select>
+              </div>
             </div>
           </div>
           <div className="w-full border-b border-gray-400"></div>
-          <div className="selection-container flex flex-col gap-3 bg-white">
-            <div>
-              <p className="text-md font-bold">Sub Title:</p>
-              <Radio.Group
-                value={data.hasAuthor}
-                onChange={(e) => setData({ ...data, hasAuthor: e.target.value })}
-                options={[
-                  { value: 1, label: 'Yes' },
-                  { value: 0, label: 'No' }
-                ]}
-              />
-            </div>
-            {data.hasAuthor !== 0 && (
-              <div className="flex flex-col gap-2">
+          {/* Options */}
+          <div className="selection-container flex flex-col gap-3">
+            <p className="text-md font-bold">Options:</p>
+            <div className="flex flex-col gap-2">
+              <div>
+                <p>Size</p>
+                <Slider
+                  className="w-[18rem]"
+                  value={data.font.options.size}
+                  onChange={(value) => setData({ ...data, font: { ...data.font, options: { ...data.font.options, size: value } } })}
+                />
+              </div>
+              <div>
+                <p>Width</p>
+                <Slider
+                  className="w-[18rem]"
+                  max={data.size.width}
+                  value={data.font.options.width}
+                  onChange={(value) => setData({ ...data, font: { ...data.font, options: { ...data.font.options, width: value } } })}
+                />
+              </div>
+              <div>
+                <p>Line Height</p>
+                <Slider
+                  className="w-[18rem]"
+                  max={100}
+                  value={data.font.options.lineHeight}
+                  onChange={(value) => setData({ ...data, font: { ...data.font, options: { ...data.font.options, lineHeight: value } } })}
+                />
+              </div>
+              <div>
+                <p>Alignment</p>
+                <Segmented
+                  style={{ width: 'fit-content' }}
+                  defaultValue={data.font.options.align}
+                  options={['left', 'center', 'right']}
+                  onChange={(value) => setData({ ...data, font: { ...data.font, options: { ...data.font.options, align: value } } })}
+                />
+              </div>
+              <div>
+                <p>Preview Text</p>
+                <textarea
+                  className="w-full border"
+                  value={texts.options}
+                  onChange={(e) => setTexts((prev) => ({ ...prev, options: e.target.value }))}
+                />
+              </div>
+              <div className="grid grid-cols-3">
                 <div>
-                  <p>Size</p>
-                  <Slider
-                    className="w-[18rem]"
-                    value={data.font.credit_size}
-                    onChange={(value) => setData({ ...data, font: { ...data.font, credit_size: value } })}
-                  />
-                </div>
-                <div>
-                  <p>Width</p>
-                  <Slider
-                    className="w-[18rem]"
-                    max={data.size.width}
-                    value={data.font.credit_width}
-                    onChange={(value) => setData({ ...data, font: { ...data.font, credit_width: value } })}
-                  />
-                </div>
-                <div>
-                  <p>Alignment</p>
-                  <Segmented
-                    style={{ width: 'fit-content' }}
-                    defaultValue={data.font.credit_align}
-                    options={['left', 'center', 'right']}
-                    onChange={(value) => setData({ ...data, font: { ...data.font, credit_align: value } })}
-                  />
-                </div>
-                <div>
-                  <p>Preview Text</p>
-                  <textarea
-                    className="w-full border "
-                    value={texts.author}
-                    onChange={(e) => setTexts((prev) => ({ ...prev, author: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <p>Font</p>
-                  <Select
-                    style={{ width: '10rem' }}
-                    value={data.font.credit_font}
-                    onChange={(val) => {
-                      setData({ ...data, font: { ...data.font, credit_font: val } });
-                    }}
-                  >
-                    <Select.Option value="Sans Serif">Sans Serif</Select.Option>
-                    {fonts.map((font) => (
-                      <Select.Option value={font.name}>{font.name}</Select.Option>
-                    ))}
-                  </Select>
-                </div>
-                <div>
-                  <p>Style</p>
-                  <Select
-                    style={{ width: '10rem' }}
-                    value={data.font.credit_style}
-                    onChange={(val) => {
-                      setData({ ...data, font: { ...data.font, credit_style: val } });
-                    }}
-                  >
-                    <Select.Option value="normal">normal</Select.Option>
-                    <Select.Option value="bold">Bold</Select.Option>
-                    <Select.Option value="bolditalic">Bold + Italic</Select.Option>
-                    <Select.Option value="italic">Italic</Select.Option>
-                  </Select>
-                </div>
-
-                <div>
-                  <p>Color</p>
+                  <p>Text Color</p>
                   <input
                     type="color"
-                    value={data.font.credit_color}
-                    onChange={(e) => {
-                      setData({ ...data, font: { ...data.font, credit_color: e.target.value } });
-                    }}
+                    value={data.font.options.color}
+                    onChange={(e) => setData({ ...data, font: { ...data.font, options: { ...data.font.options, color: e.target.value } } })}
                   />
                 </div>
+                <div>
+                  <p>Answer Color</p>
+                  <input
+                    type="color"
+                    value={data.font.options.answerColor}
+                    onChange={(e) =>
+                      setData({ ...data, font: { ...data.font, options: { ...data.font.options, answerColor: e.target.value } } })
+                    }
+                  />
+                </div>
+                <div>
+                  <p className="text-md ">BG Color:</p>
+                  <div className="flex gap-2 items-center h-[23px]">
+                    <Switch
+                      className="w-fit"
+                      value={data.font.options.bg}
+                      onChange={(val) =>
+                        setData((prev) => ({ ...prev, font: { ...prev.font, options: { ...prev.font.options, bg: val } } }))
+                      }
+                    />
+                    {data.font.options.bg && (
+                      <input
+                        type="color"
+                        value={data.font.options.bgColor}
+                        onChange={(e) =>
+                          setData({ ...data, font: { ...data.font, options: { ...data.font.options, bgColor: e.target.value } } })
+                        }
+                      />
+                    )}
+                  </div>
+                </div>
               </div>
-            )}
+              <div>
+                <p className="font-bold">Animation</p>
+                <Select
+                  style={{ width: '10rem' }}
+                  value={data.font.options.animation}
+                  onChange={(value) => setData({ ...data, font: { ...data.font, options: { ...data.font.options, animation: value } } })}
+                >
+                  <Select.Option value="fade">Fade</Select.Option>
+                  <Select.Option value="bounce">Bounce</Select.Option>
+                  <Select.Option value="slideup">Slide Up</Select.Option>
+                  <Select.Option value="slidedown">Slide Down</Select.Option>
+                  <Select.Option value="slideleft">Slide Left</Select.Option>
+                  <Select.Option value="slideright">Slide Right</Select.Option>
+                  <Select.Option value="scale">Scale</Select.Option>
+                  <Select.Option value="blink">Blink</Select.Option>
+                  <Select.Option value="shake">Shake</Select.Option>
+                  <Select.Option value="horizontalShake">Horizontal Shake</Select.Option>
+                  <Select.Option value="verticalShake">Vertical Shake</Select.Option>
+                </Select>
+              </div>
+            </div>
           </div>
+          <div className="w-full border-b border-gray-400"></div>
           <Button
             onClick={handleCreateTemplate}
             className="w-[10rem] transform translate-x-1/2 mb-2"

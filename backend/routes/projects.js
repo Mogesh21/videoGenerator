@@ -14,13 +14,12 @@ router.get("/videos", async (req, res) => {
                     p.author AS project_author,
                     p.created_at AS project_created_at,
                     v.id AS video_id,
-                    v.title_id AS video_title_id,
                     v.name AS video_name,
                     v.created_at AS video_created_at
                   FROM 
                     projects p
                   LEFT JOIN 
-                    videos v ON v.title_id = p.id
+                    videos v ON v.project_id = p.id
                   WHERE 
                     p.is_deleted = 0 
                     AND p.deleted_at IS NULL;
@@ -79,7 +78,7 @@ router.get("/videos", async (req, res) => {
 //         //   deleted_at: new Date(),
 //         // },
 //         where: {
-//           title_id: {
+//           project_id: {
 //             in: ids,
 //           },
 //         },
@@ -103,7 +102,7 @@ router.get("/videos", async (req, res) => {
 //         //   deleted_at: new Date(),
 //         // },
 //         where: {
-//           title_id: ids[0],
+//           project_id: ids[0],
 //         },
 //       });
 
@@ -139,7 +138,7 @@ router.get("/videos", async (req, res) => {
 //         videos: {
 //           select: {
 //             id: true,
-//             title_id: true,
+//             project_id: true,
 //             name: true,
 //             created_at: true,
 //           },
@@ -200,7 +199,7 @@ router.get("/videos", async (req, res) => {
 //         images: {
 //           select: {
 //             id: true,
-//             title_id: true,
+//             project_id: true,
 //             name: true,
 //           },
 //         },
