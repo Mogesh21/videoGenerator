@@ -12,7 +12,7 @@ const initialState = {
 export const endpoints = {
   key: 'api/menu',
   master: 'master',
-  dashboard: '/dashboard'
+  dashboard: '/videos'
 };
 
 export function useGetMenuMaster() {
@@ -46,7 +46,6 @@ export function handlerDrawerOpen(isDashboardDrawerOpened) {
 }
 
 export function handlerActiveItem(openedItem) {
-
   mutate(
     endpoints.key + endpoints.master,
     (currentMenuMaster) => {

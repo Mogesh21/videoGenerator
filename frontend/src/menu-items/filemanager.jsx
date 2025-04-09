@@ -17,7 +17,7 @@ const filemanager = {
       title: 'Videos',
       type: 'item',
       icon: YoutubeOutlined,
-      url: '/projects',
+      url: '/videos',
       breadcrumbs: false
     }
   ]

@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static("public"));
 app.use("/font", express.static("font"));
 
-app.use("/projects", Projects);
+// app.use("/projects", Projects);
 // app.use("/make", Make);
 app.use("/templates", Templates);
 app.use("/fonts", Fonts);

@@ -19,15 +19,15 @@ const Videos = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentVideo, setCurrentVideo] = useState({});
   const items = [
-    {
-      title: <Link to="/projects">Projects</Link>
-    },
+    // {
+    //   title: <Link to="/projects">Projects</Link>
+    // },
     {
       title: 'Videos'
-    },
-    {
-      title: data?.name
     }
+    // {
+    //   title: data?.name
+    // }
   ];
 
   React.useEffect(() => {
@@ -36,27 +36,29 @@ const Videos = () => {
     }
   }, [isModalOpen]);
 
-  const fetchData = async (project_id) => {
+  const fetchData = async () => {
     try {
-      const id = location?.state?.id?.toString() || project_id;
-      const response = await axios.get(`${SERVER_ADDRESS}/projects/videos/${id}`);
+      const response = await axios.get(`${SERVER_ADDRESS}/videos`);
       if (response.status === 200) {
-        setData(response.data);
+        const formattedData = response.data.map((val) => {
+          const options = { year: '2-digit', month: 'short', day: '2-digit' };
+          const formattedDate = new Date(val.created_at).toLocaleDateString('en-GB', options)?.replace(',', '')?.toUpperCase();
+          return {
+            ...val,
+            created_at: formattedDate
+          };
+        });
+        setData(formattedData);
       } else {
         message.error({ content: 'Internal Server Error', duration: 2 });
       }
     } catch (err) {
       console.log(err);
-      navigate('/projects/videos');
     }
   };
 
   useEffect(() => {
-    if (location?.state?.id) {
-      fetchData(location.state.id);
-    } else {
-      navigate('/projects/videos');
-    }
+    fetchData();
   }, []);
 
   const handleView = (vid) => {
@@ -65,20 +67,17 @@ const Videos = () => {
     setPlaying(true);
   };
 
-  const handleVideoDelete = async (vid, len) => {
+  const handleVideoDelete = async (vid) => {
     try {
-      const response = await axios.delete(`${SERVER_ADDRESS}/videos/delete`, {
+      const response = await axios.delete(`${SERVER_ADDRESS}/videos`, {
         headers: {
           id: vid.id,
-          projectid: data.id,
-          name: vid.name,
-          length: len
+          name: vid.name
         }
       });
       if (response.status === 200) {
         message.success({ content: 'Video deleted Successfully', duration: 2 });
-        console.log(data.videos.length);
-        data.videos.length === 1 ? navigate('/projects') : setData({ ...data, videos: data.videos.filter((val) => val.id !== vid.id) });
+        fetchData();
       }
     } catch (err) {
       console.log(err);
@@ -88,23 +87,20 @@ const Videos = () => {
 
   const handleMultipleDelete = async () => {
     try {
-      const names = data.videos.filter((val) => selected.includes(val.id)).map((val) => val.name);
+      const names = data.filter((val) => selected.includes(val.id)).map((val) => val.name);
       // return;
       const response = await axios.delete(`${SERVER_ADDRESS}/videos/deleteVideos`, {
         headers: {
           data: JSON.stringify({
             names: names,
-            ids: selected,
-            titleid: data.id,
-            allvideos: data.videos.length === selected.length
+            ids: selected
           })
         }
       });
       if (response.status === 200) {
-        console.log(selected.length === data.videos.length);
         message.success({ content: 'Selected Videos Deleted Successfully', duration: 2 });
+        fetchData();
         setSelected([]);
-        data.videos.length === selected.length ? navigate('/projects') : fetchData(data.id);
       } else {
         throw new Error('Internal Server Error');
       }
@@ -115,26 +111,26 @@ const Videos = () => {
   };
 
   const handleDownload = async () => {
-    const selectedVideos = data.videos.filter((val) => selected.includes(val.id));
-    const urls = selectedVideos.map((video) => `${SERVER_ADDRESS}/public/videos/${data.id}/${video.name}`);
+    const selectedVideos = data.filter((val) => selected.includes(val.id));
+    const urls = selectedVideos.map((video) => `${SERVER_ADDRESS}/public/videos/${video.name}`);
     const promises = urls.map(async (url) => {
       const res = await fetch(url);
       const blob = await res.blob();
       return blob;
     });
-    
+
     const files = await Promise.all(promises);
     const zip = new JSZip();
-    const videos = zip.folder(data.name);
-    files.forEach((file) => {
-      videos.file(`${data.name}.mp4`, file);
+    const videos = zip.folder('Interview bix videos');
+    files.forEach((file, index) => {
+      videos.file(`${selectedVideos[index].name}.mp4`, file);
     });
 
     const zipFile = await videos.generateAsync({ type: 'blob' });
 
     const a = document.createElement('a');
 
-    a.download = data.name;
+    a.download = 'Interviewbix videos';
 
     a.href = URL.createObjectURL(zipFile);
 
@@ -146,13 +142,10 @@ const Videos = () => {
 
   return (
     <div className="min-h-full p-4 w-full rounded-xl bg-white flex flex-col items-center ">
-      <div className="w-full ">
-        <Breadcrumb items={items} />
-      </div>
       <div className="flex justify-between w-full items-center h-20 px-3">
-        <p className="text-2xl text-blue-600 font-bold pl-5">{data.name?.toUpperCase()}</p>
+        <p className="text-2xl text-blue-600 font-bold pl-5">Videos</p>
         <div className="flex gap-2">
-          <Button onClick={() => setSelected(data.videos.map((val) => val.id))}>Select All</Button>
+          <Button onClick={() => setSelected(data.map((val) => val.id))}>Select All</Button>
           {selected.length > 0 && (
             <div className="flex gap-2">
               <Button onClick={handleDownload}>Download</Button>
@@ -174,18 +167,17 @@ const Videos = () => {
         </div>
       </div>
       <div className="min-h-full p-4 w-full rounded-xl bg-white flex flex-col gap-6 items-center">
-        {/* <div className="text-2xl font-bold text-blue-600">{videos.title}</div> */}
         <div className="flex gap-3 flex-wrap justify-start w-full px-4">
-          <Checkbox.Group value={selected} onChange={(val) => setSelected([...val])}>
-            {data && data.videos?.length > 0 ? (
-              data.videos.map((vid, index) => (
+          <Checkbox.Group value={selected} className='gap-3' onChange={(val) => setSelected([...val])}>
+            {data.length > 0 ? (
+              data.map((vid, index) => (
                 <div key={index} className="w-36 min-h-36 p-2 border flex flex-col items-center group relative">
                   <Checkbox value={vid.id} className="z-1 px-2 py-1 absolute left-1 top-1" />
                   <div className="w-full flex justify-end mb-2 opacity-0 group-hover:opacity-100">
                     <Popconfirm
                       title="Delete video"
                       description="Are you sure to delete this video?"
-                      onConfirm={() => handleVideoDelete(vid, data.videos.length)}
+                      onConfirm={() => handleVideoDelete(vid)}
                       okText="Yes"
                       cancelText="No"
                     >
@@ -212,7 +204,7 @@ const Videos = () => {
               ))
             ) : (
               <div className="flex w-full justify-center">
-                <p className="text-center text-xl ">{data.videos?.length}No Videos available...</p>
+                <p className="text-center text-xl ">No Videos available...</p>
               </div>
             )}
           </Checkbox.Group>
@@ -221,7 +213,6 @@ const Videos = () => {
       {isModalOpen && (
         <Modal
           style={{}}
-          title={currentVideo?.title}
           open={isModalOpen}
           footer=""
           onCancel={() => {
@@ -235,38 +226,13 @@ const Videos = () => {
               key={isModalOpen ? currentVideo?.id : null}
               playing={isModalOpen}
               className="videoplayer"
-              url={isModalOpen ? `${SERVER_ADDRESS}/public/videos/${data.id}/${currentVideo?.name}` : ''}
+              url={isModalOpen ? `${SERVER_ADDRESS}/public/videos/${currentVideo?.name}` : ''}
               controls
               style={{ width: '30rem', height: 'auto' }}
             />
           </div>
         </Modal>
       )}
-
-      {/* <div className="flex flex-wrap gap-2 pl-2 pt-2 justify-start w-full">
-        {searchData ? (
-          searchData.map(
-            (data) =>
-              data.videos.length > 0 && (
-                <div
-                  className="border w-40 h-40 flex flex-col items-center gap-1 cursor-pointer"
-                  key={data.id}
-                  onClick={() => handleProject(data)}
-                >
-                  <img src={folderIcon} className="w-[70%] h-[70%]" />
-                  <p className="m-0 text-center text-ellipsis whitespace-nowrap overflow-hidden w-full px-2">{data.title}</p>
-                  <div className="w-full h-auto flex justify-end px-2">
-                    <p className="text-[10px] italic text-gray-400">{data.created_at}</p>
-                  </div>
-                </div>
-              )
-          )
-        ) : (
-          <div className=" mt-4 flex justify-center w-full">
-            <p className="text-md ">Projects Empty..</p>
-          </div>
-        )}
-      </div> */}
     </div>
   );
 };

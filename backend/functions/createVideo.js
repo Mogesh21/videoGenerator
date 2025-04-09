@@ -1,19 +1,12 @@
 import ffmpeg from "fluent-ffmpeg";
 import path from "path";
 import fs from "fs";
-import { createCanvas } from "canvas";
 import { loadFont } from "./createThumbnail.js";
+import { percentage } from "../routes/videos.js";
 
 const formatPath = (filePath) => {
   return filePath.replace(/\\/g, "/");
 };
-
-const verifyFileExists = (filePath, name) => {
-  if (!fs.existsSync(filePath)) {
-    throw new Error(`${name} not found at: ${filePath}`);
-  }
-};
-
 
 const animationEffects = {
   fade: (x, y, size, totalDuration = 10) =>
@@ -52,6 +45,7 @@ function escapedText(question) {
       .replace(/\\/g, "\\\\\\\\")
       .replace(/:/g, "\\:")
       .replace(/'/g, "\\'")
+      .replace(/'/g, '\\"')
       .replace(/%/g, "\\%")
       .replace(/\n/g, "\\n")
   );
@@ -68,80 +62,87 @@ function timeToSeconds(time) {
 const createVideo = async ({
   content,
   thumbnailPath,
-  introPath,
-  outroPath,
-  backgroundVideoPath,
-  audioUrl,
+  files,
+  hasIntro,
+  hasOutro,
   outputPath,
   fontSettings,
   positions,
   size,
   duration,
+  reqId,
 }) => {
+  let intro, outro;
   const fontPath = formatPath(path.join(process.cwd(), "font", `${fontSettings.style}.ttf`));
-  const bgVideo = formatPath(backgroundVideoPath);
-  const audio = formatPath(audioUrl);
+  const bgVideo = formatPath(files.background_video);
+  const audio = formatPath(files.audio);
   const thumbnail = formatPath(thumbnailPath);
   const output = formatPath(outputPath);
-  const intro = formatPath(introPath);
-  const outro = formatPath(outroPath);
+  if (hasIntro) intro = formatPath(files.intro_video);
+  if (hasOutro) outro = formatPath(files.outro_video);
   const openFont = await loadFont(path.join(process.cwd(), "font", `${fontSettings.style}.ttf`));
 
   const fgImage = content.images.map((img) => formatPath(img));
   const font = fontPath.replace(/:/g, "\\:");
   const question = escapedText(content.text);
-  const options = content.options;
-  const answer = content.answer;
+  const options = escapedText(content.options);
+  const answer = escapedText([content.answer])[0];
   const videoWidth = parseInt(size.width);
   const videoHeight = parseInt(size.height);
-  let inputLength = 3;
+  let inputLength = 2;
   const command = ffmpeg();
 
-  let filterComplex = `[0:v]scale=${videoWidth}:${videoHeight},format=rgba,trim=duration=1,setpts=PTS-STARTPTS[thumbnail];
-            [1:v]scale=${videoWidth}:${videoHeight},trim=duration=${duration.intro},setpts=PTS-STARTPTS[intro];
-            [2:v]scale=${videoWidth}:${videoHeight},trim=duration=${duration.total},setpts=PTS-STARTPTS[bg];\n`;
-
+  let filterComplex = `[0:v]scale=${videoWidth}:${videoHeight},format=rgba,trim=duration=1,setpts=PTS-STARTPTS[thumbnail];`;
   command.input(thumbnail);
-  command.input(intro);
+
+  if (hasIntro) {
+    filterComplex += `[1:v]scale=${videoWidth}:${videoHeight},trim=duration=${duration.intro},setpts=PTS-STARTPTS[intro];\n[2:v]scale=${videoWidth}:${videoHeight},trim=duration=${duration.total},setpts=PTS-STARTPTS[bg];\n`;
+    inputLength = inputLength + 1;
+    command.input(intro);
+  } else {
+    filterComplex += `[1:v]scale=${videoWidth}:${videoHeight},trim=duration=${duration.total},setpts=PTS-STARTPTS[bg];\n`;
+  }
+
   command.input(bgVideo);
 
   //question
   let lastLabel = "bg";
-  let currentY = positions.content.y;
+  let currentY = positions.question.y;
 
   if (question.length > 0) {
-    filterComplex += `[${lastLabel}]drawbox=x=${positions.content.x}:y=${
-      currentY - fontSettings.content.size
-    }:w=${fontSettings.content.width}:h=${
-      fontSettings.content.size * (question.length + 2)
-    }:color=black:t=10,drawbox=x=${positions.content.x}:y=${
-      currentY - fontSettings.content.size
-    }:w=${fontSettings.content.width}:h=${
-      fontSettings.content.size * (question.length + 2)
-    }:color=${fontSettings.content.bgColor}:t=fill[question_box];`;
+    if (fontSettings.question.bg) {
+      filterComplex += `[${lastLabel}]drawbox=x=${
+        positions.question.x - fontSettings.question.size
+      }:y=${currentY - fontSettings.question.size}:w=${
+        fontSettings.question.width + fontSettings.question.size
+      }:h=${fontSettings.question.size * (question.length + 2)}:color=${
+        fontSettings.question.bgColor
+      }:t=fill[question_box];`;
 
-    lastLabel = "question_box";
+      lastLabel = "question_box";
+    }
 
     for (let i = 0; i < question.length; i++) {
-      const testWidth = openFont.getAdvanceWidth(question[i], fontSettings.content.size);
+      const testWidth = openFont.getAdvanceWidth(question[i], fontSettings.question.size);
       const xVal =
-        fontSettings.content.align === "center"
-          ? positions.content.x + fontSettings.content.width / 2 - testWidth / 2
-          : align === "right"
-          ? positions.content.x + fontSettings.content.width - testWidth
-          : positions.content.x;
+        fontSettings.question.align === "center"
+          ? positions.question.x + fontSettings.question.width / 2 - testWidth / 2
+          : fontSettings.question.align === "right"
+          ? positions.question.x + fontSettings.question.width - testWidth
+          : positions.question.x;
       const animation = getAnimationFilter(
-        fontSettings.content.animation,
+        fontSettings.question.animation,
         xVal,
         currentY,
-        fontSettings.content.size,
+        fontSettings.question.size,
         duration.total
       );
       const inputLabel = i === 0 ? lastLabel : `text${i}`;
       const outputLabel = i === question.length - 1 ? "bgtext" : `text${i + 1}`;
-      filterComplex += `[${inputLabel}]drawtext=text='${question[i]}':fontfile='${font}':fontsize=${fontSettings.content.size}:x=${xVal}:y=${currentY}:fontcolor=${fontSettings.content.color}:${animation}[${outputLabel}];\n`;
+      filterComplex += `[${inputLabel}]drawtext=text='${question[i]}':fontfile='${font}':fontsize=${fontSettings.question.size}:x=${xVal}:y=${currentY}:fontcolor=${fontSettings.question.color}:${animation}[${outputLabel}];\n`;
       lastLabel = outputLabel;
-      currentY += fontSettings.content.size + fontSettings.content.lineHeight;
+      // currentY += fontSettings.question.size + fontSettings.question.lineHeight;
+      currentY += fontSettings.question.lineHeight;
     }
   }
 
@@ -166,17 +167,21 @@ const createVideo = async ({
         duration.total
       );
 
-      if (content.optionLength[current] - content.optionLength[0] === i) {
+      if (
+        content.optionLength[current] - content.optionLength[0] === i &&
+        fontSettings.options.bg
+      ) {
         const height =
           current > 0
             ? fontSettings.options.size *
               (content.optionLength[current] - content.optionLength[current - 1] + 1)
             : fontSettings.options.size * (content.optionLength[current] + 1);
-        filterComplex += `[${lastLabel}]drawbox=x=${positions.options.x}:y=${
-          optionY[i] - fontSettings.options.size / 2
-        }:w=${fontSettings.options.width}:h=${height}:color=${
-          fontSettings.options.bgColor
-        }:t=fill[option_box${i}];`;
+
+        filterComplex += `[${lastLabel}]drawbox=x=${
+          positions.options.x - fontSettings.options.size
+        }:y=${optionY[i] - fontSettings.options.size / 2}:w=${
+          fontSettings.options.width + fontSettings.options.size * 2
+        }:h=${height - 20}:color=${fontSettings.options.bgColor}:t=fill[option_box${i}];`;
 
         lastLabel = `option_box${i}`;
         current += 1;
@@ -187,9 +192,21 @@ const createVideo = async ({
 
       if (answer.includes(options[i].trim())) {
         const outputLabel2 = `text${parseInt(i + 1 + question.length) + parseInt(ans) + 1}`;
-        filterComplex += `[${inputLabel}]drawtext=text='${options[i]}':fontfile='${font}':fontsize=${fontSettings.options.size}:x=${xVal}:y=${optionY[i]}:fontcolor=${fontSettings.options.color}:enable='lte(t,${duration.timer})':${animation}[${outputLabel}];\n`;
+        filterComplex += `[${inputLabel}]drawtext=text='${
+          options[i]
+        }':fontfile='${font}':fontsize=${fontSettings.options.size}:x=${xVal}:y=${
+          optionY[i]
+        }:fontcolor=${fontSettings.options.color}:enable='lte(t,${
+          duration.timer + 0.3
+        })':${animation}[${outputLabel}];\n`;
         //ans highlight
-        filterComplex += `[${outputLabel}]drawtext=text='${options[i]}':fontfile='${font}':fontsize=${fontSettings.options.size}:x=${xVal}:y=${optionY[i]}:fontcolor=${fontSettings.options.answerColor}:enable='gte(t,${duration.timer})':${animation}[${outputLabel2}];\n`;
+        filterComplex += `[${outputLabel}]drawtext=text='${
+          options[i]
+        }':fontfile='${font}':fontsize=${fontSettings.options.size}:x=${xVal}:y=${
+          optionY[i]
+        }:fontcolor=${fontSettings.options.answerColor}:enable='gte(t,${
+          duration.timer + 0.3
+        })':${animation}[${outputLabel2}];\n`;
         ans += 1;
         lastLabel = outputLabel2;
       } else {
@@ -199,19 +216,20 @@ const createVideo = async ({
     }
   }
 
+  command.input(audio);
   //images
   if (fgImage.length > 0) {
     let overLayComplex = "";
     inputLength += fgImage.length;
     for (let i = 0; i < fgImage.length; i++) {
-      const xVal =
-        fontSettings.content.align === "center"
-          ? positions.content.x + fontSettings.content.width / 2 - fontSettings.image.width / 2
-          : align === "right"
-          ? positions.content.x + fontSettings.content.width - fontSettings.image.width
-          : positions.content.x;
+      const xVal = positions.images.x;
+      // fontSettings.question.align === "center"
+      //   ? positions.question.x + fontSettings.question.width / 2 - fontSettings.image.width / 2
+      //   : fontSettings.question.align === "right"
+      //   ? positions.question.x + fontSettings.question.width - fontSettings.image.width
+      //   : positions.question.x;
 
-      const inputLabel1 = `[${i + 3}:v]`;
+      const inputLabel1 = `[${i + inputLength}:v]`;
       const outputLabel1 = `img${i + 1}`;
 
       const inputLabel2 = i === 0 ? `[${lastLabel}][img${i + 1}]` : `[${lastLabel}]`;
@@ -219,27 +237,36 @@ const createVideo = async ({
 
       filterComplex += `${inputLabel1}scale=${fontSettings.image.width}:${fontSettings.image.height}[${outputLabel1}];`;
 
-      overLayComplex += `${inputLabel2}overlay=${xVal}:${
-        currentY + fontSettings.content.lineHeight
-      }[${outputLabel2}];`;
-      currentY += fontSettings.image.height + fontSettings.content.lineHeight;
+      overLayComplex += `${inputLabel2}overlay=${xVal}:${positions.images.y}[${outputLabel2}];`;
+      currentY += fontSettings.image.height + fontSettings.question.lineHeight;
       lastLabel = outputLabel2;
       command.input(fgImage[i]);
     }
     filterComplex += overLayComplex;
   }
 
-  filterComplex += `[${inputLength + 1}:v]scale=${videoWidth}:${videoHeight},trim=duration=${
-    duration.outro
-  },setpts=PTS-STARTPTS[outro];`;
-  filterComplex += `[thumbnail][intro][${lastLabel}][outro]concat=n=4:v=1:a=0[outv]`;
+  filterComplex += `[${lastLabel}]drawtext=text='www.interviewbix.com':fontfile='${font}':fontsize=50:x=330:y=1870:fontcolor=${fontSettings.question.color}[watermark];`;
+
+  lastLabel = "watermark";
+
+  if (hasOutro) {
+    filterComplex += `[${inputLength + 1}:v]scale=${videoWidth}:${videoHeight},trim=duration=${
+      duration.outro
+    },setpts=PTS-STARTPTS[outro];`;
+    filterComplex += `[thumbnail]${hasIntro ? "[intro]" : ""}[${lastLabel}][outro]concat=n=${
+      hasIntro ? 4 : 3
+    }:v=1:a=0[outv]`;
+    command.input(outro);
+  } else {
+    filterComplex += `[thumbnail]${hasIntro ? "[intro]" : ""}[${lastLabel}]concat=n=${
+      hasIntro ? 3 : 2
+    }:v=1:a=0[outv]`;
+  }
 
   return new Promise((resolve, reject) => {
     command
-      .input(audio)
-      .input(outro)
       .complexFilter(filterComplex, "outv")
-      .outputOptions(`-map ${inputLength}:a`)
+      .outputOptions(`-map ${inputLength - fgImage.length}:a`)
       .audioCodec("aac")
       .videoCodec("libx264")
       .outputOptions("-movflags faststart")
@@ -250,10 +277,13 @@ const createVideo = async ({
       .on("progress", (progress) => {
         const processed = timeToSeconds(progress.timemark) || 0;
         const percent = ((processed / (duration.total + 10)) * 100).toFixed(2);
-        console.log(`Processing: ${percent}%`);
+        if (parseInt(percent)) {
+          percentage[reqId] = percent;
+        }
       })
       .on("stderr", (stderrLine) => console.log("🔍 FFmpeg Debug:", stderrLine))
       .on("end", () => {
+        fs.rmdirSync(path.join(process.cwd(), "public", "images"), { recursive: true });
         console.log("Processing finished successfully");
         resolve(output);
       })
@@ -265,34 +295,3 @@ const createVideo = async ({
 };
 
 export default createVideo;
-
-// {
-//     style: 'SuperShiny',
-//     content: {
-//       size: 48,
-//       color: 'green',
-//       align: 'center',
-//       width: 800,
-//       lineHeight: 10,
-//       italic: 0,
-//       bold: 1
-//     },
-//     options: {
-//       size: 40,
-//       color: 'orange',
-//       align: 'center',
-//       width: 880,
-//       lineHeight: 10,
-//       italic: 1,
-//       bold: 0
-//     },
-//     image: { width: 400, height: 400 }
-//   } {
-//     content: { x: 140, y: 400 },
-//     options: [
-//       { x: 100, y: 1100 },
-//       { x: 100, y: 1200 },
-//       { x: 100, y: 1300 },
-//       { x: 100, y: 1400 }
-//     ]
-//   } {width: 1080, height: 1920}

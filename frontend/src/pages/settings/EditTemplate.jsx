@@ -588,7 +588,7 @@ const EditTemplate = () => {
             <Button type="primary">Upload Video</Button>
           </Upload>
           <div className="grid grid-cols-2 ">
-            {data.intro && (
+            {data.intro === 1 && (
               <div className="flex flex-col">
                 <p className="text-md font-bold">Intro Video:</p>
                 <Upload {...videoprops} fileList={intro} onChange={(event) => handleBgVideo(event, 'intro_video')}>
@@ -596,7 +596,7 @@ const EditTemplate = () => {
                 </Upload>
               </div>
             )}
-            {data.outro && (
+            {data.outro === 1 && (
               <div className="flex flex-col">
                 <p className="text-md font-bold">Outro Video:</p>
                 <Upload {...videoprops} fileList={outro} onChange={(event) => handleBgVideo(event, 'outro_video')}>
@@ -637,7 +637,7 @@ const EditTemplate = () => {
                   }}
                 />
               </div>
-              {data.intro && (
+              {data.intro === 1 && (
                 <div className="grid grid-cols-[40%_60%] items-center">
                   <p>Intro Duration:</p>
                   <InputNumber
@@ -649,7 +649,7 @@ const EditTemplate = () => {
                   />
                 </div>
               )}
-              {data.outro && (
+              {data.outro === 1 && (
                 <div className="grid grid-cols-[40%_60%] items-center">
                   <p>Outro Duration:</p>
                   <InputNumber

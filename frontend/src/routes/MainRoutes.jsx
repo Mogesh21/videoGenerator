@@ -32,12 +32,12 @@ const MainRoutes = {
       path: '/',
       element: <Dashboard />
     },
+    // {
+    //   path: '/projects',
+    //   element: <Projects />
+    // },
     {
-      path: '/projects',
-      element: <Projects />
-    },
-    {
-      path: '/projects/videos/*',
+      path: '/videos',
       element: <Videos />
     },
     {

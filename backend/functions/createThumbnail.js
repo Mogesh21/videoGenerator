@@ -70,7 +70,8 @@ export function wrapText(
   maxWidth,
   lineHeight,
   radius = false,
-  bgColor
+  bgColor,
+  bg
 ) {
   const paragraphs = text.split("\n");
   let wrappedLines = [];
@@ -82,7 +83,7 @@ export function wrapText(
 
     for (const word of words) {
       const testLine = line + word + " ";
-      const testWidth = font.getAdvanceWidth(testLine, lineHeight);
+      const testWidth = font.getAdvanceWidth(testLine, size);
 
       if (testWidth > maxWidth && line !== "") {
         wrappedLines.push(line);
@@ -94,22 +95,23 @@ export function wrapText(
     wrappedLines.push(line);
   });
 
-  ctx.fillStyle = "#ffffff";
-  ctx.beginPath();
-  roundedRect(
-    ctx,
-    x,
-    y - lineHeight,
-    maxWidth,
-    wrappedLines.length * lineHeight + lineHeight / 2,
-    radius ? 20 : 0,
-    bgColor
-  );
-  ctx.fill();
-
+  if (bg) {
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    roundedRect(
+      ctx,
+      x,
+      y - size,
+      maxWidth,
+      wrappedLines.length * size + size / 2,
+      radius ? 20 : 0,
+      bgColor
+    );
+    ctx.fill();
+  }
   wrappedLines.forEach((line) => {
     const align = ctx.textAlign;
-    const testWidth = font.getAdvanceWidth(line, lineHeight);
+    const testWidth = font.getAdvanceWidth(line, size);
     const xVal =
       align === "center"
         ? x + maxWidth / 2 - testWidth / 2
@@ -117,11 +119,11 @@ export function wrapText(
         ? x + maxWidth - testWidth
         : x;
 
-    const textPath = font.getPath(line, xVal, y, lineHeight);
+    const textPath = font.getPath(line, xVal, y, size);
     textPath.fill = color;
     textPath.draw(ctx);
     optionPosition.push(y);
-    y += lineHeight;
+    y += size;
   });
 
   return [y, wrappedLines, optionPosition];
@@ -154,12 +156,12 @@ async function createThumbnail({
 
     const question = text.map((val) => val.trim()).filter((val) => val);
 
-    let currentY = positions.content.y;
+    let currentY = positions.question.y;
 
     //content
     if (question.length > 0) {
-      ctx.fillStyle = font.content.color;
-      ctx.textAlign = font.content.align;
+      ctx.fillStyle = font.question.color;
+      ctx.textAlign = font.question.align;
 
       if (fontStyle) {
         question.forEach((line, index) => {
@@ -167,14 +169,15 @@ async function createThumbnail({
           const radius = index === 0 ? true : question.length - 1 === index ? true : false;
           [currentY, wrappedLine] = wrapText(
             ctx,
-            { font: fontStyle, color: font.content.color, size: font.content.size },
+            { font: fontStyle, color: font.question.color, size: font.question.size },
             line,
-            positions.content.x,
-            currentY + font.content.lineHeight / 2,
-            font.content.width,
-            font.content.size + font.content.lineHeight,
+            positions.question.x,
+            currentY + font.question.lineHeight / 2,
+            font.question.width,
+            font.question.lineHeight,
             radius,
-            font.content.bgColor
+            font.question.bgColor,
+            font.question.bg
           );
 
           wrappedQuestion.push(wrappedLine);
@@ -185,17 +188,17 @@ async function createThumbnail({
       //     let wrappedLine = "";
       //     const radius = index === 0 ? true : question.length - 1 === index ? true : false;
       //     ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
-      //       font.content_size
+      //       font.question_size
       //     }px ${DEFAULT_FONT}`;
 
       //     [currentY, wrappedLine] = wrapText(
       //       ctx,
-      //       { font: null, color: font.content.color, size: font.content.size },
+      //       { font: null, color: font.question.color, size: font.question.size },
       //       line,
-      //       positions.content.x,
+      //       positions.question.x,
       //       currentY,
-      //       font.content.width,
-      //       font.content.size + font.content.lineHeight,
+      //       font.question.width,
+      //       font.question.size + font.question.lineHeight,
       //       radius
       //     );
       //     wrappedQuestion.push(wrappedLine);
@@ -207,14 +210,14 @@ async function createThumbnail({
     if (images.length > 0) {
       newImages = await downloadImages(images);
       const imageElements = await Promise.all(newImages.map((img) => loadImage(img)));
-      const xVal =
-        font.content.align === "center"
-          ? positions.content.x + font.content.width / 2 - font.image.width / 2
-          : font.content.align === "right"
-          ? positions.content.x + font.content.width / 2 - font.image.width
-          : positions.content.x;
+      const xVal = positions.images.x;
+      //   font.question.align === "center"
+      //     ? positions.images.x + font.image.width / 2 - font.image.width / 2
+      //     : font.image.align === "right"
+      //     ? positions.images.x + font.image.width / 2 - font.image.width
+      //     : positions.images.x;
       imageElements.forEach((currentImage) => {
-        ctx.drawImage(currentImage, xVal, currentY, font.image.width, font.image.height);
+        ctx.drawImage(currentImage, xVal, positions.images.y, font.image.width, font.image.height);
       });
     }
 
@@ -235,34 +238,23 @@ async function createThumbnail({
             option,
             positions.options.x,
             OptionY + font.options.size > positions.options.y
-              ? OptionY + font.options.size + font.options.lineHeight
+              ? OptionY + font.options.size
               : positions.options.y,
             font.options.width,
-            font.options.size + font.options.lineHeight,
+            font.options.lineHeight,
             true,
-            font.options.bgColor
+            font.options.bgColor,
+            font.options.bg
           );
           wrappedOptions.push(wrappedLine);
           optionPosition.push(optionPos);
         }
-        // else {
-        //   ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
-        //     font.content_size
-        //   }px ${DEFAULT_FONT}`;
-        //   [OptionY, wrappedLine] = wrapText(
-        //     ctx,
-        //     { font: null, color: font.options.color, size: font.options.size },
-        //     option,
-        //     positions.options[index].x,
-        //     positions.options[index].y,
-        //     font.options.width,
-        //     font.options.size + font.content.lineHeight,
-        //     true
-        //   );
-        //   wrappedOptions.push(wrappedLine);
-        // }
       }
     });
+
+    const textPath = fontStyle.getPath("interviewbix.com", 330, 1870, 50);
+    textPath.fill = font.question.color;
+    textPath.draw(ctx);
 
     const outputPath = path.join(dir, `thumbnail.png`);
     const buffer = canvas.toBuffer("image/png");

@@ -5,60 +5,60 @@ import db from "../config/db.js";
 
 const router = express.Router();
 
-router.get("/videos", async (req, res) => {
-  try {
-    const query = `SELECT 
-                    p.id AS project_id,
-                    p.name AS project_name,
-                    p.title AS project_title,
-                    p.author AS project_author,
-                    p.created_at AS project_created_at,
-                    v.id AS video_id,
-                    v.name AS video_name,
-                    v.created_at AS video_created_at
-                  FROM 
-                    projects p
-                  LEFT JOIN 
-                    videos v ON v.project_id = p.id
-                  WHERE 
-                    p.is_deleted = 0 
-                    AND p.deleted_at IS NULL;
-                  `;
+// router.get("/videos", async (req, res) => {
+//   try {
+//     const query = `SELECT 
+//                     p.id AS project_id,
+//                     p.name AS project_name,
+//                     p.title AS project_title,
+//                     p.author AS project_author,
+//                     p.created_at AS project_created_at,
+//                     v.id AS video_id,
+//                     v.name AS video_name,
+//                     v.created_at AS video_created_at
+//                   FROM 
+//                     projects p
+//                   LEFT JOIN 
+//                     videos v ON v.project_id = p.id
+//                   WHERE 
+//                     p.is_deleted = 0 
+//                     AND p.deleted_at IS NULL;
+//                   `;
 
-    const [data] = await db.query(query, []);
-    console.log(data);
+//     const [data] = await db.query(query, []);
+//     console.log(data);
 
-    const formattedData = data.map((val) => {
-      const options = { year: "2-digit", month: "short", day: "2-digit" };
+//     const formattedData = data.map((val) => {
+//       const options = { year: "2-digit", month: "short", day: "2-digit" };
 
-      const formattedDate = val.created_at
-        ?.toLocaleDateString("en-GB", options)
-        ?.replace(",", "")
-        ?.toUpperCase();
+//       const formattedDate = val.created_at
+//         ?.toLocaleDateString("en-GB", options)
+//         ?.replace(",", "")
+//         ?.toUpperCase();
 
-      return {
-        ...val,
-        created_at: formattedDate,
-        videos: val.videos.map((vid) => {
-          const formattedDate = vid.created_at
-            ?.toLocaleDateString("en-GB", options)
-            ?.replace(",", "")
-            ?.toUpperCase();
+//       return {
+//         ...val,
+//         created_at: formattedDate,
+//         videos: val.videos.map((vid) => {
+//           const formattedDate = vid.created_at
+//             ?.toLocaleDateString("en-GB", options)
+//             ?.replace(",", "")
+//             ?.toUpperCase();
 
-          return {
-            ...vid,
-            created_at: formattedDate,
-          };
-        }),
-      };
-    });
+//           return {
+//             ...vid,
+//             created_at: formattedDate,
+//           };
+//         }),
+//       };
+//     });
 
-    res.status(200).json(formattedData);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
+//     res.status(200).json(formattedData);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ message: "Internal Server Error" });
+//   }
+// });
 
 // router.delete("/deleteVideo", async (req, res) => {
 //   try {

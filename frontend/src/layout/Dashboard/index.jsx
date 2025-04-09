@@ -28,7 +28,7 @@ export default function DashboardLayout() {
   }, [downXL]);
 
   useEffect(() => {
-    navigate('/projects');
+    navigate('/videos');
   }, []);
 
   if (menuMasterLoading) return <Loader />;
