@@ -255,12 +255,12 @@ const CreateTemplate = () => {
     try {
       const updatedPosition = {
         question: {
-          x: data.positions.question.x * 3,
-          y: data.positions.question.y * 3
+          x: data.positions.question.x,
+          y: data.positions.question.y
         },
         options: {
-          x: data.positions.options.x * 3,
-          y: data.positions.options.y * 3
+          x: data.positions.options.x,
+          y: data.positions.options.y
         }
       };
       data.positions = updatedPosition;
@@ -461,7 +461,7 @@ const CreateTemplate = () => {
             <Button type="primary">Upload Video</Button>
           </Upload>
           <div className="grid grid-cols-2 ">
-            {data.intro === 1 && (
+            {data.intro == 1 && (
               <div className="flex flex-col">
                 <p className="text-md font-bold">Intro Video:</p>
                 <Upload {...videoprops} onChange={(event) => handleBgVideo(event, 'intro_video')}>
@@ -469,7 +469,7 @@ const CreateTemplate = () => {
                 </Upload>
               </div>
             )}
-            {data.outro === 1 && (
+            {data.outro == 1 && (
               <div className="flex flex-col">
                 <p className="text-md font-bold">Outro Video:</p>
                 <Upload {...videoprops} onChange={(event) => handleBgVideo(event, 'outro_video')}>
@@ -510,7 +510,7 @@ const CreateTemplate = () => {
                   }}
                 />
               </div>
-              {data.intro === 1 && (
+              {data.intro == 1 && (
                 <div className="grid grid-cols-[40%_60%] items-center">
                   <p>Intro Duration:</p>
                   <InputNumber
@@ -522,7 +522,7 @@ const CreateTemplate = () => {
                   />
                 </div>
               )}
-              {data.outro === 1 && (
+              {data.outro == 1 && (
                 <div className="grid grid-cols-[40%_60%] items-center">
                   <p>Outro Duration:</p>
                   <InputNumber

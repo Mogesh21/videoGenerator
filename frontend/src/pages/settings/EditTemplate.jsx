@@ -419,10 +419,10 @@ const EditTemplate = () => {
       if (!video[0]?.status) {
         formData.append('backgroundVideo', video[0]);
       }
-      if (!intro[0]?.status) {
+      if (intro && !intro[0]?.status) {
         formData.append('intro_video', intro[0]);
       }
-      if (!outro[0]?.status) {
+      if (outro && !outro[0]?.status) {
         formData.append('outro_video', outro[0]);
       }
       if (!audio[0]?.status) {
@@ -588,7 +588,7 @@ const EditTemplate = () => {
             <Button type="primary">Upload Video</Button>
           </Upload>
           <div className="grid grid-cols-2 ">
-            {data.intro === 1 && (
+            {data.intro == 1 && (
               <div className="flex flex-col">
                 <p className="text-md font-bold">Intro Video:</p>
                 <Upload {...videoprops} fileList={intro} onChange={(event) => handleBgVideo(event, 'intro_video')}>
@@ -596,7 +596,7 @@ const EditTemplate = () => {
                 </Upload>
               </div>
             )}
-            {data.outro === 1 && (
+            {data.outro == 1 && (
               <div className="flex flex-col">
                 <p className="text-md font-bold">Outro Video:</p>
                 <Upload {...videoprops} fileList={outro} onChange={(event) => handleBgVideo(event, 'outro_video')}>
@@ -637,7 +637,7 @@ const EditTemplate = () => {
                   }}
                 />
               </div>
-              {data.intro === 1 && (
+              {data.intro == 1 && (
                 <div className="grid grid-cols-[40%_60%] items-center">
                   <p>Intro Duration:</p>
                   <InputNumber
@@ -649,7 +649,7 @@ const EditTemplate = () => {
                   />
                 </div>
               )}
-              {data.outro === 1 && (
+              {data.outro == 1 && (
                 <div className="grid grid-cols-[40%_60%] items-center">
                   <p>Outro Duration:</p>
                   <InputNumber
