@@ -27,9 +27,9 @@ export default function DashboardLayout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [downXL]);
 
-  useEffect(() => {
-    navigate('/videos');
-  }, []);
+  // useEffect(() => {
+  //   navigate('/videos');
+  // }, []);
 
   if (menuMasterLoading) return <Loader />;
 
