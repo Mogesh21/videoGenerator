@@ -18,19 +18,19 @@ router.post("/create", async (req, res) => {
     const { assets, font, content, positions, size, duration, intro, outro, reqId } = req.body;
     percentage[reqId] = 0;
     const files = {
-      background_image: `E:/Mogesh/Projects/interviewbix_videos/backend/public/templates/${assets.background_image}`,
-      background_video: `E:/Mogesh/Projects/interviewbix_videos/backend/public/templates/${assets.background_video}`,
-      audio: `E:/Mogesh/Projects/interviewbix_videos/backend/public/templates/${assets.audio}`,
+      background_image: path.join(process.cwd(), "public", "templates", assets.background_image),
+      background_video: path.join(process.cwd(), "public", "templates", assets.background_video),
+      audio: path.join(process.cwd(), "public", "templates", assets.audio),
     };
 
     if (intro) {
-      files.intro_video = `E:/Mogesh/Projects/interviewbix_videos/backend/public/templates/${assets.intro_video}`;
+      files.intro_video = path.join(process.cwd(), "public", "templates", assets.intro_video);
     }
     if (outro) {
-      files.outro_video = `E:/Mogesh/Projects/interviewbix_videos/backend/public/templates/${assets.outro_video}`;
+      files.outro_video = path.join(process.cwd(), "public", "templates", assets.outro_video);
     }
 
-    const outputPath = `E:/Mogesh/Projects/interviewbix_videos/backend/public/videos/${videoName}`;
+    const outputPath = path.join(process.cwd(), "public", "videos", videoName);
     const thumbnail = path.join(process.cwd(), "public", "images", "0", "thumbnail.png");
 
     const [newImages, wrappedQuestion, wrappedOptions, optionPosition, optionLength] =
@@ -102,7 +102,7 @@ router.delete("/", async (req, res) => {
     await connection.beginTransaction();
     const { id, name } = req.headers;
     const [data] = await connection.query("DELETE FROM videos WHERE id = ?", [id]);
-    const videoPath = `E:/Mogesh/Projects/interviewbix_videos/backend/public/videos/${name}`;
+    const videoPath = path.join(process.cwd(), "public", "videos", name);
 
     if (fs.existsSync(videoPath)) {
       fs.rmSync(videoPath);
@@ -123,7 +123,7 @@ router.delete("/deleteVideos", async (req, res) => {
     if (ids.length === 1) await connection.query("DELETE FROM videos WHERE id = ?", [ids]);
     else await connection.query("DELETE FROM videos WHERE id in (?)", [ids]);
     for (let i = 0; i < ids.length; i++) {
-      const videoPath = `E:/Mogesh/Projects/interviewbix_videos/backend/public/videos/${names[i]}`;
+      const videoPath = path.join(process.cwd(), "public", "videos", names[i]);
       if (fs.existsSync(videoPath)) {
         fs.rmSync(videoPath);
       }
