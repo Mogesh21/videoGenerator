@@ -141,6 +141,9 @@ async function createThumbnail({
     const wrappedQuestion = [];
     const wrappedOptions = [];
     const optionPosition = [];
+    if (font.style === "Default") {
+      font.style = "arial";
+    }
 
     const fontPath = path.join(process.cwd(), "font", `${font.style}.ttf`);
     const fontStyle = await loadFont(fontPath);
@@ -183,27 +186,6 @@ async function createThumbnail({
           wrappedQuestion.push(wrappedLine);
         });
       }
-      // else {
-      //   question.forEach((line, index) => {
-      //     let wrappedLine = "";
-      //     const radius = index === 0 ? true : question.length - 1 === index ? true : false;
-      //     ctx.font = `${italic ? "italic" : ""} ${bold ? "bold" : ""} ${
-      //       font.question_size
-      //     }px ${DEFAULT_FONT}`;
-
-      //     [currentY, wrappedLine] = wrapText(
-      //       ctx,
-      //       { font: null, color: font.question.color, size: font.question.size },
-      //       line,
-      //       positions.question.x,
-      //       currentY,
-      //       font.question.width,
-      //       font.question.size + font.question.lineHeight,
-      //       radius
-      //     );
-      //     wrappedQuestion.push(wrappedLine);
-      //   });
-      // }
     }
 
     //images
@@ -211,11 +193,6 @@ async function createThumbnail({
       newImages = await downloadImages(images);
       const imageElements = await Promise.all(newImages.map((img) => loadImage(img)));
       const xVal = positions.images.x;
-      //   font.question.align === "center"
-      //     ? positions.images.x + font.image.width / 2 - font.image.width / 2
-      //     : font.image.align === "right"
-      //     ? positions.images.x + font.image.width / 2 - font.image.width
-      //     : positions.images.x;
       imageElements.forEach((currentImage) => {
         ctx.drawImage(currentImage, xVal, positions.images.y, font.image.width, font.image.height);
       });
@@ -274,6 +251,7 @@ async function createThumbnail({
       optionLength,
     ];
   } catch (err) {
+    err.name = "Image Error";
     throw err;
   }
 }

@@ -62,13 +62,18 @@ router.post("/create", async (req, res) => {
       reqId: reqId,
     });
 
-    console.log("video created");
     await connection.commit();
     res.status(200).json({ message: "Video Created Successfully" });
   } catch (error) {
     console.log(error);
     await connection.rollback();
-    res.status(500).json({ message: "Internal Server Error" });
+    if (error.name === "Image Error") {
+      res.status(500).json({ message: "Unable to generate Image" });
+    } else if (error.name === "Video Error") {
+      res.status(500).json({ message: "Unable to create Video. Please check video resolution" });
+    } else {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   }
 });
 

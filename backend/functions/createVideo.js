@@ -288,6 +288,7 @@ const createVideo = async ({
         resolve(output);
       })
       .on("error", (err) => {
+        err.name = "Video Error";
         console.error("Error:", err);
         reject(err);
       });

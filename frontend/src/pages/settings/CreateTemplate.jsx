@@ -233,22 +233,37 @@ const CreateTemplate = () => {
 
   const handleRatio = (val) => {
     const size = { type: val };
-
+    let options = data.positions.options;
     if (val === 'post') {
       size.width = 1080;
       size.height = 1080;
+      options = {
+        x: 100,
+        y: 600
+      };
+      optionsRef.current.style.top = '200px';
     } else if (val === 'reel') {
       size.width = 1080;
       size.height = 1920;
+      options = {
+        x: 100,
+        y: 1100
+      };
+      optionsRef.current.style.top = '400px';
     } else if (val === 'video') {
       size.width = 1920;
       size.height = 1080;
+      options = {
+        x: 100,
+        y: 600
+      };
+      optionsRef.current.style.top = '200px';
     }
 
     canvasRef.current.style.width = size.width / 3 + 'px';
     canvasRef.current.style.height = size.height / 3 + 'px';
 
-    setData({ ...data, size: size });
+    setData({ ...data, size: size, positions: { ...data.positions, options: options } });
   };
 
   const handleCreateTemplate = async () => {
@@ -330,7 +345,7 @@ const CreateTemplate = () => {
         <div className="relative flex justify-center h-fit overflow-hidden">
           <canvas
             ref={canvasRef}
-            className="bg-gray-200 border-2 w-[360px] h-[360px] relative"
+            className="bg-gray-200 overflow-hidden w-[360px] h-[360px] relative"
             style={{
               width: data.size.width / 3 + 'px',
               height: data.size.height / 3 + 'px'
@@ -372,7 +387,7 @@ const CreateTemplate = () => {
             }}
           >
             {texts.options && (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 px-0.5">
                 <p
                   className="border border-black overflow-hidden"
                   style={{ backgroundColor: data.font.options.bg ? data.font.options.bgColor : '' }}
@@ -494,6 +509,7 @@ const CreateTemplate = () => {
                 setData({ ...data, font: { ...data.font, style: val } });
               }}
             >
+              <Select.Option value="Default">Default</Select.Option>
               {fonts.map((font) => (
                 <Select.Option value={font.name}>{font.name}</Select.Option>
               ))}

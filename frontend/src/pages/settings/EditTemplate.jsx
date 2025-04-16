@@ -378,12 +378,18 @@ const EditTemplate = () => {
     if (val === 'post') {
       size.width = 1080;
       size.height = 1080;
+      setData({ ...data, positions: { ...data.positions, options: { ...data.positions.options, y: 600 } } });
+      optionsRef.current.style.top = '200px';
     } else if (val === 'reel') {
       size.width = 1080;
       size.height = 1920;
+      setData({ ...data, positions: { ...data.positions, options: { ...data.positions.options, y: 1100 } } });
+      optionsRef.current.style.top = '400px';
     } else if (val === 'video') {
       size.width = 1920;
       size.height = 1080;
+      setData({ ...data, positions: { ...data.positions, options: { ...data.positions.options, y: 200 } } });
+      optionsRef.current.style.top = '200px';
     }
 
     canvasRef.current.style.width = size.width / 3 + 'px';
@@ -621,6 +627,7 @@ const EditTemplate = () => {
                 setData({ ...data, font: { ...data.font, style: val } });
               }}
             >
+              <Select.Option value="Default">Default</Select.Option>
               {fonts.map((font) => (
                 <Select.Option value={font.name}>{font.name}</Select.Option>
               ))}

@@ -475,7 +475,11 @@ const CreateVideo = () => {
       setProgress(null);
       setProgressPercent(0);
       console.log(err);
-      message.error({ content: 'Internal Server Error' });
+      if (err?.response?.data?.message) {
+        message.error({ content: err.response.data.message });
+      } else {
+        message.error({ content: 'Internal Server Error' });
+      }
     }
   };
 
@@ -602,8 +606,8 @@ const CreateVideo = () => {
                 color: data.font.question.color,
                 position: 'absolute',
                 top: 1840 / 3,
-                left: 350/3,
-                fontSize: 50/3
+                left: 350 / 3,
+                fontSize: 50 / 3
               }}
             >
               interviewbix.com
@@ -683,6 +687,7 @@ const CreateVideo = () => {
                   setData({ ...data, font: { ...data.font, style: val } });
                 }}
               >
+                <Select.Option value="Default">Default</Select.Option>
                 {fonts.map((font) => (
                   <Select.Option key={font.id} value={font.name}>
                     {font.name}
